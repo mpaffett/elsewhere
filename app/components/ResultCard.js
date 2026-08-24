@@ -2,7 +2,13 @@ import styles from "./ResultCard.module.css";
 
 // A single result card. No state, no logic -- it just displays the three
 // values it's handed. All the maths already happened in lib/calculate.js.
-export default function ResultCard({ percent, perDayLabel, totalHours, delayIndex }) {
+export default function ResultCard({
+  percent,
+  perDayLabel,
+  totalHours,
+  delayIndex,
+  sentence,
+}) {
   return (
     <div
       className={`${styles.card} ${styles[`card${percent}`]}`}
@@ -14,6 +20,10 @@ export default function ResultCard({ percent, perDayLabel, totalHours, delayInde
         <span className={styles.totalNumber}>{totalHours}</span> hours back
         over 12 weeks
       </p>
+
+      {/* Only appears once the AI has answered. Until then the card is
+          exactly as it was. */}
+      {sentence && <p className={styles.sentence}>{sentence}</p>}
     </div>
   );
 }

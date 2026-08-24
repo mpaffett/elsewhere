@@ -14,6 +14,12 @@ export default function Calculator() {
   const [error, setError] = useState("");
   const [results, setResults] = useState(null);
 
+  // The AI sentences, and the two bits of state that go with any request
+  // that leaves the browser: is it in flight, and did it go wrong?
+  const [picture, setPicture] = useState(null);
+  const [picturePending, setPicturePending] = useState(false);
+  const [pictureError, setPictureError] = useState("");
+
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -32,11 +38,49 @@ export default function Calculator() {
     }
 
     setError("");
+
+    // Throw away any sentences from a previous goal. Without this, someone
+    // who changes their goal and resubmits would see the old AI text sitting
+    // under the new numbers.
+    setPicture(null);
+    setPictureError("");
+
     setResults({
       goal: goalCheck.goal,
       cards: calculateAll(screenTime.totalMinutes),
       endDate: horizonEndDate(),
     });
+  }
+
+  async function handleShowPicture() {
+    setPicturePending(true);
+    setPictureError("");
+
+    try {
+      const response = await fetch("/api/picture", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ goal: goal, hours: hours, minutes: minutes }),
+      });
+
+      const body = await response.json();
+
+      if (!response.ok) {
+        // The server always sends a readable message, so we can show it
+        // straight to the visitor rather than inventing our own wording.
+        setPictureError(body.error || "Something went wrong. Please try again.");
+        return;
+      }
+
+      setPicture(body.lines);
+    } catch {
+      // This only happens if the network itself failed.
+      setPictureError("Couldn't reach the server. Please try again.");
+    } finally {
+      // Runs whether we succeeded or failed, so the button can never get
+      // stuck saying "Thinking...".
+      setPicturePending(false);
+    }
   }
 
   return (
@@ -98,10 +142,30 @@ export default function Calculator() {
           <p className={styles.towards}>Toward: {results.goal}</p>
           <div className={styles.cardRow}>
             {results.cards.map((card, index) => (
-              <ResultCard key={card.percent} delayIndex={index} {...card} />
+              <ResultCard
+                key={card.percent}
+                delayIndex={index}
+                sentence={picture ? picture[index] : null}
+                {...card}
+              />
             ))}
           </div>
           <p className={styles.endDate}>That&rsquo;s by {results.endDate}.</p>
+
+          {/* Only offer the button while there are no sentences yet. Once
+              they've arrived, there's nothing left to ask for. */}
+          {!picture && (
+            <button
+              type="button"
+              className={styles.picture}
+              onClick={handleShowPicture}
+              disabled={picturePending}
+            >
+              {picturePending ? "Thinking\u2026" : "Show me what's possible"}
+            </button>
+          )}
+
+          {pictureError && <p className={styles.error}>{pictureError}</p>}
         </section>
       )}
     </div>

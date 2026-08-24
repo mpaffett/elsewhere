@@ -67,3 +67,32 @@
   font-size: 1.6rem;
   font-weight: 600;
 }
+
+/* The AI sentence. Separated from the numbers above by a hairline rule in
+   the card's own text colour, so it works on all three backgrounds. */
+.sentence {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid currentColor;
+  border-top-color: color-mix(in srgb, currentColor 18%, transparent);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  opacity: 0.92;
+
+  animation: fadeIn 0.4s ease-out both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 0.92;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sentence {
+    animation: none;
+  }
+}
