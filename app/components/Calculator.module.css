@@ -1,0 +1,146 @@
+.form {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 32px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.label {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 600;
+  padding: 0;
+}
+
+.timeInputs {
+  display: flex;
+  gap: 16px;
+}
+
+.timeInput {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 10px 16px;
+}
+
+.timeInput input {
+  width: 56px;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 1.2rem;
+  color: var(--color-text);
+  outline: none;
+}
+
+/* Hide the little up/down spinner arrows so the boxes look like plain
+   number fields rather than a form-builder default. */
+.timeInput input::-webkit-outer-spin-button,
+.timeInput input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.timeInput input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.timeInput span {
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.hint {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.goalInput {
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--color-text);
+  background: var(--color-background);
+  outline: none;
+}
+
+.goalInput:focus,
+.timeInput:focus-within {
+  border-color: var(--color-accent);
+}
+
+.submit {
+  align-self: flex-start;
+  background: var(--color-accent);
+  color: var(--color-card-75-text);
+  border: none;
+  border-radius: 999px;
+  padding: 14px 32px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.submit:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lifted);
+}
+
+.error {
+  margin-top: 20px;
+  background: var(--color-error-bg);
+  color: var(--color-error-text);
+  border-radius: 12px;
+  padding: 14px 18px;
+  font-size: 0.95rem;
+}
+
+.results {
+  margin-top: 40px;
+}
+
+.towards {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  margin-bottom: 20px;
+}
+
+.cardRow {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 640px) {
+  .cardRow {
+    grid-template-columns: 1fr;
+  }
+
+  .timeInputs {
+    flex-direction: column;
+  }
+}
+
+.endDate {
+  margin-top: 20px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}

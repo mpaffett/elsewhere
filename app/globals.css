@@ -1,13 +1,40 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/*
+  Design tokens for Elsewhere.
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  Everything below is a CSS variable, so a colour or spacing value only
+  needs to change in one place. The three result cards (in
+  calculator.module.css) reuse these same variables, and the Phase 3
+  poster is meant to reuse them again -- one warm palette, used everywhere.
+*/
+:root {
+  /* Warm paper, not white. Nothing on this page is grey. */
+  --color-background: #fbf7f0;
+  --color-surface: #ffffff;
+  --color-text: #241f1a;
+  --color-text-muted: #6b6157;
+
+  /* The three reduction cards get warmer as the reduction deepens --
+     reading left to right should feel like the sun coming up. */
+  --color-card-25-bg: #f3ead9;
+  --color-card-25-text: #241f1a;
+  --color-card-50-bg: #f0b878;
+  --color-card-50-text: #241f1a;
+  --color-card-75-bg: #b5502e;
+  --color-card-75-text: #fbf3e9;
+
+  --color-accent: #b5502e;
+  --color-error-bg: #f7e4dc;
+  --color-error-text: #8a3418;
+  --color-border: #e7dcc9;
+
+  --font-heading: var(--font-fraunces), Georgia, serif;
+  --font-body: var(--font-karla), -apple-system, sans-serif;
+
+  --radius: 20px;
+  --shadow-soft: 0 12px 32px rgba(36, 31, 26, 0.06);
+  --shadow-lifted: 0 20px 48px rgba(36, 31, 26, 0.1);
+
+  --max-width: 720px;
 }
 
 html {
@@ -22,28 +49,44 @@ body {
 
 body {
   min-height: 100%;
-  display: flex;
-  flex-direction: column;
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--color-text);
+  background: var(--color-background);
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  /* A soft glow behind the whole page, like late-afternoon light rather
+     than a flat dashboard background. It's fixed so it doesn't move as
+     the page grows taller once results appear. */
+  background-image: radial-gradient(
+    ellipse 800px 500px at 50% -10%,
+    rgba(240, 184, 120, 0.25),
+    transparent 70%
+  );
+  background-attachment: fixed;
 }
 
 * {
   box-sizing: border-box;
-  padding: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  line-height: 1.15;
+  margin: 0;
+}
+
+p {
   margin: 0;
 }
 
 a {
   color: inherit;
-  text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+button {
+  font-family: inherit;
 }

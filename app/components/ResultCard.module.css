@@ -1,0 +1,69 @@
+.card {
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  /* Fade and rise into place. Each card gets a slightly later delay
+     (set inline in ResultCard.js) so they arrive one after another
+     instead of all at once. */
+  opacity: 0;
+  transform: translateY(12px);
+  animation: rise 0.5s ease-out forwards;
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.card25 {
+  background: var(--color-card-25-bg);
+  color: var(--color-card-25-text);
+}
+
+.card50 {
+  background: var(--color-card-50-bg);
+  color: var(--color-card-50-text);
+}
+
+.card75 {
+  background: var(--color-card-75-bg);
+  color: var(--color-card-75-text);
+}
+
+.percent {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+  opacity: 0.85;
+}
+
+.perDay {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.total {
+  margin-top: 10px;
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+.totalNumber {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 600;
+}
