@@ -99,9 +99,14 @@
   transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-.submit:hover {
+.submit:hover:not(:disabled) {
   transform: translateY(-1px);
   box-shadow: var(--shadow-lifted);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: wait;
 }
 
 .error {
@@ -137,42 +142,4 @@
   .timeInputs {
     flex-direction: column;
   }
-}
-
-.endDate {
-  margin-top: 20px;
-  color: var(--color-text-muted);
-  font-size: 0.95rem;
-}
-
-/* The button that fetches the AI sentences.
-
-   Deliberately quieter than the main submit button -- outlined rather than
-   filled -- because it's a second, optional step, not the main action. */
-.picture {
-  display: block;
-  margin: 28px auto 0;
-  background: transparent;
-  color: var(--color-accent);
-  border: 1.5px solid var(--color-accent);
-  border-radius: 999px;
-  padding: 12px 28px;
-  font-family: var(--font-body);
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
-}
-
-.picture:hover:not(:disabled) {
-  background: var(--color-accent);
-  color: var(--color-card-75-text);
-  transform: translateY(-1px);
-}
-
-/* While waiting, the button stays put and just dims. Swapping in a spinner
-   would move the cards around underneath it. */
-.picture:disabled {
-  opacity: 0.55;
-  cursor: wait;
 }

@@ -8,6 +8,7 @@ export default function ResultCard({
   totalHours,
   delayIndex,
   sentence,
+  pending,
 }) {
   return (
     <div
@@ -21,9 +22,15 @@ export default function ResultCard({
         over 12 weeks
       </p>
 
-      {/* Only appears once the AI has answered. Until then the card is
-          exactly as it was. */}
+      {/* Three states: nothing yet (numbers only), waiting on the AI
+          (a quiet placeholder so the card doesn't jump in height when the
+          real sentence arrives), or the sentence itself. */}
       {sentence && <p className={styles.sentence}>{sentence}</p>}
+      {pending && !sentence && (
+        <p className={`${styles.sentence} ${styles.sentencePending}`}>
+          Thinking&hellip;
+        </p>
+      )}
     </div>
   );
 }

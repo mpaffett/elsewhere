@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { calculateAll, horizonEndDate } from "../../lib/calculate.js";
+import { calculateAll } from "../../lib/calculate.js";
 import { validateGoal, validateScreenTime } from "../../lib/validate.js";
 import ResultCard from "./ResultCard.js";
 import styles from "./Calculator.module.css";
@@ -20,7 +20,7 @@ export default function Calculator() {
   const [picturePending, setPicturePending] = useState(false);
   const [pictureError, setPictureError] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     const screenTime = validateScreenTime(hours, minutes);
@@ -39,22 +39,18 @@ export default function Calculator() {
 
     setError("");
 
-    // Throw away any sentences from a previous goal. Without this, someone
-    // who changes their goal and resubmits would see the old AI text sitting
-    // under the new numbers.
-    setPicture(null);
-    setPictureError("");
-
+    // The numbers appear immediately -- they're free, local maths. The AI
+    // sentences take a few seconds, so they're fetched next and fill in
+    // underneath once they arrive, rather than making the visitor wait for
+    // both before seeing anything.
     setResults({
       goal: goalCheck.goal,
       cards: calculateAll(screenTime.totalMinutes),
-      endDate: horizonEndDate(),
     });
-  }
 
-  async function handleShowPicture() {
-    setPicturePending(true);
+    setPicture(null);
     setPictureError("");
+    setPicturePending(true);
 
     try {
       const response = await fetch("/api/picture", {
@@ -77,8 +73,6 @@ export default function Calculator() {
       // This only happens if the network itself failed.
       setPictureError("Couldn't reach the server. Please try again.");
     } finally {
-      // Runs whether we succeeded or failed, so the button can never get
-      // stuck saying "Thinking...".
       setPicturePending(false);
     }
   }
@@ -130,7 +124,9 @@ export default function Calculator() {
           />
         </label>
 
-        <button type="submit" className={styles.submit}>
+        {/* Disabled while a picture request is still in flight, so a second
+            click can't fire an overlapping fetch and mix up two answers. */}
+        <button type="submit" className={styles.submit} disabled={picturePending}>
           Show me
         </button>
       </form>
@@ -146,24 +142,11 @@ export default function Calculator() {
                 key={card.percent}
                 delayIndex={index}
                 sentence={picture ? picture[index] : null}
+                pending={picturePending}
                 {...card}
               />
             ))}
           </div>
-          <p className={styles.endDate}>That&rsquo;s by {results.endDate}.</p>
-
-          {/* Only offer the button while there are no sentences yet. Once
-              they've arrived, there's nothing left to ask for. */}
-          {!picture && (
-            <button
-              type="button"
-              className={styles.picture}
-              onClick={handleShowPicture}
-              disabled={picturePending}
-            >
-              {picturePending ? "Thinking\u2026" : "Show me what's possible"}
-            </button>
-          )}
 
           {pictureError && <p className={styles.error}>{pictureError}</p>}
         </section>

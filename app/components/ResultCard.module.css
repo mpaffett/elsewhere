@@ -96,3 +96,27 @@
     animation: none;
   }
 }
+
+/* While the AI sentence is loading. Same slot as the real sentence so the
+   card doesn't change height when the answer arrives, just a gentle pulse
+   instead of the fade-in. */
+.sentencePending {
+  opacity: 0.6;
+  animation: pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sentencePending {
+    animation: none;
+    opacity: 0.6;
+  }
+}
