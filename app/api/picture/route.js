@@ -16,7 +16,16 @@ import {
 } from "../../../lib/prompt.js";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
-const TIMEOUT_MS = 30000;
+// How long to wait on any single model before giving up and trying the next.
+//
+// This started at 30 seconds, which was far too patient. With reasoning
+// turned off a healthy model answers in 0.5-3.5s; we measured one free
+// provider crawling through 95 tokens in 33.8s, which is queueing, not work.
+// Waiting 30s for that -- three times over -- is a 90-second worst case.
+//
+// 10s is comfortable margin over a healthy response while capping the total
+// wait at 30s across all three models.
+const TIMEOUT_MS = 10000;
 
 // The models we'll try, in order, until one answers.
 //
@@ -46,6 +55,12 @@ function fail(message, status) {
 //   { status: "busy" }            -- this model is throttled, try another
 //   { status: "failed", message, code } -- give up and tell the visitor
 async function askOneModel(model, apiKey, goal, tiers) {
+  // Timing, so the server log shows which model answered and how long each
+  // attempt took. Without this we can only guess whether a slow request was
+  // one slow model or several throttled ones in a row.
+  const startedAt = Date.now();
+  const elapsed = () => `${((Date.now() - startedAt) / 1000).toFixed(1)}s`;
+
   // AbortController is how you put a time limit on fetch. Without this, a
   // stalled free model could leave the visitor watching a spinner forever.
   const controller = new AbortController();
@@ -66,6 +81,19 @@ async function askOneModel(model, apiKey, goal, tiers) {
           { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: buildUserMessage(goal, tiers) },
         ],
+        // Turn off the model's "thinking out loud" step.
+        //
+        // The models we use are reasoning models: left alone they draft and
+        // critique their answer before writing it, and we measured that as
+        // 64-81% of everything they generated -- text nobody ever sees.
+        //
+        // Time taken is roughly (tokens generated / how fast the provider is
+        // running). We can't control a free provider's speed, but we can cut
+        // the work: this drops generation from ~840 tokens to ~150. When the
+        // provider is fast you'd barely notice; when it's crawling, that's
+        // the difference between an eight-second wait and a two-second one.
+        reasoning: { enabled: false },
+
         // This is the bit that constrains the reply to our schema, rather
         // than us asking for JSON in the prompt and hoping for the best.
         response_format: {
@@ -81,7 +109,7 @@ async function askOneModel(model, apiKey, goal, tiers) {
   } catch (error) {
     if (error.name === "AbortError") {
       // A slow model is much like a busy one: worth trying the next.
-      console.error(`${model} timed out.`);
+      console.error(`[timing] ${model} timed out after ${elapsed()}`);
       return { status: "busy" };
     }
     console.error(`Could not reach OpenRouter for ${model}:`, error);
@@ -97,7 +125,10 @@ async function askOneModel(model, apiKey, goal, tiers) {
 
   if (!response.ok) {
     const detail = await response.text();
-    console.error(`${model} returned ${response.status}:`, detail);
+    console.error(
+      `[timing] ${model} returned ${response.status} after ${elapsed()}`,
+    );
+    console.error(detail);
 
     if (response.status === 429) {
       return { status: "busy" };
@@ -123,16 +154,22 @@ async function askOneModel(model, apiKey, goal, tiers) {
 
   const payload = await response.json();
   const text = payload?.choices?.[0]?.message?.content;
+  const generated = payload?.usage?.completion_tokens ?? "?";
 
   if (!text) {
-    console.error(`${model} sent an empty reply:`, JSON.stringify(payload));
+    console.error(`[timing] ${model} sent an empty reply after ${elapsed()}`);
     return { status: "busy" };
   }
 
+  console.log(
+    `[timing] ${model} answered in ${elapsed()} (${generated} tokens)`,
+  );
   return { status: "ok", text: text };
 }
 
 export async function POST(request) {
+  const requestStartedAt = Date.now();
+
   // ---------------------------------------------------------------------
   // 1. Read and check what was sent
   //
@@ -238,6 +275,9 @@ export async function POST(request) {
     console.error("A tier had no matching line:", text);
     return fail("Got an incomplete answer. Please try again.", 502);
   }
+
+  const totalSeconds = ((Date.now() - requestStartedAt) / 1000).toFixed(1);
+  console.log(`[timing] whole request took ${totalSeconds}s`);
 
   return Response.json({ lines: ordered });
 }
