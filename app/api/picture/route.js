@@ -258,20 +258,23 @@ export async function POST(request) {
     return fail("Got an incomplete answer. Please try again.", 502);
   }
 
-  const sentencesByPercent = {};
+  const achievementsByPercent = {};
   for (const line of lines) {
-    if (typeof line?.sentence !== "string" || line.sentence.trim() === "") {
+    if (
+      typeof line?.achievement !== "string" ||
+      line.achievement.trim() === ""
+    ) {
       console.error("A line was empty:", text);
       return fail("Got an incomplete answer. Please try again.", 502);
     }
-    sentencesByPercent[line.percent] = line.sentence.trim();
+    achievementsByPercent[line.percent] = line.achievement.trim();
   }
 
   // Put them back in our tier order rather than trusting the order they
   // arrived in, and confirm every tier actually got one.
-  const ordered = tiers.map((tier) => sentencesByPercent[tier.percent]);
+  const ordered = tiers.map((tier) => achievementsByPercent[tier.percent]);
 
-  if (ordered.some((sentence) => sentence === undefined)) {
+  if (ordered.some((achievement) => achievement === undefined)) {
     console.error("A tier had no matching line:", text);
     return fail("Got an incomplete answer. Please try again.", 502);
   }
@@ -279,5 +282,5 @@ export async function POST(request) {
   const totalSeconds = ((Date.now() - requestStartedAt) / 1000).toFixed(1);
   console.log(`[timing] whole request took ${totalSeconds}s`);
 
-  return Response.json({ lines: ordered });
+  return Response.json({ achievements: ordered });
 }

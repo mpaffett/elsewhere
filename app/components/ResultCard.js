@@ -7,7 +7,7 @@ export default function ResultCard({
   perDayLabel,
   totalHours,
   delayIndex,
-  sentence,
+  achievement,
   pending,
 }) {
   return (
@@ -17,18 +17,25 @@ export default function ResultCard({
     >
       <p className={styles.percent}>Give up {percent}%</p>
       <p className={styles.perDay}>{perDayLabel} a day</p>
-      <p className={styles.total}>
-        <span className={styles.totalNumber}>{totalHours}</span> hours back
-        over 12 weeks
-      </p>
 
-      {/* Three states: nothing yet (numbers only), waiting on the AI
-          (a quiet placeholder so the card doesn't jump in height when the
-          real sentence arrives), or the sentence itself. */}
-      {sentence && <p className={styles.sentence}>{sentence}</p>}
-      {pending && !sentence && (
+      {/* The hours are ours -- calculated locally, always correct, and
+          never repeated by the AI. Only the "to spend on ___" part is the
+          AI's job, so the sentence assembles itself from two sources. */}
+      {achievement && (
+        <p className={styles.sentence}>
+          Over 12 weeks you&rsquo;d regain{" "}
+          <span className={styles.totalNumber}>{totalHours}</span> hours to
+          spend on {achievement}.
+        </p>
+      )}
+
+      {/* While waiting on the AI, still show the number -- it's already
+          known -- with a quiet placeholder standing in for the achievement. */}
+      {pending && !achievement && (
         <p className={`${styles.sentence} ${styles.sentencePending}`}>
-          Thinking&hellip;
+          Over 12 weeks you&rsquo;d regain{" "}
+          <span className={styles.totalNumber}>{totalHours}</span> hours to
+          spend on&hellip;
         </p>
       )}
     </div>

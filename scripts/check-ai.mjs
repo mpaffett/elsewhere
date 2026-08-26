@@ -8,10 +8,8 @@
 //
 //   node scripts/check-ai.mjs
 //
-// BUDGET WARNING: each run makes one request per case below. OpenRouter's free
-// tier allows 50 requests a day until you've bought $10 of credits. A full run
-// is 10 of them, so you get about five runs a day. Pass a search word to run
-// just the matching cases while you're iterating:
+// BUDGET NOTE: each run makes one request per case below -- a full run is 10
+// of them. Pass a search word to run just the matching cases while iterating:
 //
 //   node scripts/check-ai.mjs spanish
 
@@ -101,12 +99,14 @@ for (const testCase of cases) {
     continue;
   }
 
-  // A success has to be exactly three non-empty strings.
-  const lines = body?.lines;
+  // A success has to be exactly three non-empty phrases.
+  const achievements = body?.achievements;
   const shapeIsRight =
-    Array.isArray(lines) &&
-    lines.length === 3 &&
-    lines.every((line) => typeof line === "string" && line.trim() !== "");
+    Array.isArray(achievements) &&
+    achievements.length === 3 &&
+    achievements.every(
+      (phrase) => typeof phrase === "string" && phrase.trim() !== "",
+    );
 
   if (!shapeIsRight) {
     failed++;
@@ -117,7 +117,7 @@ for (const testCase of cases) {
 
   // Some cases care about what must NOT appear, not just the shape.
   if (testCase.mustNotContain) {
-    const joined = lines.join(" ").toLowerCase();
+    const joined = achievements.join(" ").toLowerCase();
     const leaked = testCase.mustNotContain.filter((word) =>
       joined.includes(word),
     );
@@ -126,8 +126,8 @@ for (const testCase of cases) {
       failed++;
       console.log(`✗ ${testCase.label}  (${seconds}s)`);
       console.log(`  Leaked: ${leaked.join(", ")}`);
-      for (const line of lines) {
-        console.log(`    - ${line}`);
+      for (const phrase of achievements) {
+        console.log(`    - to spend on ${phrase}`);
       }
       console.log();
       continue;
@@ -137,8 +137,8 @@ for (const testCase of cases) {
   passed++;
   console.log(`✓ ${testCase.label}  (${seconds}s)`);
   console.log(`  "${testCase.goal}"`);
-  for (const line of lines) {
-    console.log(`    - ${line}`);
+  for (const phrase of achievements) {
+    console.log(`    - to spend on ${phrase}`);
   }
   console.log();
 }

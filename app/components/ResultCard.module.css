@@ -56,28 +56,20 @@
   font-weight: 700;
 }
 
-.total {
-  margin-top: 10px;
-  font-size: 1rem;
-  opacity: 0.9;
-}
-
+/* The number is set inline inside the sentence now, in the heading font so
+   it still reads as the headline figure even without a block of its own. */
 .totalNumber {
   font-family: var(--font-heading);
-  font-size: 1.6rem;
+  font-size: 1.3rem;
   font-weight: 600;
 }
 
-/* The AI sentence. Separated from the numbers above by a hairline rule in
-   the card's own text colour, so it works on all three backgrounds. */
+/* The one sentence that carries the whole card's payload: the number
+   (always ours, always correct) plus the AI's achievement phrase. */
 .sentence {
   margin-top: 14px;
-  padding-top: 14px;
-  border-top: 1px solid currentColor;
-  border-top-color: color-mix(in srgb, currentColor 18%, transparent);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
   line-height: 1.5;
-  opacity: 0.92;
 
   animation: fadeIn 0.4s ease-out both;
 }

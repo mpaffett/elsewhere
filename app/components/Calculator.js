@@ -14,9 +14,9 @@ export default function Calculator() {
   const [error, setError] = useState("");
   const [results, setResults] = useState(null);
 
-  // The AI sentences, and the two bits of state that go with any request
-  // that leaves the browser: is it in flight, and did it go wrong?
-  const [picture, setPicture] = useState(null);
+  // The AI's achievement phrases, and the two bits of state that go with any
+  // request that leaves the browser: is it in flight, and did it go wrong?
+  const [achievements, setAchievements] = useState(null);
   const [picturePending, setPicturePending] = useState(false);
   const [pictureError, setPictureError] = useState("");
 
@@ -48,7 +48,7 @@ export default function Calculator() {
       cards: calculateAll(screenTime.totalMinutes),
     });
 
-    setPicture(null);
+    setAchievements(null);
     setPictureError("");
     setPicturePending(true);
 
@@ -68,7 +68,7 @@ export default function Calculator() {
         return;
       }
 
-      setPicture(body.lines);
+      setAchievements(body.achievements);
     } catch {
       // This only happens if the network itself failed.
       setPictureError("Couldn't reach the server. Please try again.");
@@ -141,7 +141,7 @@ export default function Calculator() {
               <ResultCard
                 key={card.percent}
                 delayIndex={index}
-                sentence={picture ? picture[index] : null}
+                achievement={achievements ? achievements[index] : null}
                 pending={picturePending}
                 {...card}
               />
