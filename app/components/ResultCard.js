@@ -6,6 +6,7 @@ export default function ResultCard({
   percent,
   perDayLabel,
   totalHours,
+  endDate,
   delayIndex,
   achievement,
   pending,
@@ -18,25 +19,30 @@ export default function ResultCard({
       <p className={styles.percent}>Give up {percent}%</p>
       <p className={styles.perDay}>{perDayLabel} a day</p>
 
-      {/* The hours are ours -- calculated locally, always correct, and
-          never repeated by the AI. Only the "to spend on ___" part is the
-          AI's job, so the sentence assembles itself from two sources. */}
+      {/* The date leads and does the emotional work -- it puts a real
+          calendar date on the outcome. The scene is the AI's job; the date
+          and hours are ours, calculated locally, never repeated by the AI. */}
       {achievement && (
         <p className={styles.sentence}>
-          Over 12 weeks you&rsquo;d regain{" "}
-          <span className={styles.totalNumber}>{totalHours}</span> hours to
-          spend on {achievement}.
+          By <span className={styles.date}>{endDate}</span>, you could be{" "}
+          {achievement}.
         </p>
       )}
 
-      {/* While waiting on the AI, still show the number -- it's already
-          known -- with a quiet placeholder standing in for the achievement. */}
+      {/* While waiting on the AI, the date still shows -- it's already
+          known -- with a quiet placeholder standing in for the scene. */}
       {pending && !achievement && (
         <p className={`${styles.sentence} ${styles.sentencePending}`}>
-          Over 12 weeks you&rsquo;d regain{" "}
-          <span className={styles.totalNumber}>{totalHours}</span> hours to
-          spend on&hellip;
+          By <span className={styles.date}>{endDate}</span>, you could
+          be&hellip;
         </p>
+      )}
+
+      {/* The hours, kept as quiet supporting text rather than the headline
+          figure -- present for anyone who wants the receipt, easy to skip
+          past for anyone who doesn't. */}
+      {achievement && (
+        <p className={styles.hoursFootnote}>{totalHours} hours reclaimed</p>
       )}
     </div>
   );

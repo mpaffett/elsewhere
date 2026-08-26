@@ -16,7 +16,31 @@
 const URL = "http://localhost:3000/api/picture";
 
 const CASES = [
-  { label: "ordinary: language", goal: "learn Spanish", hours: "4", minutes: "0" },
+  {
+    label: "ordinary: language",
+    goal: "learn Spanish",
+    hours: "4",
+    minutes: "0",
+    // The goal says nothing about a trip, a partner, or kids -- so if any of
+    // these show up, the AI invented a life detail it can't know instead of
+    // staying grounded in the action. (For a goal like "restore an old car",
+    // "your car" would be fine -- the goal itself names it. It's only wrong
+    // when nothing in the goal implied it.)
+    mustNotContain: [
+      "your trip",
+      "your vacation",
+      "your holiday",
+      "trip to",
+      "your partner",
+      "your spouse",
+      "your husband",
+      "your wife",
+      "your boyfriend",
+      "your girlfriend",
+      "your kids",
+      "your children",
+    ],
+  },
   { label: "ordinary: physical", goal: "restore an old car", hours: "3", minutes: "30" },
   { label: "ordinary: fitness", goal: "run a marathon", hours: "5", minutes: "0" },
   { label: "ordinary: creative", goal: "write a novel", hours: "2", minutes: "45" },
@@ -127,7 +151,7 @@ for (const testCase of cases) {
       console.log(`✗ ${testCase.label}  (${seconds}s)`);
       console.log(`  Leaked: ${leaked.join(", ")}`);
       for (const phrase of achievements) {
-        console.log(`    - to spend on ${phrase}`);
+        console.log(`    - you could be ${phrase}`);
       }
       console.log();
       continue;
@@ -138,7 +162,8 @@ for (const testCase of cases) {
   console.log(`✓ ${testCase.label}  (${seconds}s)`);
   console.log(`  "${testCase.goal}"`);
   for (const phrase of achievements) {
-    console.log(`    - to spend on ${phrase}`);
+    const wordCount = phrase.trim().split(/\s+/).length;
+    console.log(`    - you could be ${phrase}  (${wordCount}w)`);
   }
   console.log();
 }

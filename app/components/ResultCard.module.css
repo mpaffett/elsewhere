@@ -56,16 +56,16 @@
   font-weight: 700;
 }
 
-/* The number is set inline inside the sentence now, in the heading font so
-   it still reads as the headline figure even without a block of its own. */
-.totalNumber {
+/* The date is the emotional anchor now -- set in the heading font so it
+   reads as the headline figure, the same job the big hour count used to do. */
+.date {
   font-family: var(--font-heading);
-  font-size: 1.3rem;
+  font-size: 1.15rem;
   font-weight: 600;
 }
 
-/* The one sentence that carries the whole card's payload: the number
-   (always ours, always correct) plus the AI's achievement phrase. */
+/* The one sentence that carries the whole card's payload: a real date
+   (always ours, always correct) plus the AI's scene. */
 .sentence {
   margin-top: 14px;
   font-size: 1.05rem;
@@ -111,4 +111,12 @@
     animation: none;
     opacity: 0.6;
   }
+}
+
+/* The hours, present for anyone who wants the receipt behind the scene
+   above, quiet enough to skip past for anyone who doesn't. */
+.hoursFootnote {
+  margin-top: 10px;
+  font-size: 0.8rem;
+  opacity: 0.65;
 }

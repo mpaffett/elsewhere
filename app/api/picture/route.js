@@ -134,12 +134,18 @@ async function askOneModel(model, apiKey, goal, tiers) {
       return { status: "busy" };
     }
     if (response.status === 401) {
-      // Almost always a typo'd or missing key in .env.local.
-      return {
-        status: "failed",
-        message: "The server isn't set up correctly.",
-        code: 500,
-      };
+      // This looks like "our key is wrong", but we measured it happening on
+      // one model in a list where every other model was answering fine
+      // seconds earlier -- OpenRouter forwards a free model's own upstream
+      // auth hiccup (e.g. "AtlasCloud: unauthorized") as a top-level 401,
+      // indistinguishable by status code from our key actually being wrong.
+      // Treat it like "busy": try the next model. If EVERY model 401s, that
+      // really would mean our key is bad -- this log line is how we'd know.
+      console.error(
+        `${model} returned 401 -- could be a bad OPENROUTER_API_KEY, or ` +
+          "just this model's own upstream provider having a moment.",
+      );
+      return { status: "busy" };
     }
     if (response.status === 402) {
       return {
