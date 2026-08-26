@@ -20,21 +20,20 @@ export default function ResultCard({
       <p className={styles.perDay}>{perDayLabel} a day</p>
 
       {/* The date leads and does the emotional work -- it puts a real
-          calendar date on the outcome. The scene is the AI's job; the date
-          and hours are ours, calculated locally, never repeated by the AI. */}
+          calendar date on the outcome. The rest of the sentence, including
+          its own "You've..." and full stop, is the AI's job; the date and
+          hours are ours, calculated locally, never repeated by the AI. */}
       {achievement && (
         <p className={styles.sentence}>
-          By <span className={styles.date}>{endDate}</span>, you could be{" "}
-          {achievement}.
+          By <span className={styles.date}>{endDate}</span>, {achievement}
         </p>
       )}
 
       {/* While waiting on the AI, the date still shows -- it's already
-          known -- with a quiet placeholder standing in for the scene. */}
+          known -- with a quiet placeholder standing in for the result. */}
       {pending && !achievement && (
         <p className={`${styles.sentence} ${styles.sentencePending}`}>
-          By <span className={styles.date}>{endDate}</span>, you could
-          be&hellip;
+          By <span className={styles.date}>{endDate}</span>&hellip;
         </p>
       )}
 

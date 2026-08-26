@@ -151,7 +151,7 @@ for (const testCase of cases) {
       console.log(`✗ ${testCase.label}  (${seconds}s)`);
       console.log(`  Leaked: ${leaked.join(", ")}`);
       for (const phrase of achievements) {
-        console.log(`    - you could be ${phrase}`);
+        console.log(`    - By {date}, ${phrase}`);
       }
       console.log();
       continue;
@@ -163,7 +163,7 @@ for (const testCase of cases) {
   console.log(`  "${testCase.goal}"`);
   for (const phrase of achievements) {
     const wordCount = phrase.trim().split(/\s+/).length;
-    console.log(`    - you could be ${phrase}  (${wordCount}w)`);
+    console.log(`    - By {date}, ${phrase}  (${wordCount}w)`);
   }
   console.log();
 }

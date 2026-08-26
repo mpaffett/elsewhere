@@ -63,12 +63,20 @@ async function askOneModel(model, apiKey, goal, tiers) {
 
   // AbortController is how you put a time limit on fetch. Without this, a
   // stalled free model could leave the visitor watching a spinner forever.
+  //
+  // The timer has to stay running until we've finished reading the reply,
+  // not just until fetch() itself resolves. We measured a real request where
+  // fetch() came back quickly (headers arrived) but the body then trickled
+  // in over 120 seconds -- response.json() has no time limit of its own, so
+  // a clearTimeout() placed right after fetch() protects nothing during that
+  // second phase. Everything that can be slow -- the request AND reading the
+  // reply -- happens inside this one try block, and the timer is only
+  // cleared once both are done.
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
 
-  let response;
   try {
-    response = await fetch(OPENROUTER_URL, {
+    const response = await fetch(OPENROUTER_URL, {
       method: "POST",
       signal: controller.signal,
       headers: {
@@ -106,6 +114,61 @@ async function askOneModel(model, apiKey, goal, tiers) {
         },
       }),
     });
+
+    if (!response.ok) {
+      // Reading .text() on an error response is also covered by the same
+      // timeout -- a stalled error body shouldn't hang any less than a
+      // stalled success body would.
+      const detail = await response.text();
+      console.error(
+        `[timing] ${model} returned ${response.status} after ${elapsed()}`,
+      );
+      console.error(detail);
+
+      if (response.status === 429) {
+        return { status: "busy" };
+      }
+      if (response.status === 401) {
+        // This looks like "our key is wrong", but we measured it happening
+        // on one model in a list where every other model was answering fine
+        // seconds earlier -- OpenRouter forwards a free model's own upstream
+        // auth hiccup (e.g. "AtlasCloud: unauthorized") as a top-level 401,
+        // indistinguishable by status code from our key actually being
+        // wrong. Treat it like "busy": try the next model. If EVERY model
+        // 401s, that really would mean our key is bad -- this log line is
+        // how we'd know.
+        console.error(
+          `${model} returned 401 -- could be a bad OPENROUTER_API_KEY, or ` +
+            "just this model's own upstream provider having a moment.",
+        );
+        return { status: "busy" };
+      }
+      if (response.status === 402) {
+        return {
+          status: "failed",
+          message: "The free allowance has run out for today.",
+          code: 402,
+        };
+      }
+      // Anything else might just be this one model misbehaving.
+      return { status: "busy" };
+    }
+
+    const payload = await response.json();
+    const text = payload?.choices?.[0]?.message?.content;
+    const generated = payload?.usage?.completion_tokens ?? "?";
+
+    if (!text) {
+      console.error(
+        `[timing] ${model} sent an empty reply after ${elapsed()}`,
+      );
+      return { status: "busy" };
+    }
+
+    console.log(
+      `[timing] ${model} answered in ${elapsed()} (${generated} tokens)`,
+    );
+    return { status: "ok", text: text };
   } catch (error) {
     if (error.name === "AbortError") {
       // A slow model is much like a busy one: worth trying the next.
@@ -119,58 +182,11 @@ async function askOneModel(model, apiKey, goal, tiers) {
       code: 502,
     };
   } finally {
-    // Always clear the timer, whether we succeeded or failed.
+    // Always clear the timer, whether we succeeded or failed -- and now this
+    // only runs once the whole exchange (request + reading the reply) is
+    // actually finished.
     clearTimeout(timeout);
   }
-
-  if (!response.ok) {
-    const detail = await response.text();
-    console.error(
-      `[timing] ${model} returned ${response.status} after ${elapsed()}`,
-    );
-    console.error(detail);
-
-    if (response.status === 429) {
-      return { status: "busy" };
-    }
-    if (response.status === 401) {
-      // This looks like "our key is wrong", but we measured it happening on
-      // one model in a list where every other model was answering fine
-      // seconds earlier -- OpenRouter forwards a free model's own upstream
-      // auth hiccup (e.g. "AtlasCloud: unauthorized") as a top-level 401,
-      // indistinguishable by status code from our key actually being wrong.
-      // Treat it like "busy": try the next model. If EVERY model 401s, that
-      // really would mean our key is bad -- this log line is how we'd know.
-      console.error(
-        `${model} returned 401 -- could be a bad OPENROUTER_API_KEY, or ` +
-          "just this model's own upstream provider having a moment.",
-      );
-      return { status: "busy" };
-    }
-    if (response.status === 402) {
-      return {
-        status: "failed",
-        message: "The free allowance has run out for today.",
-        code: 402,
-      };
-    }
-    // Anything else might just be this one model misbehaving.
-    return { status: "busy" };
-  }
-
-  const payload = await response.json();
-  const text = payload?.choices?.[0]?.message?.content;
-  const generated = payload?.usage?.completion_tokens ?? "?";
-
-  if (!text) {
-    console.error(`[timing] ${model} sent an empty reply after ${elapsed()}`);
-    return { status: "busy" };
-  }
-
-  console.log(
-    `[timing] ${model} answered in ${elapsed()} (${generated} tokens)`,
-  );
-  return { status: "ok", text: text };
 }
 
 export async function POST(request) {
@@ -273,7 +289,29 @@ export async function POST(request) {
       console.error("A line was empty:", text);
       return fail("Got an incomplete answer. Please try again.", 502);
     }
-    achievementsByPercent[line.percent] = line.achievement.trim();
+
+    // The prompt asks for a lowercase start, since this text continues our
+    // own sentence after a comma ("By 18 November, you've held..."). We
+    // measured the model ignoring that and capitalising anyway ("By 18
+    // November, You've held...", which reads like a typo). Rather than trust
+    // the instruction to hold every time, we guarantee it here: lowercase
+    // the first letter no matter what arrives. Cheap, and always correct --
+    // every achievement continues the same fixed lead-in.
+    let normalised = line.achievement.trim();
+
+    // Some models restate the date we've already given them -- "by 18
+    // November, you're..." or "by the end of the twelve weeks, you've...".
+    // We told the prompt not to, and mostly it listens, but not always: the
+    // model appears to work out its own "twelve weeks from today" and write
+    // it in, duplicating the date our own template is about to add. Since
+    // our own lead-in already supplies the real date, any leading "by
+    // ...," clause here can only be a duplicate -- so it's stripped before
+    // this ever reaches the page, the same way we force the lowercase start.
+    normalised = normalised.replace(/^by\s+[^,]+,\s*/i, "");
+
+    normalised = normalised.charAt(0).toLowerCase() + normalised.slice(1);
+
+    achievementsByPercent[line.percent] = normalised;
   }
 
   // Put them back in our tier order rather than trusting the order they
