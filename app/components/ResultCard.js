@@ -1,7 +1,12 @@
 import styles from "./ResultCard.module.css";
 
-// A single result card. No state, no logic -- it just displays the three
-// values it's handed. All the maths already happened in lib/calculate.js.
+// A single result card. No state, no logic -- it just displays the values
+// it's handed. All the maths already happened in lib/calculate.js.
+//
+// The card is a two-rung ladder. The top rung is something they could do in
+// the next few hours; the bottom rung is where that lands them six weeks
+// out. Showing only the far end made the payoff feel theoretical -- the
+// whole point of the near rung is that the goal starts tonight, not someday.
 export default function ResultCard({
   percent,
   perDayLabel,
@@ -9,7 +14,7 @@ export default function ResultCard({
   totalHours,
   endDate,
   delayIndex,
-  achievement,
+  step,
   pending,
 }) {
   return (
@@ -27,28 +32,43 @@ export default function ResultCard({
         that&rsquo;s {proportionLabel} of your screen time
       </p>
 
-      {/* The date leads and does the emotional work -- it puts a real
-          calendar date on the outcome. The rest of the sentence, including
-          its own "You've..." and full stop, is the AI's job; the date and
-          hours are ours, calculated locally, never repeated by the AI. */}
-      {achievement && (
-        <p className={styles.sentence}>
-          By <span className={styles.date}>{endDate}</span>, {achievement}
-        </p>
+      {/* Both rungs open with an emphasised time anchor -- "Tonight" and the
+          date get matching treatment, so the ladder reads as two points on
+          one line rather than two unrelated sentences. Everything after each
+          lead-in is the AI's, including its own full stop. */}
+      {step && (
+        <>
+          <p className={`${styles.sentence} ${styles.tonight}`}>
+            <span className={styles.anchor}>Tonight</span> &mdash;{" "}
+            {step.tonight}
+          </p>
+          <p className={styles.sentence}>
+            By <span className={styles.anchor}>{endDate}</span>, {step.byThen}
+          </p>
+        </>
       )}
 
-      {/* While waiting on the AI, the date still shows -- it's already
-          known -- with a quiet placeholder standing in for the result. */}
-      {pending && !achievement && (
-        <p className={`${styles.sentence} ${styles.sentencePending}`}>
-          By <span className={styles.date}>{endDate}</span>&hellip;
-        </p>
+      {/* While waiting on the AI, both lead-ins still show -- they're
+          already known -- with quiet placeholders standing in for the parts
+          that aren't. Keeping both lines here means the card doesn't jump
+          in height when the real text lands. */}
+      {pending && !step && (
+        <>
+          <p
+            className={`${styles.sentence} ${styles.tonight} ${styles.sentencePending}`}
+          >
+            <span className={styles.anchor}>Tonight</span> &mdash;&hellip;
+          </p>
+          <p className={`${styles.sentence} ${styles.sentencePending}`}>
+            By <span className={styles.anchor}>{endDate}</span>&hellip;
+          </p>
+        </>
       )}
 
       {/* The hours, kept as quiet supporting text rather than the headline
           figure -- present for anyone who wants the receipt, easy to skip
           past for anyone who doesn't. */}
-      {achievement && (
+      {step && (
         <p className={styles.hoursFootnote}>{totalHours} hours elsewhere</p>
       )}
     </div>

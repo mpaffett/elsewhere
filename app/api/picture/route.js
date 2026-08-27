@@ -48,6 +48,72 @@ function fail(message, status) {
   return Response.json({ error: message }, { status: status });
 }
 
+// Words the user themselves capitalised in their goal -- almost always
+// proper nouns ("learn Spanish" tells us Spanish is one).
+//
+// We ask the prompt to capitalise proper nouns and it doesn't reliably
+// listen: it leans so hard on "start lowercase" that it lowercases the whole
+// fragment, so cards came back reading "three spanish words". Rather than
+// keep arguing with the prompt, we use what the user already told us.
+//
+// The goal's FIRST word is skipped, because people capitalise the start of
+// what they type out of habit ("Learn Spanish") and we don't want to force
+// "Learn" into the middle of a sentence. That means a goal like "Spanish for
+// travel" is missed -- it fails safe, changing nothing.
+function properNounsFrom(goal) {
+  return goal
+    .trim()
+    .split(/\s+/)
+    .slice(1)
+    .filter((word) => /^[A-Z][a-zA-Z'-]+$/.test(word));
+}
+
+// Clean up one fragment of AI text before it reaches the page.
+//
+// Each card is a sentence we start and the model finishes -- "Tonight — " and
+// "By 8 October, " are ours, the rest is theirs. The prompt asks for text
+// that slots into that, but instructions don't hold every single time, and
+// these three failures are all ones we've actually measured. Guaranteeing
+// them here is cheap and always correct; trusting the prompt alone isn't.
+function tidyFragment(raw, properNouns) {
+  let text = raw.trim();
+
+  // Strip a lead-in the model repeated back at us. We supply "Tonight — "
+  // and the real date ourselves, so anything like "tonight, ..." or
+  // "by 8 October, ..." arriving here can only be a duplicate. We measured
+  // the model working out its own date and writing it in, which rendered as
+  // "By 8 October, by 8 October, you've...".
+  text = text.replace(/^tonight\s*[,—:-]\s*/i, "");
+  text = text.replace(/^by\s+[^,]+,\s*/i, "");
+
+  // Our own prompt examples are written in plain ASCII, so the model
+  // sometimes copies that style and returns "--" where it means an em dash.
+  // On the page that renders as two visible hyphens.
+  text = text.replace(/\s+--\s+/g, " — ");
+
+  // Both fragments continue a sentence we've already begun, so neither
+  // should arrive capitalised. The model capitalises anyway often enough
+  // that this needs to be enforced rather than requested.
+  //
+  // One known limit: a fragment that legitimately STARTS with a proper noun
+  // ("Spanish has become...") would get flattened to "spanish has
+  // become...". In practice these fragments open with a verb or "you've",
+  // so it hasn't come up -- and telling proper nouns from ordinary words
+  // needs a dictionary we don't have -- except for the proper nouns the
+  // user handed us in their own goal, which are restored right below, and
+  // which cover the first-word case too.
+  text = text.charAt(0).toLowerCase() + text.slice(1);
+
+  // Put the user's own capitalisation back. Done last, so it also fixes a
+  // proper noun sitting in first position.
+  for (const noun of properNouns) {
+    const escaped = noun.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    text = text.replace(new RegExp(`\\b${escaped}\\b`, "gi"), noun);
+  }
+
+  return text;
+}
+
 // Ask one model for an answer.
 //
 // Returns one of three things, so the caller knows what to do next:
@@ -280,51 +346,34 @@ export async function POST(request) {
     return fail("Got an incomplete answer. Please try again.", 502);
   }
 
-  const achievementsByPercent = {};
+  // Each tier needs both halves. If either is missing we'd rather show an
+  // error than render a card with one rung silently blank.
+  const properNouns = properNounsFrom(goalCheck.goal);
+
+  const stepsByPercent = {};
   for (const line of lines) {
-    if (
-      typeof line?.achievement !== "string" ||
-      line.achievement.trim() === ""
-    ) {
-      console.error("A line was empty:", text);
+    const hasBoth =
+      typeof line?.tonight === "string" &&
+      line.tonight.trim() !== "" &&
+      typeof line?.byThen === "string" &&
+      line.byThen.trim() !== "";
+
+    if (!hasBoth) {
+      console.error("A line was missing tonight or byThen:", text);
       return fail("Got an incomplete answer. Please try again.", 502);
     }
 
-    // The prompt asks for a lowercase start, since this text continues our
-    // own sentence after a comma ("By 18 November, you've held..."). We
-    // measured the model ignoring that and capitalising anyway ("By 18
-    // November, You've held...", which reads like a typo). Rather than trust
-    // the instruction to hold every time, we guarantee it here: lowercase
-    // the first letter no matter what arrives. Cheap, and always correct --
-    // every achievement continues the same fixed lead-in.
-    let normalised = line.achievement.trim();
-
-    // Some models restate the date we've already given them -- "by 18
-    // November, you're..." or "by the end of the twelve weeks, you've...".
-    // We told the prompt not to, and mostly it listens, but not always: the
-    // model appears to work out its own "twelve weeks from today" and write
-    // it in, duplicating the date our own template is about to add. Since
-    // our own lead-in already supplies the real date, any leading "by
-    // ...," clause here can only be a duplicate -- so it's stripped before
-    // this ever reaches the page, the same way we force the lowercase start.
-    normalised = normalised.replace(/^by\s+[^,]+,\s*/i, "");
-
-    // Our own prompt examples are written in plain ASCII, so the model
-    // sometimes copies that style and returns "--" where it means an em
-    // dash. On the page that renders as two visible hyphens. Swap them for
-    // a real em dash rather than trying to police punctuation in the prompt.
-    normalised = normalised.replace(/\s+--\s+/g, " — ");
-
-    normalised = normalised.charAt(0).toLowerCase() + normalised.slice(1);
-
-    achievementsByPercent[line.percent] = normalised;
+    stepsByPercent[line.percent] = {
+      tonight: tidyFragment(line.tonight, properNouns),
+      byThen: tidyFragment(line.byThen, properNouns),
+    };
   }
 
   // Put them back in our tier order rather than trusting the order they
   // arrived in, and confirm every tier actually got one.
-  const ordered = tiers.map((tier) => achievementsByPercent[tier.percent]);
+  const ordered = tiers.map((tier) => stepsByPercent[tier.percent]);
 
-  if (ordered.some((achievement) => achievement === undefined)) {
+  if (ordered.some((step) => step === undefined)) {
     console.error("A tier had no matching line:", text);
     return fail("Got an incomplete answer. Please try again.", 502);
   }
@@ -332,5 +381,5 @@ export async function POST(request) {
   const totalSeconds = ((Date.now() - requestStartedAt) / 1000).toFixed(1);
   console.log(`[timing] whole request took ${totalSeconds}s`);
 
-  return Response.json({ achievements: ordered });
+  return Response.json({ steps: ordered });
 }

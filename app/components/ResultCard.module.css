@@ -61,22 +61,33 @@
   opacity: 0.7;
 }
 
-/* The date is the emotional anchor now -- set in the heading font so it
-   reads as the headline figure, the same job the big hour count used to do. */
-.date {
+/* The time anchor at the start of each rung -- "Tonight" on the near one,
+   the date on the far one. Both get the same treatment so the two lines
+   read as two points on one timeline rather than unrelated sentences. */
+.anchor {
   font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 600;
 }
 
-/* The one sentence that carries the whole card's payload: a real date
-   (always ours, always correct) plus the AI's scene. */
+/* Each rung of the ladder: a time anchor that's always ours and always
+   correct, plus the AI's text. */
 .sentence {
   margin-top: 14px;
   font-size: 1.05rem;
   line-height: 1.5;
 
   animation: fadeIn 0.4s ease-out both;
+}
+
+/* The near rung. Separated from the far one by a hairline in the card's own
+   text colour, so the split between "now" and "six weeks out" is visible at
+   a glance -- and it works on all three card backgrounds without needing a
+   colour of its own. */
+.tonight {
+  padding-bottom: 14px;
+  border-bottom: 1px solid currentColor;
+  border-bottom-color: color-mix(in srgb, currentColor 18%, transparent);
 }
 
 @keyframes fadeIn {

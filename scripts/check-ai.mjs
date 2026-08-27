@@ -57,6 +57,17 @@ const CASES = [
     // check the case "passes" purely for returning three tidy sentences.
     mustNotContain: ["cheese", "poem", "verse", "stanza"],
   },
+  {
+    // A goal you physically cannot practise tonight -- no boat, no water.
+    // The model wrote "untie the dock lines and push off from shore" here,
+    // which is why the prompt now has an access rule. Kept as a visible
+    // case: whether a step is actually doable tonight needs human eyes, so
+    // this one is here to be read, not asserted on.
+    label: "access-gated goal",
+    goal: "learn to sail",
+    hours: "3",
+    minutes: "0",
+  },
   { label: "very long goal", goal: "learn to play the drums well enough to join a band and play a gig", hours: "3", minutes: "15" },
   { label: "tiny screen time", goal: "learn Spanish", hours: "0", minutes: "35" },
 ];
@@ -123,49 +134,105 @@ for (const testCase of cases) {
     continue;
   }
 
-  // A success has to be exactly three non-empty phrases.
-  const achievements = body?.achievements;
+  // A success has to be exactly three tiers, each with both rungs filled.
+  const steps = body?.steps;
   const shapeIsRight =
-    Array.isArray(achievements) &&
-    achievements.length === 3 &&
-    achievements.every(
-      (phrase) => typeof phrase === "string" && phrase.trim() !== "",
+    Array.isArray(steps) &&
+    steps.length === 3 &&
+    steps.every(
+      (step) =>
+        typeof step?.tonight === "string" &&
+        step.tonight.trim() !== "" &&
+        typeof step?.byThen === "string" &&
+        step.byThen.trim() !== "",
     );
 
   if (!shapeIsRight) {
     failed++;
-    console.log(`✗ ${testCase.label}  (${seconds}s)`);
+    console.log(`\u2717 ${testCase.label}  (${seconds}s)`);
     console.log(`  Wrong shape: ${JSON.stringify(body)}\n`);
     continue;
   }
 
-  // Some cases care about what must NOT appear, not just the shape.
+  const show = () => {
+    for (const step of steps) {
+      console.log(`    Tonight — ${step.tonight}`);
+      console.log(`    By {date}, ${step.byThen}`);
+      console.log();
+    }
+  };
+
+  // Failure modes specific to the two-rung card, checked on every case
+  // rather than only where they were first seen.
+  const problems = [];
+
+  // Each tier frees up a different amount of time tonight, so three
+  // identical actions means the model ignored that and the tiers look
+  // interchangeable. Measured on the first two-rung run.
+  const tonights = steps.map((step) => step.tonight.trim().toLowerCase());
+  if (new Set(tonights).size < tonights.length) {
+    problems.push(`the three "tonight" actions aren't all different`);
+  }
+
+  for (const step of steps) {
+    // The card already states the date before the AI's text starts, so a
+    // month name here would render twice. Deliberately NOT matching "week"
+    // or day names -- "five words you'll actually need this week" is good
+    // copy, not a duplicated date, and flagging it was a false positive.
+    const monthName =
+      /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i;
+    if (monthName.test(step.tonight) || monthName.test(step.byThen)) {
+      problems.push(`names a month (the card already shows the date)`);
+    }
+
+    // The card prints the hours in its own footnote, so the AI quoting them
+    // back ("a 42-hour sprint") prints the same number twice. Measured on
+    // the first two-rung run, in all three cards at once.
+    const quotesHours = /\d+\s*-?\s*hour/i;
+    if (quotesHours.test(step.tonight) || quotesHours.test(step.byThen)) {
+      problems.push(`quotes the hours back: "${step.byThen}"`);
+    }
+
+    // "tonight" is imperative -- it should open with a verb, not the
+    // second-person voice the far rung uses.
+    if (/^(you'll|you'd|you've|you are|you're|you )/i.test(step.tonight)) {
+      problems.push(`tonight isn't imperative: "${step.tonight}"`);
+    }
+  }
+
+  if (problems.length > 0) {
+    failed++;
+    console.log(`\u2717 ${testCase.label}  (${seconds}s)`);
+    for (const problem of problems) {
+      console.log(`  ${problem}`);
+    }
+    console.log();
+    continue;
+  }
+
+  // Some cases care about what must NOT appear, in either rung.
   if (testCase.mustNotContain) {
-    const joined = achievements.join(" ").toLowerCase();
+    const joined = steps
+      .map((step) => `${step.tonight} ${step.byThen}`)
+      .join(" ")
+      .toLowerCase();
     const leaked = testCase.mustNotContain.filter((word) =>
       joined.includes(word),
     );
 
     if (leaked.length > 0) {
       failed++;
-      console.log(`✗ ${testCase.label}  (${seconds}s)`);
+      console.log(`\u2717 ${testCase.label}  (${seconds}s)`);
       console.log(`  Leaked: ${leaked.join(", ")}`);
-      for (const phrase of achievements) {
-        console.log(`    - By {date}, ${phrase}`);
-      }
-      console.log();
+      show();
       continue;
     }
   }
 
   passed++;
-  console.log(`✓ ${testCase.label}  (${seconds}s)`);
+  console.log(`\u2713 ${testCase.label}  (${seconds}s)`);
   console.log(`  "${testCase.goal}"`);
-  for (const phrase of achievements) {
-    const wordCount = phrase.trim().split(/\s+/).length;
-    console.log(`    - By {date}, ${phrase}  (${wordCount}w)`);
-  }
-  console.log();
+  show();
 }
 
 console.log(`${passed} passed, ${failed} failed`);

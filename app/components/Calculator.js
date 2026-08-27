@@ -14,9 +14,10 @@ export default function Calculator() {
   const [error, setError] = useState("");
   const [results, setResults] = useState(null);
 
-  // The AI's achievement phrases, and the two bits of state that go with any
-  // request that leaves the browser: is it in flight, and did it go wrong?
-  const [achievements, setAchievements] = useState(null);
+  // The AI's two-rung steps (tonight + byThen per tier), and the two bits of
+  // state that go with any request that leaves the browser: is it in flight,
+  // and did it go wrong?
+  const [steps, setSteps] = useState(null);
   const [picturePending, setPicturePending] = useState(false);
   const [pictureError, setPictureError] = useState("");
 
@@ -47,7 +48,7 @@ export default function Calculator() {
       cards: calculateAll(screenTime.totalMinutes),
     });
 
-    setAchievements(null);
+    setSteps(null);
     setPictureError("");
     setPicturePending(true);
 
@@ -67,7 +68,7 @@ export default function Calculator() {
         return;
       }
 
-      setAchievements(body.achievements);
+      setSteps(body.steps);
     } catch {
       // This only happens if the network itself failed.
       setPictureError("Couldn't reach the server. Please try again.");
@@ -121,6 +122,10 @@ export default function Calculator() {
             value={goal}
             onChange={(event) => setGoal(event.target.value)}
           />
+          <p className={styles.hint}>
+            The more specific the better &mdash; &ldquo;get back into
+            guitar&rdquo; beats &ldquo;learn guitar&rdquo;.
+          </p>
         </label>
 
         {/* Disabled while a picture request is still in flight, so a second
@@ -139,7 +144,7 @@ export default function Calculator() {
               <ResultCard
                 key={card.percent}
                 delayIndex={index}
-                achievement={achievements ? achievements[index] : null}
+                step={steps ? steps[index] : null}
                 pending={picturePending}
                 {...card}
               />
