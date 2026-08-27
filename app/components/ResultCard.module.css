@@ -44,16 +44,21 @@
   color: var(--color-card-75-text);
 }
 
-.percent {
+/* The headline. Bigger than it was as a bare time, because it's now
+   carrying the whole proposition rather than sitting under a label. */
+.perDay {
   font-family: var(--font-heading);
-  font-size: 1.1rem;
+  font-size: 1.5rem;
   font-weight: 600;
-  opacity: 0.85;
+  line-height: 1.25;
 }
 
-.perDay {
-  font-size: 1.4rem;
-  font-weight: 700;
+/* Context for the headline: how big an ask this is against their current
+   habit. Quiet -- it's the reason to believe, not the pitch. */
+.proportion {
+  margin-top: 4px;
+  font-size: 0.9rem;
+  opacity: 0.7;
 }
 
 /* The date is the emotional anchor now -- set in the heading font so it

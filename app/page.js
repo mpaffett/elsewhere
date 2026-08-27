@@ -11,7 +11,7 @@ export default function Home() {
         <h1 className={styles.title}>Elsewhere</h1>
         <p className={styles.intro}>
           See how far you could get toward something that matters, just by
-          giving up a slice of your screen time.
+          sending a slice of your screen time somewhere else.
         </p>
       </header>
 

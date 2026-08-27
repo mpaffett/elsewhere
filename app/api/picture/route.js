@@ -309,6 +309,12 @@ export async function POST(request) {
     // this ever reaches the page, the same way we force the lowercase start.
     normalised = normalised.replace(/^by\s+[^,]+,\s*/i, "");
 
+    // Our own prompt examples are written in plain ASCII, so the model
+    // sometimes copies that style and returns "--" where it means an em
+    // dash. On the page that renders as two visible hyphens. Swap them for
+    // a real em dash rather than trying to police punctuation in the prompt.
+    normalised = normalised.replace(/\s+--\s+/g, " — ");
+
     normalised = normalised.charAt(0).toLowerCase() + normalised.slice(1);
 
     achievementsByPercent[line.percent] = normalised;

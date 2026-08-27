@@ -44,7 +44,6 @@ export default function Calculator() {
     // underneath once they arrive, rather than making the visitor wait for
     // both before seeing anything.
     setResults({
-      goal: goalCheck.goal,
       cards: calculateAll(screenTime.totalMinutes),
     });
 
@@ -135,7 +134,6 @@ export default function Calculator() {
 
       {results && (
         <section className={styles.results}>
-          <p className={styles.towards}>Toward: {results.goal}</p>
           <div className={styles.cardRow}>
             {results.cards.map((card, index) => (
               <ResultCard

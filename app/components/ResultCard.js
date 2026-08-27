@@ -5,6 +5,7 @@ import styles from "./ResultCard.module.css";
 export default function ResultCard({
   percent,
   perDayLabel,
+  proportionLabel,
   totalHours,
   endDate,
   delayIndex,
@@ -16,8 +17,15 @@ export default function ResultCard({
       className={`${styles.card} ${styles[`card${percent}`]}`}
       style={{ animationDelay: `${delayIndex * 90}ms` }}
     >
-      <p className={styles.percent}>Give up {percent}%</p>
-      <p className={styles.perDay}>{perDayLabel} a day</p>
+      {/* The headline is the ask and the promise in one line. "Elsewhere"
+          is the destination the time goes to -- the whole premise is that
+          the time isn't lost, it's redirected, so the card never says
+          "give up". The proportion sits underneath as context for how big
+          an ask this is relative to their current habit. */}
+      <p className={styles.perDay}>{perDayLabel} a day, elsewhere</p>
+      <p className={styles.proportion}>
+        that&rsquo;s {proportionLabel} of your screen time
+      </p>
 
       {/* The date leads and does the emotional work -- it puts a real
           calendar date on the outcome. The rest of the sentence, including
@@ -41,7 +49,7 @@ export default function ResultCard({
           figure -- present for anyone who wants the receipt, easy to skip
           past for anyone who doesn't. */}
       {achievement && (
-        <p className={styles.hoursFootnote}>{totalHours} hours reclaimed</p>
+        <p className={styles.hoursFootnote}>{totalHours} hours elsewhere</p>
       )}
     </div>
   );

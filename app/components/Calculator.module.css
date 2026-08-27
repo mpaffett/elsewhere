@@ -122,12 +122,6 @@
   margin-top: 40px;
 }
 
-.towards {
-  font-family: var(--font-heading);
-  font-size: 1.3rem;
-  margin-bottom: 20px;
-}
-
 .cardRow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
