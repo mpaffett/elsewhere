@@ -18,29 +18,41 @@ import {
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 // How long to wait on any single model before giving up and trying the next.
 //
-// This started at 30 seconds, which was far too patient. With reasoning
-// turned off a healthy model answers in 0.5-3.5s; we measured one free
+// This started at 30 seconds, which was far too patient: we measured one
 // provider crawling through 95 tokens in 33.8s, which is queueing, not work.
 // Waiting 30s for that -- three times over -- is a 90-second worst case.
 //
-// 10s is comfortable margin over a healthy response while capping the total
-// wait at 30s across all three models.
-const TIMEOUT_MS = 10000;
+// We then cut it to 10s, which turned out to be too impatient once we moved
+// to paid models. MiMo normally answers in 7-9s, so a 10s limit was cutting
+// it off right at the finish line: a request that was two seconds from done
+// would instead go and ask two more models, and take 23s. Being stingy with
+// the timeout was costing more time than it saved.
+//
+// 15s clears MiMo's usual spread with room to spare, so the fallback chain is
+// reserved for models that are genuinely stuck rather than merely slow.
+const TIMEOUT_MS = 15000;
 
 // The models we'll try, in order, until one answers.
 //
-// Free models on OpenRouter share a pool with every other free user, so any
-// one of them can be "temporarily rate-limited upstream" at any moment -- we
-// hit this twice within five minutes while building. That isn't a fault we can
-// fix, so we work around it: if the first model is busy, try the next.
+// These are the paid versions (no ":free" suffix). We used the free ones while
+// building, but they have three problems we can't live with in production:
+// they publish our prompts, they share one rate limit with every other free
+// user on OpenRouter, and they go "temporarily rate-limited upstream" without
+// warning -- we hit that twice within five minutes. Paying fixes all three,
+// and costs roughly 20p per thousand people who use the site.
 //
-// The first is the best writer of the three. The last is OpenRouter's own
-// router, which picks whatever free model is available -- a scrappy last
-// resort, since we can't predict which model (or voice) we'll get.
+// We still keep a fallback list, because a paid model can still have a bad
+// minute: if the first is busy, try the next.
+//
+// MiMo goes first because it's the one that actually answers in time. The
+// prompt was originally tuned against Nemotron, so that was our first choice --
+// but the paid Nemotron endpoint took longer than our 10s timeout on every
+// try, while MiMo came back in 7-9s. A model that times out is no use however
+// well it writes, so the order follows measured speed, not preference.
 const MODELS = [
-  "nvidia/nemotron-3-super-120b-a12b:free",
-  "dots-studio/dots-3-note-preview:free",
-  "openrouter/free",
+  "xiaomi/mimo-v2.5",
+  "nvidia/nemotron-3-super-120b-a12b",
+  "google/gemma-4-31b-it",
 ];
 
 // A small helper so every failure leaves this file the same way.
@@ -112,6 +124,73 @@ function tidyFragment(raw, properNouns) {
   }
 
   return text;
+}
+
+// Turn a model's raw reply into the steps we'll send to the browser.
+//
+// Returns the finished array on success, or null if the reply was unusable --
+// bad JSON, the wrong number of lines, a missing half, a tier with no line.
+// The caller treats null the same way it treats a busy model: try the next one.
+//
+// Even with a schema we check every step, because a model can return an empty
+// reply, or stop halfway through a sentence and leave broken JSON behind. We
+// saw exactly that: MiMo answering with byThen set to an empty string.
+function unpackReply(text, tiers, properNouns) {
+  let parsed;
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    console.error("Reply wasn't valid JSON:", text);
+    return null;
+  }
+
+  // We asked for exactly one line per tier. If the shape is wrong we'd rather
+  // try another model than render three blank cards.
+  const lines = parsed?.lines;
+
+  if (!Array.isArray(lines) || lines.length !== tiers.length) {
+    console.error("Wrong number of lines:", text);
+    return null;
+  }
+
+  // Each tier needs both halves. If either is missing we'd rather try another
+  // model than render a card with one rung silently blank.
+  //
+  // Note the order: we tidy FIRST and check SECOND. Checking the raw text
+  // isn't enough, because tidyFragment can empty a string that arrived
+  // non-empty -- if a model answers with just "By 13 October," the date strip
+  // eats the whole thing. What matters is whether the text we're about to
+  // send is blank, so that's what we test.
+  const stepsByPercent = {};
+  for (const line of lines) {
+    if (typeof line?.tonight !== "string" || typeof line?.byThen !== "string") {
+      console.error("A line was missing tonight or byThen:", text);
+      return null;
+    }
+
+    const step = {
+      tonight: tidyFragment(line.tonight, properNouns),
+      byThen: tidyFragment(line.byThen, properNouns),
+    };
+
+    if (step.tonight.trim() === "" || step.byThen.trim() === "") {
+      console.error("A line was empty once tidied:", text);
+      return null;
+    }
+
+    stepsByPercent[line.percent] = step;
+  }
+
+  // Put them back in our tier order rather than trusting the order they
+  // arrived in, and confirm every tier actually got one.
+  const ordered = tiers.map((tier) => stepsByPercent[tier.percent]);
+
+  if (ordered.some((step) => step === undefined)) {
+    console.error("A tier had no matching line:", text);
+    return null;
+  }
+
+  return ordered;
 }
 
 // Ask one model for an answer.
@@ -302,84 +381,39 @@ export async function POST(request) {
     return fail("The server isn't set up yet. Try again later.", 500);
   }
 
-  let text = null;
+  const properNouns = properNounsFrom(goalCheck.goal);
+
+  let steps = null;
 
   for (const model of MODELS) {
     const attempt = await askOneModel(model, apiKey, goalCheck.goal, tiers);
 
-    if (attempt.status === "ok") {
-      text = attempt.text;
-      break;
-    }
     if (attempt.status === "failed") {
       return fail(attempt.message, attempt.code);
     }
-    // "busy" -- fall through and try the next model.
-  }
-
-  if (text === null) {
-    console.error("Every model was busy.");
-    return fail("Everything's busy right now. Try again in a minute.", 503);
-  }
-
-  // ---------------------------------------------------------------------
-  // 3. Unpack the reply
-  //
-  // Even with a schema, we check every step. A free model can return an empty
-  // reply, or stop halfway through a sentence and leave broken JSON behind.
-  // ---------------------------------------------------------------------
-  let parsed;
-  try {
-    parsed = JSON.parse(text);
-  } catch {
-    console.error("Reply wasn't valid JSON:", text);
-    return fail("Got a confusing answer. Please try again.", 502);
-  }
-
-  // Check we got exactly the three lines we asked for, one per tier, and
-  // that each is a non-empty string. If the shape is wrong we'd rather show
-  // an error than render three blank cards.
-  const lines = parsed?.lines;
-
-  if (!Array.isArray(lines) || lines.length !== tiers.length) {
-    console.error("Wrong number of lines:", text);
-    return fail("Got an incomplete answer. Please try again.", 502);
-  }
-
-  // Each tier needs both halves. If either is missing we'd rather show an
-  // error than render a card with one rung silently blank.
-  const properNouns = properNounsFrom(goalCheck.goal);
-
-  const stepsByPercent = {};
-  for (const line of lines) {
-    const hasBoth =
-      typeof line?.tonight === "string" &&
-      line.tonight.trim() !== "" &&
-      typeof line?.byThen === "string" &&
-      line.byThen.trim() !== "";
-
-    if (!hasBoth) {
-      console.error("A line was missing tonight or byThen:", text);
-      return fail("Got an incomplete answer. Please try again.", 502);
+    if (attempt.status === "busy") {
+      continue;
     }
 
-    stepsByPercent[line.percent] = {
-      tonight: tidyFragment(line.tonight, properNouns),
-      byThen: tidyFragment(line.byThen, properNouns),
-    };
+    // We got a reply, but a reply isn't the same as a usable one. Unpack it
+    // here, inside the loop, so that a model which answers with nonsense gets
+    // treated exactly like a model that didn't answer at all: we move on and
+    // give the next one a turn, instead of failing the whole request.
+    const unpacked = unpackReply(attempt.text, tiers, properNouns);
+
+    if (unpacked !== null) {
+      steps = unpacked;
+      break;
+    }
   }
 
-  // Put them back in our tier order rather than trusting the order they
-  // arrived in, and confirm every tier actually got one.
-  const ordered = tiers.map((tier) => stepsByPercent[tier.percent]);
-
-  if (ordered.some((step) => step === undefined)) {
-    console.error("A tier had no matching line:", text);
-    return fail("Got an incomplete answer. Please try again.", 502);
+  if (steps === null) {
+    console.error("No model gave a usable answer.");
+    return fail("Everything's busy right now. Try again in a minute.", 503);
   }
 
   const totalSeconds = ((Date.now() - requestStartedAt) / 1000).toFixed(1);
   console.log(`[timing] whole request took ${totalSeconds}s`);
 
-  return Response.json({ steps: ordered });
+  return Response.json({ steps });
 }
