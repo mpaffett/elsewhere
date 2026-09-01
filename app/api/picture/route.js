@@ -16,44 +16,59 @@ import {
 } from "../../../lib/prompt.js";
 
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
+// The models we'll try, in order, until one answers. We keep a list rather
+// than a single name because any one model can be busy or stuck at any
+// moment: if the first doesn't answer, we ask the next.
+//
+// There are two lists, and one switch at the bottom to choose between them.
+//
+// FREE is what we use while building. It costs nothing, which is the point --
+// there's no sense burning credit on our own test runs.
+//
+// PAID is what we must switch to before the site goes live, and the reason is
+// not speed or quality. It's that free models on OpenRouter PUBLISH THE
+// PROMPTS SENT TO THEM. That's fine while the only goals being typed in are
+// ours; it is not fine once strangers are typing in what they want to change
+// about their lives. Paid also gets us off the shared free rate limit and
+// away from the random "temporarily rate-limited upstream" failures. It costs
+// roughly 20p per thousand visitors.
+const FREE_MODELS = [
+  "nvidia/nemotron-3-super-120b-a12b:free",
+  "dots-studio/dots-3-note-preview:free",
+  "openrouter/free",
+];
+
+// Ordered by measured speed, not by preference. The prompt was tuned against
+// Nemotron, so that was the obvious first choice -- but the paid Nemotron
+// endpoint missed our timeout on every single attempt, while MiMo answered in
+// 7-9s. A model that times out is no use however well it writes.
+const PAID_MODELS = [
+  "xiaomi/mimo-v2.5",
+  "nvidia/nemotron-3-super-120b-a12b",
+  "google/gemma-4-31b-it",
+];
+
+// THE SWITCH. Change this one line to PAID_MODELS before launch, and change
+// TIMEOUT_MS just below to match.
+const MODELS = FREE_MODELS;
+
 // How long to wait on any single model before giving up and trying the next.
 //
 // This started at 30 seconds, which was far too patient: we measured one
 // provider crawling through 95 tokens in 33.8s, which is queueing, not work.
 // Waiting 30s for that -- three times over -- is a 90-second worst case.
 //
-// We then cut it to 10s, which turned out to be too impatient once we moved
-// to paid models. MiMo normally answers in 7-9s, so a 10s limit was cutting
-// it off right at the finish line: a request that was two seconds from done
-// would instead go and ask two more models, and take 23s. Being stingy with
-// the timeout was costing more time than it saved.
+// The right number depends on which list above is switched on, because the
+// two answer at very different speeds:
 //
-// 15s clears MiMo's usual spread with room to spare, so the fallback chain is
-// reserved for models that are genuinely stuck rather than merely slow.
-const TIMEOUT_MS = 15000;
-
-// The models we'll try, in order, until one answers.
+//   FREE_MODELS answer in 1.5-4.5s  -> 10s is plenty
+//   PAID_MODELS answer in 7-9s      -> 10s is too tight, use 15000
 //
-// These are the paid versions (no ":free" suffix). We used the free ones while
-// building, but they have three problems we can't live with in production:
-// they publish our prompts, they share one rate limit with every other free
-// user on OpenRouter, and they go "temporarily rate-limited upstream" without
-// warning -- we hit that twice within five minutes. Paying fixes all three,
-// and costs roughly 20p per thousand people who use the site.
-//
-// We still keep a fallback list, because a paid model can still have a bad
-// minute: if the first is busy, try the next.
-//
-// MiMo goes first because it's the one that actually answers in time. The
-// prompt was originally tuned against Nemotron, so that was our first choice --
-// but the paid Nemotron endpoint took longer than our 10s timeout on every
-// try, while MiMo came back in 7-9s. A model that times out is no use however
-// well it writes, so the order follows measured speed, not preference.
-const MODELS = [
-  "xiaomi/mimo-v2.5",
-  "nvidia/nemotron-3-super-120b-a12b",
-  "google/gemma-4-31b-it",
-];
+// That second line is worth keeping, because we learned it the annoying way.
+// At 10s we were cutting MiMo off about two seconds from done, and the
+// request would then go and ask two more models and take 23s. Being stingy
+// with the timeout cost more time than it saved.
+const TIMEOUT_MS = 10000;
 
 // A small helper so every failure leaves this file the same way.
 function fail(message, status) {
