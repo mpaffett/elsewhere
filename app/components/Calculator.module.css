@@ -6,6 +6,13 @@
   display: flex;
   flex-direction: column;
   gap: 28px;
+
+  /* Centers every bare piece of text in the card (the legend, the hints,
+     the goal label). Inherited, so it reaches the labels and hints without
+     needing a rule of its own on each one. align-items stays at its default
+     (stretch) so the fieldset and its input boxes keep the card's full
+     width -- only the text and the specific rows below are recentred. */
+  text-align: center;
 }
 
 .field {
@@ -43,6 +50,7 @@ legend.label {
 
 .timeInputs {
   display: flex;
+  justify-content: center;
   gap: 16px;
 }
 
@@ -104,7 +112,7 @@ legend.label {
 }
 
 .submit {
-  align-self: flex-start;
+  align-self: center;
   background: var(--color-accent);
   color: var(--color-card-75-text);
   border: none;
@@ -133,6 +141,7 @@ legend.label {
   border-radius: 12px;
   padding: 14px 18px;
   font-size: 0.95rem;
+  text-align: center;
 }
 
 /* The cost section and the second form both sit between the two questions,

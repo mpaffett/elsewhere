@@ -33,6 +33,7 @@
 .intro {
   font-size: 1rem;
   color: var(--color-text-muted);
+  text-align: center;
 }
 
 .rows {
@@ -41,12 +42,14 @@
   gap: 14px;
 }
 
+/* Each row reads as one centred stack -- the horizon on top, the figure
+   and its hours below -- rather than a label-left, value-right ledger line.
+   That matches the centred heading above it and the centred cards below. */
 .row {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 6px 12px;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
   padding-bottom: 14px;
   border-bottom: 1px solid var(--color-border);
 }
@@ -56,24 +59,17 @@
   border-bottom: none;
 }
 
-/* No flex: 1 here on purpose -- that let this shrink below the width its
-   own text needs, which wrapped "In 5 years" mid-phrase on a narrow screen.
-   white-space: nowrap keeps the three words together; the row itself is
-   what wraps, sending .figure onto its own line below when there isn't
-   room for both. */
 .horizon {
   font-size: 0.95rem;
   color: var(--color-text-muted);
-  white-space: nowrap;
 }
 
-/* The figure and its footnote, grouped so they wrap onto a new line
-   together rather than the label and the hours separating from each
-   other. */
 .figure {
   display: flex;
   align-items: baseline;
-  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 4px 12px;
 }
 
 /* The headline of each row -- the figure that's meant to land. Fraunces and

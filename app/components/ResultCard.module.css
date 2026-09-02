@@ -4,7 +4,9 @@
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
+  align-items: center;
   gap: 6px;
+  text-align: center;
 
   /* Fade and rise into place. Each card gets a slightly later delay
      (set inline in ResultCard.js) so they arrive one after another
@@ -73,6 +75,10 @@
 /* Each rung of the ladder: a time anchor that's always ours and always
    correct, plus the AI's text. */
 .sentence {
+  /* align-self: stretch overrides the card's centering just for these two
+     paragraphs, so the hairline below .tonight still spans the full card
+     width rather than shrinking to fit the centred text above it. */
+  align-self: stretch;
   margin-top: 14px;
   font-size: 1.05rem;
   line-height: 1.5;
