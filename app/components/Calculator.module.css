@@ -135,6 +135,17 @@ legend.label {
   font-size: 0.95rem;
 }
 
+/* The cost section and the second form both sit between the two questions,
+   so they need the same breathing room the results section already has
+   below everything. */
+.costSection {
+  margin-top: 32px;
+}
+
+.goalForm {
+  margin-top: 32px;
+}
+
 .results {
   margin-top: 40px;
 }

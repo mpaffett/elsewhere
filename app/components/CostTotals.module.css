@@ -1,0 +1,94 @@
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  /* Same rise-in as the result cards, so the two sections feel like one
+     visual language even though they appear at different points in the
+     flow. */
+  opacity: 0;
+  transform: translateY(12px);
+  animation: rise 0.5s ease-out forwards;
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.intro {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.row:last-child {
+  padding-bottom: 0;
+  border-bottom: none;
+}
+
+/* No flex: 1 here on purpose -- that let this shrink below the width its
+   own text needs, which wrapped "In 5 years" mid-phrase on a narrow screen.
+   white-space: nowrap keeps the three words together; the row itself is
+   what wraps, sending .figure onto its own line below when there isn't
+   room for both. */
+.horizon {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
+
+/* The figure and its footnote, grouped so they wrap onto a new line
+   together rather than the label and the hours separating from each
+   other. */
+.figure {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+/* The headline of each row -- the figure that's meant to land. Fraunces and
+   the accent colour, the same treatment the result cards give their own
+   headline number, so cost and payoff read as two halves of one idea. */
+.label {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--color-accent);
+  white-space: nowrap;
+}
+
+.hours {
+  font-size: 0.85rem;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}
