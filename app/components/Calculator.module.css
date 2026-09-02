@@ -9,9 +9,12 @@
 }
 
 .field {
+  /* Named so the legend rule below can reuse the exact same number. */
+  --field-gap: 10px;
+
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--field-gap);
   border: none;
   padding: 0;
   margin: 0;
@@ -22,6 +25,20 @@
   font-size: 1.05rem;
   font-weight: 600;
   padding: 0;
+}
+
+/* Browsers pull a <legend> out of its fieldset's normal flow, which means it
+   isn't a flex item and the gap above skips straight past it. The result was
+   the screen-time heading sitting flush against its input boxes while the
+   goal field below got its 10px -- the two questions looked spaced
+   differently for no visible reason.
+
+   We keep the fieldset/legend markup because it's the honest way to group
+   two inputs (hours and minutes) under one question, so we add the spacing
+   back by hand instead. Using the same variable means the two can't drift
+   apart if the gap is ever changed. */
+legend.label {
+  margin-bottom: var(--field-gap);
 }
 
 .timeInputs {
