@@ -58,10 +58,10 @@ const CASES = [
     mustNotContain: ["cheese", "poem", "verse", "stanza"],
   },
   {
-    // A goal you physically cannot practise tonight -- no boat, no water.
+    // A goal you physically cannot practise today -- no boat, no water.
     // The model wrote "untie the dock lines and push off from shore" here,
     // which is why the prompt now has an access rule. Kept as a visible
-    // case: whether a step is actually doable tonight needs human eyes, so
+    // case: whether a step is actually doable today needs human eyes, so
     // this one is here to be read, not asserted on.
     label: "access-gated goal",
     goal: "learn to sail",
@@ -156,7 +156,7 @@ for (const testCase of cases) {
 
   const show = () => {
     for (const step of steps) {
-      console.log(`    Tonight — ${step.tonight}`);
+      console.log(`    Today — ${step.tonight}`);
       console.log(`    By {date}, ${step.byThen}`);
       console.log();
     }
@@ -166,12 +166,12 @@ for (const testCase of cases) {
   // rather than only where they were first seen.
   const problems = [];
 
-  // Each tier frees up a different amount of time tonight, so three
+  // Each tier frees up a different amount of time today, so three
   // identical actions means the model ignored that and the tiers look
   // interchangeable. Measured on the first two-rung run.
   const tonights = steps.map((step) => step.tonight.trim().toLowerCase());
   if (new Set(tonights).size < tonights.length) {
-    problems.push(`the three "tonight" actions aren't all different`);
+    problems.push(`the three "today" actions aren't all different`);
   }
 
   for (const step of steps) {
@@ -193,10 +193,10 @@ for (const testCase of cases) {
       problems.push(`quotes the hours back: "${step.byThen}"`);
     }
 
-    // "tonight" is imperative -- it should open with a verb, not the
+    // "today" is imperative -- it should open with a verb, not the
     // second-person voice the far rung uses.
     if (/^(you'll|you'd|you've|you are|you're|you )/i.test(step.tonight)) {
-      problems.push(`tonight isn't imperative: "${step.tonight}"`);
+      problems.push(`today isn't imperative: "${step.tonight}"`);
     }
   }
 

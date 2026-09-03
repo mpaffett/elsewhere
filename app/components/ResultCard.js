@@ -13,7 +13,7 @@ const STAGGER_MS = 300;
 // The card is a two-rung ladder. The top rung is something they could do in
 // the next few hours; the bottom rung is where that lands them six weeks
 // out. Showing only the far end made the payoff feel theoretical -- the
-// whole point of the near rung is that the goal starts tonight, not someday.
+// whole point of the near rung is that the goal starts today, not someday.
 export default function ResultCard({
   percent,
   perDayLabel,
@@ -39,14 +39,19 @@ export default function ResultCard({
         that&rsquo;s {proportionLabel} of your screen time
       </p>
 
-      {/* Both rungs open with an emphasised time anchor -- "Tonight" and the
+      {/* Both rungs open with an emphasised time anchor -- "Today" and the
           date get matching treatment, so the ladder reads as two points on
           one line rather than two unrelated sentences. Everything after each
-          lead-in is the AI's, including its own full stop. */}
+          lead-in is the AI's, including its own full stop.
+
+          The label says "Today"; the data key underneath is still called
+          `tonight`, matching the API response -- renaming a field just to
+          match a label a designer might change again felt like the wrong
+          trade. */}
       {step && (
         <>
-          <p className={`${styles.sentence} ${styles.tonight}`}>
-            <span className={styles.anchor}>Tonight</span> &mdash;{" "}
+          <p className={`${styles.sentence} ${styles.today}`}>
+            <span className={styles.anchor}>Today</span> &mdash;{" "}
             {step.tonight}
           </p>
           <p className={styles.sentence}>
@@ -62,9 +67,9 @@ export default function ResultCard({
       {pending && !step && (
         <>
           <p
-            className={`${styles.sentence} ${styles.tonight} ${styles.sentencePending}`}
+            className={`${styles.sentence} ${styles.today} ${styles.sentencePending}`}
           >
-            <span className={styles.anchor}>Tonight</span> &mdash;&hellip;
+            <span className={styles.anchor}>Today</span> &mdash;&hellip;
           </p>
           <p className={`${styles.sentence} ${styles.sentencePending}`}>
             By <span className={styles.anchor}>{endDate}</span>&hellip;

@@ -97,7 +97,7 @@ function properNounsFrom(goal) {
 
 // Clean up one fragment of AI text before it reaches the page.
 //
-// Each card is a sentence we start and the model finishes -- "Tonight — " and
+// Each card is a sentence we start and the model finishes -- "Today — " and
 // "By 8 October, " are ours, the rest is theirs. The prompt asks for text
 // that slots into that, but instructions don't hold every single time, and
 // these three failures are all ones we've actually measured. Guaranteeing
@@ -105,12 +105,15 @@ function properNounsFrom(goal) {
 function tidyFragment(raw, properNouns) {
   let text = raw.trim();
 
-  // Strip a lead-in the model repeated back at us. We supply "Tonight — "
-  // and the real date ourselves, so anything like "tonight, ..." or
+  // Strip a lead-in the model repeated back at us. We supply "Today — "
+  // and the real date ourselves, so anything like "today, ..." or
   // "by 8 October, ..." arriving here can only be a duplicate. We measured
   // the model working out its own date and writing it in, which rendered as
-  // "By 8 October, by 8 October, you've...".
-  text = text.replace(/^tonight\s*[,—:-]\s*/i, "");
+  // "By 8 October, by 8 October, you've...". Also strips a leftover
+  // "tonight" -- the prompt used to call this field's lead-in that, and a
+  // model can still reach for the word out of habit even after the prompt
+  // itself no longer says it.
+  text = text.replace(/^(today|tonight)\s*[,—:-]\s*/i, "");
   text = text.replace(/^by\s+[^,]+,\s*/i, "");
 
   // Our own prompt examples are written in plain ASCII, so the model

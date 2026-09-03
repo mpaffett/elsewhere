@@ -90,7 +90,7 @@
    text colour, so the split between "now" and "six weeks out" is visible at
    a glance -- and it works on all three card backgrounds without needing a
    colour of its own. */
-.tonight {
+.today {
   padding-bottom: 14px;
   border-bottom: 1px solid currentColor;
   border-bottom-color: color-mix(in srgb, currentColor 18%, transparent);
