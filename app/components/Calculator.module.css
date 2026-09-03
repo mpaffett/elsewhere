@@ -159,6 +159,10 @@ legend.label {
   margin-top: 40px;
 }
 
+.emailSection {
+  margin-top: 32px;
+}
+
 /* Frames the card row the same way CostTotals frames its own rows -- a
    short line of context before the numbers, in the same muted, centred
    style, so the two sections read as one visual pattern. */

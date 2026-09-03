@@ -23,6 +23,14 @@
   --color-card-75-text: #fbf3e9;
 
   --color-accent: #b5502e;
+
+  /* A second, distinct button colour -- deliberately close to --color-accent
+     but pushed toward true red rather than the warmer terracotta, so a
+     button using this reads as a different KIND of action next to the
+     ordinary "Show me" buttons, not just another step in the same form.
+     First used on the placeholder email-capture button. */
+  --color-accent-alt: #c23a1c;
+
   --color-error-bg: #f7e4dc;
   --color-error-text: #8a3418;
   --color-border: #e7dcc9;

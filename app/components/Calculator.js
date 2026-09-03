@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { calculateAll, costOverLifetime } from "../../lib/calculate.js";
 import { validateGoal, validateScreenTime } from "../../lib/validate.js";
 import CostTotals from "./CostTotals.js";
+import EmailCapture from "./EmailCapture.js";
 import ResultCard from "./ResultCard.js";
 import styles from "./Calculator.module.css";
 
@@ -278,6 +279,16 @@ export default function Calculator() {
           </div>
 
           {pictureError && <p className={styles.error}>{pictureError}</p>}
+        </section>
+      )}
+
+      {/* The next step in the journey, once the cards are on screen -- this
+          doesn't wait for the AI sentences to finish loading, only for the
+          cards themselves to exist. Placeholder for now: see
+          EmailCapture.js. */}
+      {results && (
+        <section className={styles.emailSection}>
+          <EmailCapture />
         </section>
       )}
     </div>

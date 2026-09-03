@@ -1,0 +1,55 @@
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  padding: 28px 24px;
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.emailInput {
+  width: 100%;
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--color-text);
+  background: var(--color-background);
+  outline: none;
+}
+
+.emailInput:focus {
+  border-color: var(--color-accent);
+}
+
+/* Bigger than the "Show me" buttons above, and a different shade of red
+   (--color-accent-alt rather than --color-accent) -- this is the ask at the
+   end of the journey, not just another step through the form, and Matt
+   wants to see how that contrast actually feels on the page before
+   deciding how far to push it. */
+.submit {
+  background: var(--color-accent-alt);
+  color: var(--color-card-75-text);
+  border: none;
+  border-radius: 999px;
+  padding: 16px 40px;
+  font-size: 1.15rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.submit:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lifted);
+}
