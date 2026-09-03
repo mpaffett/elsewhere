@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import {
-  calculateAll,
-  costOverLifetime,
-} from "../../lib/calculate.js";
+import { calculateAll, costOverLifetime } from "../../lib/calculate.js";
 import { validateGoal, validateScreenTime } from "../../lib/validate.js";
 import CostTotals from "./CostTotals.js";
 import ResultCard from "./ResultCard.js";
@@ -264,6 +261,10 @@ export default function Calculator() {
 
       {results && (
         <section ref={resultsRef} className={styles.results}>
+          <p className={styles.resultsIntro}>
+            Here&rsquo;s what sending some of that time elsewhere could look
+            like.
+          </p>
           <div className={styles.cardRow}>
             {results.cards.map((card, index) => (
               <ResultCard

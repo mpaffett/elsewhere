@@ -1,5 +1,12 @@
 import styles from "./ResultCard.module.css";
 
+// How long to wait between one card starting its rise-in and the next one
+// starting. This is what makes the three cards read as an unveiling --
+// 25%, then 50%, then 75% -- rather than all three just popping in at once.
+// It was 90ms, which is too quick to actually see as a sequence; 300ms is
+// slow enough to register as "and then" without feeling like a wait.
+const STAGGER_MS = 300;
+
 // A single result card. No state, no logic -- it just displays the values
 // it's handed. All the maths already happened in lib/calculate.js.
 //
@@ -20,7 +27,7 @@ export default function ResultCard({
   return (
     <div
       className={`${styles.card} ${styles[`card${percent}`]}`}
-      style={{ animationDelay: `${delayIndex * 90}ms` }}
+      style={{ animationDelay: `${delayIndex * STAGGER_MS}ms` }}
     >
       {/* The headline is the ask and the promise in one line. "Elsewhere"
           is the destination the time goes to -- the whole premise is that

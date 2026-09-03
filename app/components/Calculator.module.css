@@ -159,6 +159,16 @@ legend.label {
   margin-top: 40px;
 }
 
+/* Frames the card row the same way CostTotals frames its own rows -- a
+   short line of context before the numbers, in the same muted, centred
+   style, so the two sections read as one visual pattern. */
+.resultsIntro {
+  font-size: 1rem;
+  color: var(--color-text-muted);
+  text-align: center;
+  margin-bottom: 20px;
+}
+
 .cardRow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
