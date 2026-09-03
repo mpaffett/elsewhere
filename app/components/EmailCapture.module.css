@@ -38,7 +38,7 @@
    wants to see how that contrast actually feels on the page before
    deciding how far to push it. */
 .submit {
-  background: var(--color-accent-alt);
+  background: var(--color-accent);
   color: var(--color-card-75-text);
   border: none;
   border-radius: 999px;
