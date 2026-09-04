@@ -59,6 +59,7 @@ export default function Calculator() {
   const [picturePending, setPicturePending] = useState(false);
   const [pictureError, setPictureError] = useState("");
 
+  const costSectionRef = useRef(null);
   const goalSectionRef = useRef(null);
   const resultsRef = useRef(null);
 
@@ -75,8 +76,17 @@ export default function Calculator() {
     };
   }, []);
 
-  // Scroll each new section into view as the visitor reaches it, so the
-  // pacing is visible rather than happening below the fold.
+  // Keep whatever the visitor just reached centred on screen, rather than
+  // just scrolled into view at the top edge -- "central" is what makes it
+  // read as the thing to look at right now, not just the next item in a
+  // long page. block: "center" does that scrolling for us; we only have to
+  // decide which section is the current one.
+  //
+  // The cost numbers get their own effect below, separate from this one,
+  // because they appear the instant costRows is set -- before `stage` has
+  // moved past SCREEN_TIME during the reveal delay (see
+  // GOAL_REVEAL_DELAY_MS). This effect only knows about `stage`, so it can't
+  // see that moment.
   useEffect(() => {
     const ref =
       stage === STAGE.GOAL
@@ -86,9 +96,18 @@ export default function Calculator() {
           : null;
 
     if (ref && ref.current && prefersMotion()) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "start" });
+      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
     }
   }, [stage]);
+
+  useEffect(() => {
+    if (costRows && costSectionRef.current && prefersMotion()) {
+      costSectionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [costRows]);
 
   // Everything from step 2 onward is derived from the screen-time total, so
   // if the visitor edits the hours or minutes after moving past step 1,
@@ -246,7 +265,7 @@ export default function Calculator() {
           30 years. It's local maths, so it appears the instant step 1 is
           answered, before any network request exists to wait on. */}
       {costRows && (
-        <section className={styles.costSection}>
+        <section ref={costSectionRef} className={styles.costSection}>
           <CostTotals rows={costRows} />
         </section>
       )}
