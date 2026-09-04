@@ -20,6 +20,13 @@ const STAGE = {
   RESULTS: "results",
 };
 
+// How long the cost numbers get to sit alone before the goal question
+// appears underneath them. Without this, both sections appeared in the same
+// instant -- the cost card's own fade-in animation (see CostTotals.module.css)
+// takes 500ms, so this matches that: the goal question shows up right as the
+// cost card finishes settling into place, rather than racing it.
+const GOAL_REVEAL_DELAY_MS = 500;
+
 // True unless the visitor has asked for less motion. Guards every
 // scrollIntoView call below -- without it, a new section can land below the
 // fold and the pacing reads as nothing having happened.
@@ -55,6 +62,19 @@ export default function Calculator() {
   const goalSectionRef = useRef(null);
   const resultsRef = useRef(null);
 
+  // Holds the pending "reveal the goal question" timer, so a screen-time
+  // edit during the delay (see resetPastScreenTime) can cancel it instead of
+  // letting it fire late and show the goal question next to numbers that no
+  // longer match what's in the fields above.
+  const goalRevealTimeout = useRef(null);
+
+  // Cancel a pending reveal if the visitor navigates away mid-delay.
+  useEffect(() => {
+    return () => {
+      clearTimeout(goalRevealTimeout.current);
+    };
+  }, []);
+
   // Scroll each new section into view as the visitor reaches it, so the
   // pacing is visible rather than happening below the fold.
   useEffect(() => {
@@ -76,12 +96,20 @@ export default function Calculator() {
   // them back to the start of the flow -- one rule, easy to trust: nothing
   // shown can be out of step with the number at the top of the page.
   function resetPastScreenTime() {
+    // Cancel any reveal still waiting to happen, and clear the cost numbers
+    // that go with it. Both of those exist the instant "Show me" is
+    // pressed, before `stage` itself has moved past SCREEN_TIME during the
+    // reveal delay -- so they can't be gated on `stage` below, or an edit
+    // made inside that short window would leave the old cost numbers on
+    // screen next to the new hours and minutes.
+    clearTimeout(goalRevealTimeout.current);
+    setCostRows(null);
+    setScreenTimeMinutes(null);
+
     if (stage === STAGE.SCREEN_TIME) {
       return;
     }
     setStage(STAGE.SCREEN_TIME);
-    setCostRows(null);
-    setScreenTimeMinutes(null);
     setGoal("");
     setGoalError("");
     setResults(null);
@@ -116,7 +144,9 @@ export default function Calculator() {
     // anything, there's nothing to actually reset -- leave them wherever
     // they already are rather than snapping the page back to this question.
     if (stage === STAGE.SCREEN_TIME) {
-      setStage(STAGE.GOAL);
+      goalRevealTimeout.current = setTimeout(() => {
+        setStage(STAGE.GOAL);
+      }, GOAL_REVEAL_DELAY_MS);
     }
   }
 

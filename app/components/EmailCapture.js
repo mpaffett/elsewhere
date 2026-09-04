@@ -14,7 +14,7 @@ export default function EmailCapture() {
 
   return (
     <form className={styles.card} onSubmit={handleSubmit}>
-      <p className={styles.title}>Enter your email for more</p>
+      <p className={styles.title}>Enter your email for more...</p>
       <input
         type="email"
         className={styles.emailInput}
