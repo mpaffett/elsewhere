@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { calculateAll, costOverLifetime } from "../../lib/calculate.js";
-import { validateGoal, validateScreenTime } from "../../lib/validate.js";
+import { costOverLifetime } from "../../lib/calculate.js";
+import { validateScreenTime } from "../../lib/validate.js";
 import CostTotals from "./CostTotals.js";
+import DailyAsk from "./DailyAsk.js";
 import EmailCapture from "./EmailCapture.js";
-import ResultCard from "./ResultCard.js";
+import GoalPicker from "./GoalPicker.js";
 import styles from "./Calculator.module.css";
 
 // The three stages of the flow, in order. Sections accumulate down the page
@@ -17,15 +18,15 @@ import styles from "./Calculator.module.css";
 const STAGE = {
   SCREEN_TIME: "screenTime",
   GOAL: "goal",
-  RESULTS: "results",
+  DAILY_ASK: "dailyAsk",
 };
 
-// How long the cost numbers get to sit alone before the goal question
-// appears underneath them. Without this, both sections appeared in the same
-// instant -- the cost card's own fade-in animation (see CostTotals.module.css)
-// takes 500ms, so this matches that: the goal question shows up right as the
-// cost card finishes settling into place, rather than racing it.
-const GOAL_REVEAL_DELAY_MS = 500;
+// How long a new section gets to sit alone before the next one appears
+// underneath it. Used for every transition below -- the cost card's own
+// fade-in animation (see CostTotals.module.css) takes 500ms, so this
+// matches that: each new section shows up right as the previous one
+// finishes settling, rather than racing it.
+const REVEAL_DELAY_MS = 500;
 
 // True unless the visitor has asked for less motion. Guards every
 // scrollIntoView call below -- without it, a new section can land below the
@@ -44,35 +45,26 @@ export default function Calculator() {
   const [minutes, setMinutes] = useState("");
   const [timeError, setTimeError] = useState("");
   const [costRows, setCostRows] = useState(null);
-  // The validated total, kept once step 1 is answered so step 2 doesn't have
-  // to re-parse the raw fields to run calculateAll.
+  // The validated total, kept once step 1 is answered so later steps don't
+  // have to re-parse the raw fields.
   const [screenTimeMinutes, setScreenTimeMinutes] = useState(null);
 
-  const [goal, setGoal] = useState("");
-  const [goalError, setGoalError] = useState("");
-  const [results, setResults] = useState(null);
-
-  // The AI's two-rung steps (tonight + byThen per tier), and the two bits of
-  // state that go with any request that leaves the browser: is it in flight,
-  // and did it go wrong?
-  const [steps, setSteps] = useState(null);
-  const [picturePending, setPicturePending] = useState(false);
-  const [pictureError, setPictureError] = useState("");
+  const [selectedGoal, setSelectedGoal] = useState(null);
+  const [selectedDailyAsk, setSelectedDailyAsk] = useState(null);
 
   const costSectionRef = useRef(null);
   const goalSectionRef = useRef(null);
-  const resultsRef = useRef(null);
+  const dailyAskSectionRef = useRef(null);
 
-  // Holds the pending "reveal the goal question" timer, so a screen-time
-  // edit during the delay (see resetPastScreenTime) can cancel it instead of
-  // letting it fire late and show the goal question next to numbers that no
-  // longer match what's in the fields above.
-  const goalRevealTimeout = useRef(null);
+  // Holds whichever "reveal the next section" timer is currently pending.
+  // Only one is ever pending at a time in this linear flow, so one shared
+  // ref covers every transition rather than needing one per stage.
+  const revealTimeout = useRef(null);
 
   // Cancel a pending reveal if the visitor navigates away mid-delay.
   useEffect(() => {
     return () => {
-      clearTimeout(goalRevealTimeout.current);
+      clearTimeout(revealTimeout.current);
     };
   }, []);
 
@@ -84,15 +76,14 @@ export default function Calculator() {
   //
   // The cost numbers get their own effect below, separate from this one,
   // because they appear the instant costRows is set -- before `stage` has
-  // moved past SCREEN_TIME during the reveal delay (see
-  // GOAL_REVEAL_DELAY_MS). This effect only knows about `stage`, so it can't
-  // see that moment.
+  // moved past SCREEN_TIME during the reveal delay. This effect only knows
+  // about `stage`, so it can't see that moment.
   useEffect(() => {
     const ref =
       stage === STAGE.GOAL
         ? goalSectionRef
-        : stage === STAGE.RESULTS
-          ? resultsRef
+        : stage === STAGE.DAILY_ASK
+          ? dailyAskSectionRef
           : null;
 
     if (ref && ref.current && prefersMotion()) {
@@ -121,7 +112,7 @@ export default function Calculator() {
     // reveal delay -- so they can't be gated on `stage` below, or an edit
     // made inside that short window would leave the old cost numbers on
     // screen next to the new hours and minutes.
-    clearTimeout(goalRevealTimeout.current);
+    clearTimeout(revealTimeout.current);
     setCostRows(null);
     setScreenTimeMinutes(null);
 
@@ -129,11 +120,8 @@ export default function Calculator() {
       return;
     }
     setStage(STAGE.SCREEN_TIME);
-    setGoal("");
-    setGoalError("");
-    setResults(null);
-    setSteps(null);
-    setPictureError("");
+    setSelectedGoal(null);
+    setSelectedDailyAsk(null);
   }
 
   function handleHoursChange(event) {
@@ -163,59 +151,32 @@ export default function Calculator() {
     // anything, there's nothing to actually reset -- leave them wherever
     // they already are rather than snapping the page back to this question.
     if (stage === STAGE.SCREEN_TIME) {
-      goalRevealTimeout.current = setTimeout(() => {
+      revealTimeout.current = setTimeout(() => {
         setStage(STAGE.GOAL);
-      }, GOAL_REVEAL_DELAY_MS);
+      }, REVEAL_DELAY_MS);
     }
   }
 
-  async function handleGoalSubmit(event) {
-    event.preventDefault();
+  function handleGoalSelect(goalId) {
+    setSelectedGoal(goalId);
 
-    const goalCheck = validateGoal(goal);
-    if (!goalCheck.ok) {
-      setGoalError(goalCheck.message);
-      return;
+    // Changing the goal invalidates whichever daily commitment was picked
+    // for the old one -- same reasoning as resetPastScreenTime, one level
+    // down: nothing shown can be out of step with what's chosen above it.
+    setSelectedDailyAsk(null);
+
+    // Only step forward. If the visitor picks a different goal after
+    // already reaching the daily-ask step, that step is already on screen
+    // -- no need to reveal it again, just clear the stale selection above.
+    if (stage === STAGE.GOAL) {
+      revealTimeout.current = setTimeout(() => {
+        setStage(STAGE.DAILY_ASK);
+      }, REVEAL_DELAY_MS);
     }
+  }
 
-    setGoalError("");
-
-    // The numbers appear immediately -- they're free, local maths. The AI
-    // sentences take a few seconds, so they're fetched next and fill in
-    // underneath once they arrive, rather than making the visitor wait for
-    // both before seeing anything.
-    setResults({ cards: calculateAll(screenTimeMinutes) });
-    setStage(STAGE.RESULTS);
-
-    setSteps(null);
-    setPictureError("");
-    setPicturePending(true);
-
-    try {
-      const response = await fetch("/api/picture", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ goal: goal, hours: hours, minutes: minutes }),
-      });
-
-      const body = await response.json();
-
-      if (!response.ok) {
-        // The server always sends a readable message, so we can show it
-        // straight to the visitor rather than inventing our own wording.
-        setPictureError(
-          body.error || "Something went wrong. Please try again.",
-        );
-        return;
-      }
-
-      setSteps(body.steps);
-    } catch {
-      // This only happens if the network itself failed.
-      setPictureError("Couldn't reach the server. Please try again.");
-    } finally {
-      setPicturePending(false);
-    }
+  function handleDailyAskSelect(option) {
+    setSelectedDailyAsk(option);
   }
 
   return (
@@ -261,9 +222,9 @@ export default function Calculator() {
 
       {timeError && <p className={styles.error}>{timeError}</p>}
 
-      {/* The cost section: what that screen time adds up to over 1, 5 and
-          30 years. It's local maths, so it appears the instant step 1 is
-          answered, before any network request exists to wait on. */}
+      {/* The cost section: what that screen time adds up to this week,
+          this month, this year. It's local maths, so it appears the
+          instant step 1 is answered. */}
       {costRows && (
         <section ref={costSectionRef} className={styles.costSection}>
           <CostTotals rows={costRows} />
@@ -271,71 +232,31 @@ export default function Calculator() {
       )}
 
       {stage !== STAGE.SCREEN_TIME && (
-        <form
-          ref={goalSectionRef}
-          className={`${styles.form} ${styles.goalForm}`}
-          onSubmit={handleGoalSubmit}
-        >
-          <label className={styles.field}>
-            <span className={styles.label}>
-              If you could send some of this time elsewhere, where would you
-              send it?
-            </span>
-            <input
-              type="text"
-              className={styles.goalInput}
-              placeholder="learn Spanish"
-              value={goal}
-              onChange={(event) => setGoal(event.target.value)}
-            />
-            <p className={styles.hint}>
-              The more specific the better &mdash; &ldquo;get back into
-              guitar&rdquo; beats &ldquo;learn guitar&rdquo;.
-            </p>
-          </label>
-
-          {/* Disabled while a picture request is still in flight, so a
-              second click can't fire an overlapping fetch and mix up two
-              answers. */}
-          <button
-            type="submit"
-            className={styles.submit}
-            disabled={picturePending}
-          >
-            Show me
-          </button>
-        </form>
-      )}
-
-      {goalError && <p className={styles.error}>{goalError}</p>}
-
-      {results && (
-        <section ref={resultsRef} className={styles.results}>
-          <p className={styles.resultsIntro}>
-            Here&rsquo;s what sending some of that time elsewhere could look
-            like.
-          </p>
-          <div className={styles.cardRow}>
-            {results.cards.map((card, index) => (
-              <ResultCard
-                key={card.percent}
-                delayIndex={index}
-                step={steps ? steps[index] : null}
-                pending={picturePending}
-                {...card}
-              />
-            ))}
-          </div>
-
-          {pictureError && <p className={styles.error}>{pictureError}</p>}
+        <section ref={goalSectionRef} className={styles.goalSection}>
+          <GoalPicker
+            selectedId={selectedGoal}
+            onSelect={handleGoalSelect}
+            className={styles.cardRow}
+          />
         </section>
       )}
 
-      {/* The next step in the journey, once the cards are on screen -- this
-          doesn't wait for the AI sentences to finish loading, only for the
-          cards themselves to exist. Placeholder for now: see
-          EmailCapture.js. */}
-      {results && (
+      {stage === STAGE.DAILY_ASK && screenTimeMinutes && (
+        <section ref={dailyAskSectionRef} className={styles.dailyAskSection}>
+          <DailyAsk
+            totalMinutes={screenTimeMinutes}
+            selectedPercent={
+              selectedDailyAsk ? selectedDailyAsk.percent : null
+            }
+            onSelect={handleDailyAskSelect}
+            className={styles.cardRow}
+          />
+        </section>
+      )}
+
+      {/* The next step in the journey, once a daily commitment is picked.
+          Placeholder for now: see EmailCapture.js. */}
+      {selectedDailyAsk && (
         <section className={styles.emailSection}>
           <EmailCapture />
         </section>

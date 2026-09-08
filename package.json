@@ -8,8 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --test lib/*.test.js",
-    "check-ai": "node scripts/check-ai.mjs"
+    "test": "node --test lib/*.test.js"
   },
   "dependencies": {
     "next": "16.3.2",
