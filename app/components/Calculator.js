@@ -6,8 +6,8 @@ import { costOverLifetime } from "../../lib/calculate.js";
 import { validateScreenTime } from "../../lib/validate.js";
 import CostTotals from "./CostTotals.js";
 import DailyAsk from "./DailyAsk.js";
-import EmailCapture from "./EmailCapture.js";
 import GoalPicker from "./GoalPicker.js";
+import PlanOffer from "./PlanOffer.js";
 import styles from "./Calculator.module.css";
 
 // The three stages of the flow, in order. Sections accumulate down the page
@@ -254,11 +254,11 @@ export default function Calculator() {
         </section>
       )}
 
-      {/* The next step in the journey, once a daily commitment is picked.
-          Placeholder for now: see EmailCapture.js. */}
+      {/* The real offer, once a daily commitment is picked -- see
+          PlanOffer.js. */}
       {selectedDailyAsk && (
-        <section className={styles.emailSection}>
-          <EmailCapture />
+        <section className={styles.offerSection}>
+          <PlanOffer goalId={selectedGoal} dailyAsk={selectedDailyAsk} />
         </section>
       )}
     </div>
