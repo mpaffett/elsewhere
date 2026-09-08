@@ -1,4 +1,5 @@
 import Calculator from "./components/Calculator.js";
+import FounderTeaser from "./components/FounderTeaser.js";
 import styles from "./page.module.css";
 
 // This stays a server component -- only Calculator.js needs "use client".
@@ -8,6 +9,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <header className={styles.header}>
+        <FounderTeaser />
         <h1 className={styles.title}>Elsewhere</h1>
         <p className={styles.intro}>
           See how far you could get toward something that matters, just by

@@ -1,0 +1,32 @@
+.teaser {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Same treatment as the goal-card icon placeholders, but round -- avatar
+   shape reads as "a person" without needing a real photo yet. */
+.photoPlaceholder {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-card-25-bg);
+  flex-shrink: 0;
+}
+
+.text {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.link {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
