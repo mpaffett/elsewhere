@@ -29,6 +29,24 @@ export default function About() {
           would help me, that&rsquo;s the whole point.
         </p>
 
+        <p>
+          I&rsquo;ll be honest &mdash; I don&rsquo;t love asking people for
+          money. But keeping Elsewhere going, and building the next thing
+          after it, takes real time and real cost, and I&rsquo;d rather
+          charge a small amount upfront than fill this with ads or sell your
+          data. The £9 goes straight toward that: building more ways to
+          pull people away from their screens.
+        </p>
+
+        <p>
+          Because this isn&rsquo;t really about one plan or one week.
+          I want to spend my time building things that get people off their
+          phones and back into the real world &mdash; drawing, writing,
+          making, moving, whatever it is for you. Elsewhere is the first
+          step in that, not the whole of it. Every plan someone buys helps
+          me keep pushing that forward.
+        </p>
+
         <p>Thanks for being here.</p>
 
         <Link href="/" className={styles.back}>
