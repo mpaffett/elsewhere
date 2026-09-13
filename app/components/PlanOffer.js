@@ -32,9 +32,14 @@ export default function PlanOffer({ goalId, dailyAsk }) {
       {/* "Just get in touch" rather than a named address -- there's no
           public contact email defined anywhere in the app yet. Turn this
           into a mailto link once that's decided. Matches the locked REFUND
-          decision: soft and personal, no formal policy. */}
+          decision: soft and personal, no formal policy.
+
+          The 24-hour line sets expectations for manual, made-to-order
+          fulfilment (see PAYMENT-FLOW in the elsewhere-mvp-scope-brainstorm
+          memory) -- nothing here is sent automatically. */}
       <p className={styles.reassurance}>
-        If it&rsquo;s not right for you, just get in touch.
+        Plans are made by hand &mdash; please allow up to 24 hours for
+        delivery. If it&rsquo;s not right for you, just get in touch.
       </p>
     </div>
   );
