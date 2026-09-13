@@ -1,11 +1,8 @@
 import { GOALS } from "../../lib/goals.js";
 import styles from "./PlanOffer.module.css";
 
-// PASTE THE REAL STRIPE PAYMENT LINK HERE once it exists -- Stripe
-// dashboard -> Payment Links -> New -> £9, one-time payment. Until then
-// this points nowhere real, which is fine: there's nothing to sell until
-// the actual 7-day plan content exists either.
-const STRIPE_PAYMENT_LINK_URL = "https://buy.stripe.com/REPLACE_ME";
+// The real £9, one-time Payment Link, created in Matt's Stripe dashboard.
+const STRIPE_PAYMENT_LINK_URL = "https://buy.stripe.com/4gMbJ31MA1wt9lR3Ai2oE00";
 
 // The real offer, replacing what used to be a placeholder email form. See
 // the "PAYMENT-FLOW" section of the elsewhere-mvp-scope-brainstorm memory:
