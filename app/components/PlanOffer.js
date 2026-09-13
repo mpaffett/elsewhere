@@ -38,6 +38,15 @@ export default function PlanOffer({ goalId, dailyAsk }) {
         Plans are made by hand &mdash; please allow up to 24 hours for
         delivery. If it&rsquo;s not right for you, just get in touch.
       </p>
+      {/* PRIVACY, locked in the elsewhere-mvp-scope-brainstorm memory: a
+          short line covering what the email is used for and that it's never
+          sold/shared. Placed here rather than a separate policy page,
+          because this is the actual moment the email gets collected
+          (via Stripe checkout). */}
+      <p className={styles.reassurance}>
+        Your email is only ever used to send your plan &mdash; never sold or
+        shared.
+      </p>
     </div>
   );
 }
