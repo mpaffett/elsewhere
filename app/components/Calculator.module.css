@@ -187,6 +187,31 @@
   /* Sits below the panel via .wrapper's own gap. */
 }
 
+/* Same rise-in every newly revealed section gets (see
+   CostTotals.module.css) -- applied here too so goal, daily-ask and the
+   offer card all settle onto the page the same way the cost ledger does,
+   instead of only the first reveal having any motion at all. */
+.reveal {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: rise 0.5s ease-out forwards;
+}
+
+@keyframes rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
+
 @media (max-width: 640px) {
   .cardRow {
     grid-template-columns: 1fr;

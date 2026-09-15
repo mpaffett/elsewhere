@@ -246,7 +246,10 @@ export default function Calculator() {
         )}
 
         {stage !== STAGE.SCREEN_TIME && (
-          <section ref={goalSectionRef} className={styles.step}>
+          <section
+            ref={goalSectionRef}
+            className={`${styles.step} ${styles.reveal}`}
+          >
             <div className={styles.stepHeaderRow}>
               <div className={styles.stepHeaderLeft}>
                 <span className={styles.stepNumber}>2</span>
@@ -264,7 +267,10 @@ export default function Calculator() {
         )}
 
         {stage === STAGE.DAILY_ASK && screenTimeMinutes && (
-          <section ref={dailyAskSectionRef} className={styles.step}>
+          <section
+            ref={dailyAskSectionRef}
+            className={`${styles.step} ${styles.reveal}`}
+          >
             <div className={styles.stepHeaderRow}>
               <div className={styles.stepHeaderLeft}>
                 <span className={styles.stepNumber}>3</span>
@@ -289,7 +295,7 @@ export default function Calculator() {
           PlanOffer.js. Sits outside the panel as its own card, same
           pattern as the inner emphasis box in the Stitch design. */}
       {selectedDailyAsk && (
-        <section className={styles.offerSection}>
+        <section className={`${styles.offerSection} ${styles.reveal}`}>
           <PlanOffer goalId={selectedGoal} dailyAsk={selectedDailyAsk} />
         </section>
       )}
