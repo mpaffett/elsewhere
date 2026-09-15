@@ -1,7 +1,7 @@
 .heading {
   font-family: var(--font-heading);
   font-size: 1.1rem;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--color-text);
   text-align: center;
 }
@@ -15,15 +15,15 @@
 
 .card {
   background: var(--color-surface);
-  border: 2px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 24px 20px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md);
+  padding: 20px;
   box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  text-align: center;
+  align-items: flex-start;
+  gap: 6px;
+  text-align: left;
   cursor: pointer;
   font-family: inherit;
   transition: border-color 0.15s ease, transform 0.15s ease,
@@ -35,29 +35,104 @@
   box-shadow: var(--shadow-lifted);
 }
 
-/* The chosen card -- a coloured border rather than a separate checkmark
-   icon, so the selected state reads clearly without adding new imagery. */
-.selected {
-  border-color: var(--color-accent);
-  background: color-mix(in srgb, var(--color-accent) 6%, var(--color-surface));
+.card:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
 }
 
-.iconPlaceholder {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  background: var(--color-surface-raised);
+/* One pastel "notebook cover" tint per goal -- background and border tuned
+   per colour, since a single mixed tint reads muddy across three hues. */
+.sage {
+  background: var(--color-sage-bg);
+  border-color: var(--color-sage-border);
+}
+
+.peach {
+  background: var(--color-peach-bg);
+  border-color: var(--color-peach-border);
+}
+
+.lavender {
+  background: var(--color-lavender-bg);
+  border-color: var(--color-lavender-border);
+}
+
+/* The chosen card -- a terracotta border regardless of tint, plus the
+   "Selected" badge, so the selected state reads the same way on all three
+   colours. */
+.selected {
+  border-color: var(--color-accent);
+  border-width: 2px;
+}
+
+.cardTop {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.iconTile {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-text-soft);
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  border-radius: 999px;
+  padding: 3px 10px 3px 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badgeIcon {
+  width: 11px;
+  height: 11px;
+}
+
+.label {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
 }
 
 .title {
   font-family: var(--font-heading);
-  font-size: 1.1rem;
-  font-weight: 600;
+  font-size: 1.2rem;
+  font-weight: 500;
   color: var(--color-text);
 }
 
 .description {
-  font-size: 0.9rem;
-  color: var(--color-text-muted);
-  line-height: 1.4;
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  width: 100%;
+  font-size: 0.88rem;
+  color: var(--color-text-soft);
+  line-height: 1.45;
 }
