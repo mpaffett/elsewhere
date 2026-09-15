@@ -1,51 +1,78 @@
-.form {
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* The notebook panel that holds every step of the flow -- one bordered
+   surface, like the cover of the thing the visitor is about to fill in. */
+.panel {
   background: var(--color-surface);
+  border: 2px solid var(--color-border-strong);
   border-radius: var(--radius);
-  padding: 32px;
   box-shadow: var(--shadow-soft);
+  padding: 28px 24px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
-
-  /* Centers every bare piece of text in the card (the legend, the hints,
-     the goal label). Inherited, so it reaches the labels and hints without
-     needing a rule of its own on each one. align-items stays at its default
-     (stretch) so the fieldset and its input boxes keep the card's full
-     width -- only the text and the specific rows below are recentred. */
-  text-align: center;
+  gap: 32px;
 }
 
-.field {
-  /* Named so the legend rule below can reuse the exact same number. */
-  --field-gap: 10px;
-
+.step {
   display: flex;
   flex-direction: column;
-  gap: var(--field-gap);
-  border: none;
-  padding: 0;
-  margin: 0;
+  gap: 20px;
 }
 
-.label {
-  font-family: var(--font-heading);
-  font-size: 1.05rem;
+.stepHeaderRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.stepHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stepNumber {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stepLabel {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
   font-weight: 600;
-  padding: 0;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-text);
 }
 
-/* Browsers pull a <legend> out of its fieldset's normal flow, which means it
-   isn't a flex item and the gap above skips straight past it. The result was
-   the screen-time heading sitting flush against its input boxes while the
-   goal field below got its 10px -- the two questions looked spaced
-   differently for no visible reason.
+.stepNote {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  color: var(--color-accent);
+}
 
-   We keep the fieldset/legend markup because it's the honest way to group
-   two inputs (hours and minutes) under one question, so we add the spacing
-   back by hand instead. Using the same variable means the two can't drift
-   apart if the gap is ever changed. */
-legend.label {
-  margin-bottom: var(--field-gap);
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
 }
 
 .timeInputs {
@@ -59,8 +86,8 @@ legend.label {
   align-items: center;
   gap: 8px;
   background: var(--color-background);
-  border: 1px solid var(--color-border);
-  border-radius: 12px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
   padding: 10px 16px;
 }
 
@@ -90,31 +117,45 @@ legend.label {
   font-size: 0.95rem;
 }
 
+.timeInput:focus-within {
+  border-color: var(--color-accent);
+  border-width: 1.5px;
+}
+
 .hint {
   font-size: 0.9rem;
   color: var(--color-text-muted);
 }
 
-.timeInput:focus-within {
-  border-color: var(--color-accent);
-}
-
 .submit {
-  align-self: center;
+  margin-top: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: var(--color-accent);
   color: var(--color-on-accent);
-  border: none;
-  border-radius: 999px;
-  padding: 14px 32px;
+  border: 1px solid var(--color-accent-deep);
+  border-radius: var(--radius-sm);
+  padding: 13px 30px;
   font-size: 1.05rem;
   font-weight: 700;
   cursor: pointer;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease,
+    transform 0.075s ease;
+}
+
+.submitIcon {
+  width: 16px;
+  height: 16px;
 }
 
 .submit:hover:not(:disabled) {
-  transform: translateY(-1px);
+  background: var(--color-accent-deep);
   box-shadow: var(--shadow-lifted);
+}
+
+.submit:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .submit:disabled {
@@ -123,36 +164,27 @@ legend.label {
 }
 
 .error {
-  margin-top: 20px;
   background: var(--color-error-bg);
   color: var(--color-error-text);
-  border-radius: 12px;
+  border-radius: var(--radius-sm);
   padding: 14px 18px;
   font-size: 0.95rem;
   text-align: center;
 }
 
-/* Every section below the screen-time form gets the same breathing room. */
 .costSection {
-  margin-top: 32px;
-}
-
-.goalSection {
-  margin-top: 32px;
-}
-
-.dailyAskSection {
-  margin-top: 40px;
-}
-
-.offerSection {
-  margin-top: 32px;
+  /* No extra margin -- gap on .panel already spaces every step and the
+     cost card evenly. */
 }
 
 .cardRow {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
+}
+
+.offerSection {
+  /* Sits below the panel via .wrapper's own gap. */
 }
 
 @media (max-width: 640px) {

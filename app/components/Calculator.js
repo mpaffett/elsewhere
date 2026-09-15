@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { costOverLifetime } from "../../lib/calculate.js";
+import { costOverLifetime, formatDuration } from "../../lib/calculate.js";
 import { validateScreenTime } from "../../lib/validate.js";
 import CostTotals from "./CostTotals.js";
 import DailyAsk from "./DailyAsk.js";
+import { ArrowIcon } from "./Icons.js";
 import GoalPicker from "./GoalPicker.js";
 import PlanOffer from "./PlanOffer.js";
 import styles from "./Calculator.module.css";
@@ -180,82 +181,113 @@ export default function Calculator() {
   }
 
   return (
-    <div>
-      <form className={styles.form} onSubmit={handleScreenTimeSubmit}>
-        <fieldset className={styles.field}>
-          <legend className={styles.label}>
-            What&rsquo;s your daily screen time?
-          </legend>
-          <div className={styles.timeInputs}>
-            <label className={styles.timeInput}>
-              <input
-                type="number"
-                inputMode="numeric"
-                min="0"
-                placeholder="0"
-                value={hours}
-                onChange={handleHoursChange}
-              />
-              <span>hours</span>
-            </label>
-            <label className={styles.timeInput}>
-              <input
-                type="number"
-                inputMode="numeric"
-                min="0"
-                placeholder="0"
-                value={minutes}
-                onChange={handleMinutesChange}
-              />
-              <span>minutes</span>
-            </label>
+    <div className={styles.wrapper}>
+      <div className={styles.panel}>
+        <section className={styles.step}>
+          <div className={styles.stepHeaderRow}>
+            <div className={styles.stepHeaderLeft}>
+              <span className={styles.stepNumber}>1</span>
+              <h2 className={styles.stepLabel}>
+                Step 1: Your daily screen time
+              </h2>
+            </div>
+            {screenTimeMinutes && (
+              <span className={styles.stepNote}>
+                {formatDuration(screenTimeMinutes)} a day
+              </span>
+            )}
           </div>
-          <p className={styles.hint}>
-            You&rsquo;ll find this in Settings &rarr; Screen Time.
-          </p>
-        </fieldset>
 
-        <button type="submit" className={styles.submit}>
-          Show me
-        </button>
-      </form>
+          <form className={styles.form} onSubmit={handleScreenTimeSubmit}>
+            <div className={styles.timeInputs}>
+              <label className={styles.timeInput}>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  placeholder="0"
+                  value={hours}
+                  onChange={handleHoursChange}
+                />
+                <span>hours</span>
+              </label>
+              <label className={styles.timeInput}>
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min="0"
+                  placeholder="0"
+                  value={minutes}
+                  onChange={handleMinutesChange}
+                />
+                <span>minutes</span>
+              </label>
+            </div>
+            <p className={styles.hint}>
+              You&rsquo;ll find this in Settings &rarr; Screen Time.
+            </p>
 
-      {timeError && <p className={styles.error}>{timeError}</p>}
+            <button type="submit" className={styles.submit}>
+              Show me
+              <ArrowIcon className={styles.submitIcon} />
+            </button>
+          </form>
 
-      {/* The cost section: what that screen time adds up to this week,
-          this month, this year. It's local maths, so it appears the
-          instant step 1 is answered. */}
-      {costRows && (
-        <section ref={costSectionRef} className={styles.costSection}>
-          <CostTotals rows={costRows} />
+          {timeError && <p className={styles.error}>{timeError}</p>}
         </section>
-      )}
 
-      {stage !== STAGE.SCREEN_TIME && (
-        <section ref={goalSectionRef} className={styles.goalSection}>
-          <GoalPicker
-            selectedId={selectedGoal}
-            onSelect={handleGoalSelect}
-            className={styles.cardRow}
-          />
-        </section>
-      )}
+        {/* The cost section: what that screen time adds up to this week,
+            this month, this year. It's local maths, so it appears the
+            instant step 1 is answered. */}
+        {costRows && (
+          <section ref={costSectionRef} className={styles.costSection}>
+            <CostTotals rows={costRows} />
+          </section>
+        )}
 
-      {stage === STAGE.DAILY_ASK && screenTimeMinutes && (
-        <section ref={dailyAskSectionRef} className={styles.dailyAskSection}>
-          <DailyAsk
-            totalMinutes={screenTimeMinutes}
-            selectedPercent={
-              selectedDailyAsk ? selectedDailyAsk.percent : null
-            }
-            onSelect={handleDailyAskSelect}
-            className={styles.cardRow}
-          />
-        </section>
-      )}
+        {stage !== STAGE.SCREEN_TIME && (
+          <section ref={goalSectionRef} className={styles.step}>
+            <div className={styles.stepHeaderRow}>
+              <div className={styles.stepHeaderLeft}>
+                <span className={styles.stepNumber}>2</span>
+                <h2 className={styles.stepLabel}>
+                  Step 2: What will you make this week?
+                </h2>
+              </div>
+            </div>
+            <GoalPicker
+              selectedId={selectedGoal}
+              onSelect={handleGoalSelect}
+              className={styles.cardRow}
+            />
+          </section>
+        )}
+
+        {stage === STAGE.DAILY_ASK && screenTimeMinutes && (
+          <section ref={dailyAskSectionRef} className={styles.step}>
+            <div className={styles.stepHeaderRow}>
+              <div className={styles.stepHeaderLeft}>
+                <span className={styles.stepNumber}>3</span>
+                <h2 className={styles.stepLabel}>
+                  Step 3: How much can you give it each day?
+                </h2>
+              </div>
+            </div>
+            <DailyAsk
+              totalMinutes={screenTimeMinutes}
+              selectedPercent={
+                selectedDailyAsk ? selectedDailyAsk.percent : null
+              }
+              onSelect={handleDailyAskSelect}
+              className={styles.cardRow}
+            />
+          </section>
+        )}
+      </div>
 
       {/* The real offer, once a daily commitment is picked -- see
-          PlanOffer.js. */}
+          PlanOffer.js. Sits outside the panel as its own card, same
+          pattern as the inner emphasis box in the Stitch design. */}
       {selectedDailyAsk && (
         <section className={styles.offerSection}>
           <PlanOffer goalId={selectedGoal} dailyAsk={selectedDailyAsk} />

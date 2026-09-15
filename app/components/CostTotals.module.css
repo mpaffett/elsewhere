@@ -1,15 +1,11 @@
 .card {
-  background: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 28px 24px;
-  box-shadow: var(--shadow-soft);
   display: flex;
   flex-direction: column;
   gap: 20px;
 
-  /* Same rise-in as the result cards, so the two sections feel like one
-     visual language even though they appear at different points in the
-     flow. */
+  /* Same rise-in every newly revealed step gets -- see Calculator.module.css
+     -- so the cost numbers feel like part of the same sequence, not a
+     separately-styled card bolted onto the panel. */
   opacity: 0;
   transform: translateY(12px);
   animation: rise 0.5s ease-out forwards;
@@ -36,55 +32,71 @@
   text-align: center;
 }
 
+/* Three columns, like an old ledger -- one horizon per column rather than
+   one row per horizon, so the numbers sit side by side and invite
+   comparison instead of reading as a stacked list. */
 .rows {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
 }
 
-/* Each row reads as one centred stack -- the horizon on top, the figure
-   and its hours below -- rather than a label-left, value-right ledger line.
-   That matches the centred heading above it and the centred cards below. */
 .row {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid var(--color-border);
+  text-align: center;
+  padding: 0 12px;
+  border-left: 1px solid var(--color-border);
 }
 
-.row:last-child {
-  padding-bottom: 0;
-  border-bottom: none;
+.row:first-child {
+  border-left: none;
 }
 
 .horizon {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   color: var(--color-text-muted);
 }
 
 .figure {
   display: flex;
-  align-items: baseline;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 4px 12px;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
 }
 
-/* The headline of each row -- the figure that's meant to land. Fraunces and
-   the accent colour, the same treatment the result cards give their own
-   headline number, so cost and payoff read as two halves of one idea. */
+/* The headline of each column -- the figure that's meant to land. */
 .label {
   font-family: var(--font-heading);
-  font-size: 1.4rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 500;
   color: var(--color-accent);
   white-space: nowrap;
 }
 
 .hours {
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   color: var(--color-text-muted);
   white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .rows {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .row {
+    border-left: none;
+    padding: 0;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .row:last-child {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
 }
