@@ -1,4 +1,5 @@
 import { GOALS } from "../../lib/goals.js";
+import { ArrowIcon, CheckIcon } from "./Icons.js";
 import styles from "./PlanOffer.module.css";
 
 // The real £9, one-time Payment Link, created in Matt's Stripe dashboard.
@@ -18,14 +19,23 @@ export default function PlanOffer({ goalId, dailyAsk }) {
 
   return (
     <div className={styles.card}>
-      <p className={styles.heading}>Ready to commit?</p>
-      <p className={styles.pitch}>
-        A day-by-day plan for {goal.title.toLowerCase()}, sized to{" "}
-        {dailyAsk.minutesLabel} a day &mdash; sent straight to you.
-      </p>
+      <div className={styles.summaryRow}>
+        {/* goal.title as written ("The Daily Object"), not lowercased --
+            the old copy here read "a plan for write a poem" once the goal
+            titles stopped being plain nouns. */}
+        <p className={styles.summary}>
+          <CheckIcon className={styles.summaryIcon} />
+          Selected plan: <strong>{goal.title}</strong> at{" "}
+          <strong>{dailyAsk.minutesLabel}</strong> a day
+        </p>
+        <span className={styles.priceNote}>£9 &middot; one-time</span>
+      </div>
+
       <a href={href} className={styles.cta}>
         Get my plan &mdash; £9
+        <ArrowIcon className={styles.ctaIcon} />
       </a>
+
       {/* hello@elsewhere.it.com forwards to Matt's personal inbox (set up
           2026-09-14) -- masks his personal address without needing a real
           hosted mailbox yet. Matches the locked REFUND decision: soft and
