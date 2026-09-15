@@ -102,7 +102,7 @@ legend.label {
 .submit {
   align-self: center;
   background: var(--color-accent);
-  color: var(--color-card-75-text);
+  color: var(--color-on-accent);
   border: none;
   border-radius: 999px;
   padding: 14px 32px;

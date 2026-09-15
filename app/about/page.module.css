@@ -28,7 +28,7 @@
   width: 88px;
   height: 88px;
   border-radius: 50%;
-  background: var(--color-card-25-bg);
+  background: var(--color-surface-raised);
 }
 
 .back {

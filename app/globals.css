@@ -1,48 +1,56 @@
 /*
-  Design tokens for Elsewhere.
-
-  Everything below is a CSS variable, so a colour or spacing value only
-  needs to change in one place. The three result cards (in
-  calculator.module.css) reuse these same variables, and the Phase 3
-  poster is meant to reuse them again -- one warm palette, used everywhere.
+  Design tokens for Elsewhere, taken from the Google Stitch design in
+  design/stitch/DESIGN.md: warm paper, soot-coloured ink, terracotta accent.
+  Every colour and size lives here so a change only happens in one place.
 */
 :root {
-  /* Warm paper, not white. Nothing on this page is grey. */
-  --color-background: #fbf7f0;
-  --color-surface: #ffffff;
-  --color-text: #241f1a;
-  --color-text-muted: #6b6157;
+  /* Paper tiers -- the page, a panel on the page, and a panel on a panel. */
+  --color-background: #fcf9f4;
+  --color-surface: #f4efe6;
+  --color-surface-raised: #ede5d8;
 
-  /* The three reduction cards get warmer as the reduction deepens --
-     reading left to right should feel like the sun coming up. */
-  --color-card-25-bg: #f3ead9;
-  --color-card-25-text: #241f1a;
-  --color-card-50-bg: #f0b878;
-  --color-card-50-text: #241f1a;
-  --color-card-75-bg: #b5502e;
-  --color-card-75-text: #fbf3e9;
+  /* Ink. Never pure black. */
+  --color-text: #1d1916;
+  --color-text-soft: #2b2725;
+  --color-text-muted: #68615a;
 
-  --color-accent: #b5502e;
+  --color-accent: #c85a32;
+  --color-accent-deep: #b84a28;
+  --color-accent-tint: #faecd9;
+  /* Text sitting on a terracotta button. */
+  --color-on-accent: #fcf9f4;
 
-  /* A second, distinct button colour -- deliberately close to --color-accent
-     but pushed toward true red rather than the warmer terracotta, so a
-     button using this reads as a different KIND of action next to the
-     ordinary "Show me" buttons, not just another step in the same form.
-     First used on the placeholder email-capture button. */
-  --color-accent-alt: #c23a1c;
+  --color-border: #e2d9cb;
+  --color-border-strong: #bdb2a2;
 
   --color-error-bg: #f7e4dc;
   --color-error-text: #8a3418;
-  --color-border: #e7dcc9;
 
-  --font-heading: var(--font-fraunces), Georgia, serif;
-  --font-body: var(--font-karla), -apple-system, sans-serif;
+  /* One soft notebook-cover tint per goal card: background, border, ink. */
+  --color-sage-bg: #ebf2e8;
+  --color-sage-border: #c4d4bf;
+  --color-sage-ink: #3b4e38;
+  --color-peach-bg: #fbf2e7;
+  --color-peach-border: #e5cca8;
+  --color-peach-ink: #7a4e26;
+  --color-lavender-bg: #f4eff7;
+  --color-lavender-border: #d8cddf;
+  --color-lavender-ink: #57486b;
 
-  --radius: 20px;
-  --shadow-soft: 0 12px 32px rgba(36, 31, 26, 0.06);
-  --shadow-lifted: 0 20px 48px rgba(36, 31, 26, 0.1);
+  --font-heading: var(--font-garamond), Georgia, serif;
+  --font-body: var(--font-literata), Georgia, serif;
 
-  --max-width: 720px;
+  --radius: 16px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+
+  /* A faint paper edge rather than a floating drop shadow. */
+  --shadow-soft: 0 2px 0 0 rgba(0, 0, 0, 0.03),
+    0 4px 12px -2px rgba(90, 65, 45, 0.06);
+  --shadow-lifted: 0 2px 0 0 rgba(0, 0, 0, 0.04),
+    0 8px 20px -4px rgba(90, 65, 45, 0.1);
+
+  --max-width: 1024px;
 }
 
 html {
@@ -62,16 +70,11 @@ body {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
 
-  /* A soft glow behind the whole page, like late-afternoon light rather
-     than a flat dashboard background. It's fixed so it doesn't move as
-     the page grows taller once results appear. */
-  background-image: radial-gradient(
-    ellipse 800px 500px at 50% -10%,
-    rgba(240, 184, 120, 0.25),
-    transparent 70%
-  );
-  background-attachment: fixed;
+::selection {
+  background: #deb7a6;
+  color: var(--color-text);
 }
 
 * {
@@ -82,7 +85,7 @@ h1,
 h2,
 h3 {
   font-family: var(--font-heading);
-  font-weight: 600;
+  font-weight: 500;
   line-height: 1.15;
   margin: 0;
 }

@@ -1,20 +1,20 @@
-import { Fraunces, Karla } from "next/font/google";
+import { EB_Garamond, Literata } from "next/font/google";
 import "./globals.css";
 
-// Fraunces is the display font, used for headings. It's a soft, slightly
-// wonky serif with real warmth to it -- the opposite of a corporate app.
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+// Headings. A classical book serif -- the design leans on fine-press
+// stationery, so the display face should read like set type, not an app.
+// Italic is loaded for the emphasised phrase in the hero headline.
+const garamond = EB_Garamond({
+  variable: "--font-garamond",
   subsets: ["latin"],
-  weight: ["500", "600"],
+  style: ["normal", "italic"],
 });
 
-// Karla is the body font, used for everything else. It's clean and
-// friendly, and stays readable at small sizes.
-const karla = Karla({
-  variable: "--font-karla",
+// Body and labels. A second serif built for screens, so small text stays
+// readable while matching the heading's bookish tone.
+const literata = Literata({
+  variable: "--font-literata",
   subsets: ["latin"],
-  weight: ["400", "500", "700"],
 });
 
 export const metadata = {
@@ -25,7 +25,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${fraunces.variable} ${karla.variable}`}>
+    <html lang="en" className={`${garamond.variable} ${literata.variable}`}>
       <body>{children}</body>
     </html>
   );

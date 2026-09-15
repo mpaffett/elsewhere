@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Elsewhere — Turn wasted phone time into one finished thing.</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&amp;family=Literata:ital,opsz,wght@0,7..72,300;0,7..72,400;0,7..72,500;0,7..72,600;1,7..72,400&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-lowest": "#ffffff",
+            "secondary": "#82541b",
+            "on-tertiary-container": "#f8fff0",
+            "surface-container-low": "#fbf2ee",
+            "secondary-fixed-dim": "#f8bb78",
+            "paper-surface": "#F4EFE6",
+            "ink-charcoal": "#2B2725",
+            "on-secondary-fixed": "#2b1700",
+            "surface-variant": "#e9e1dd",
+            "surface-container": "#f5ece9",
+            "primary-container": "#bf542c",
+            "surface-tint": "#a23e18",
+            "ink-deep": "#1D1916",
+            "on-primary-container": "#fffbff",
+            "on-primary": "#ffffff",
+            "on-tertiary-fixed-variant": "#3d4a39",
+            "on-error-container": "#93000a",
+            "error-container": "#ffdad6",
+            "surface-container-highest": "#e9e1dd",
+            "ochre-warm": "#D49B5B",
+            "error": "#ba1a1a",
+            "on-secondary": "#ffffff",
+            "surface-container-high": "#efe6e3",
+            "on-tertiary-fixed": "#121f10",
+            "primary-fixed-dim": "#ffb59c",
+            "tertiary-fixed": "#d7e7cf",
+            "on-surface-variant": "#57423b",
+            "on-surface": "#1e1b19",
+            "outline-variant": "#dec0b7",
+            "terracotta-deep": "#B84A28",
+            "surface-dim": "#e1d8d5",
+            "on-primary-fixed-variant": "#822801",
+            "blush-petal": "#DEB7A6",
+            "inverse-surface": "#342f2d",
+            "secondary-container": "#fec07c",
+            "primary": "#9f3c16",
+            "secondary-fixed": "#ffddbb",
+            "sage-soft": "#84937E",
+            "on-error": "#ffffff",
+            "border-strong": "#BDB2A2",
+            "on-primary-fixed": "#390c00",
+            "terracotta-rich": "#C85A32",
+            "on-tertiary": "#ffffff",
+            "border-subtle": "#E2D9CB",
+            "paper-elevated": "#EDE5D8",
+            "tertiary": "#52604d",
+            "on-secondary-container": "#794c13",
+            "on-background": "#1e1b19",
+            "ink-muted": "#68615A",
+            "tertiary-container": "#6a7965",
+            "on-secondary-fixed-variant": "#673d03",
+            "inverse-on-surface": "#f8efeb",
+            "background": "#fff8f5",
+            "paper-base": "#FCF9F4",
+            "primary-fixed": "#ffdbcf",
+            "tertiary-fixed-dim": "#bbcbb4",
+            "inverse-primary": "#ffb59c",
+            "surface-bright": "#fff8f5",
+            "outline": "#8a726a",
+            "surface": "#fff8f5",
+            /* Tactile Notebook Pastels */
+            "pastel-sage": "#E9EFE6",
+            "pastel-sage-border": "#C4D4BF",
+            "pastel-sage-ink": "#3B4E38",
+            "pastel-peach": "#FAF0E6",
+            "pastel-peach-border": "#E5CCA8",
+            "pastel-peach-ink": "#7A4E26",
+            "pastel-butter": "#F6F1F9",
+            "pastel-butter-border": "#D8CDDF",
+            "pastel-butter-ink": "#57486B"
+          },
+          fontFamily: {
+            "headline-lg": ["EB Garamond", "serif"],
+            "headline-md": ["EB Garamond", "serif"],
+            "headline-sm": ["EB Garamond", "serif"],
+            "display-lg": ["EB Garamond", "serif"],
+            "display-md": ["EB Garamond", "serif"],
+            "body-lg": ["Literata", "serif"],
+            "body-md": ["Literata", "serif"],
+            "body-sm": ["Literata", "serif"],
+            "label-lg": ["Literata", "serif"],
+            "label-md": ["Literata", "serif"],
+            "label-sm": ["Literata", "serif"]
+          },
+          boxShadow: {
+            "notebook": "0 2px 0 0 rgba(0,0,0,0.03), 0 4px 12px -2px rgba(90,65,45,0.06)",
+            "notebook-active": "0 0 0 2px #C85A32, 0 6px 16px -2px rgba(200,90,50,0.18)"
+          }
+        }
+      }
+    };
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Debossed notebook texture border simulation */
+    .notebook-spine {
+      box-shadow: inset 4px 0 0 0 rgba(0,0,0,0.06), inset -1px 0 0 0 rgba(255,255,255,0.6);
+    }
+    .debossed-frame {
+      box-shadow: inset 0 1px 2px rgba(0,0,0,0.04), 0 1px 0 rgba(255,255,255,0.8);
+    }
+    /* Slider styling */
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      height: 20px;
+      width: 20px;
+      border-radius: 9999px;
+      background: #C85A32;
+      border: 3px solid #FCF9F4;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      cursor: pointer;
+      transition: transform 0.1s ease;
+    }
+    input[type=range]::-webkit-slider-thumb:hover {
+      transform: scale(1.15);
+    }
+    input[type=range]::-moz-range-thumb {
+      height: 20px;
+      width: 20px;
+      border-radius: 9999px;
+      background: #C85A32;
+      border: 3px solid #FCF9F4;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body class="bg-paper-base text-ink-deep font-body-md selection:bg-blush-petal selection:text-ink-deep min-h-screen antialiased flex flex-col justify-between">
+<!-- Top Navigation -->
+<header class="bg-paper-base/95 backdrop-blur-sm border-b border-border-subtle sticky top-0 z-50">
+<div class="flex justify-between items-center w-full px-gutter md:px-margin py-3.5 max-w-7xl mx-auto">
+<!-- Brand Anchor -->
+<div class="flex items-center space-x-6">
+<a class="font-headline-lg text-2xl md:text-headline-lg text-ink-deep tracking-tight font-medium hover:text-terracotta-rich transition-colors" href="#">
+        Elsewhere
+      </a>
+<span class="hidden sm:inline-block font-label-sm text-[11px] tracking-widest text-ink-muted border-l border-border-subtle pl-4 uppercase">
+        Private Press • Issue No. 07
+      </span>
+</div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex items-center space-x-7"><a class="text-terracotta-rich border-b border-terracotta-rich pb-0.5 font-label-md text-xs tracking-wide" href="#minutes">1. Reclaimed Time</a>
+<a class="text-ink-muted font-label-md text-xs tracking-wide hover:text-ink-deep pb-0.5 transition-colors" href="#vessels">2. The Vessels</a>
+<a class="text-ink-muted font-label-md text-xs tracking-wide hover:text-ink-deep pb-0.5 transition-colors" href="#founder">Founder Story</a>
+<a class="text-ink-muted font-label-md text-xs tracking-wide hover:text-ink-deep pb-0.5 transition-colors" href="#manifesto">Manifesto</a></nav>
+<!-- Trailing Action & Founder Note Badge -->
+<div class="flex items-center space-x-4">
+<a class="flex items-center space-x-2.5 group pr-1" href="#founder">
+<div class="relative w-8 h-8 border border-border-strong rounded-full overflow-hidden p-0.5 bg-paper-surface">
+<img alt="Matt, founder of Elsewhere, seated at a wooden desk with a notebook" class="w-full h-full object-cover rounded-full filter saturate-95" src="https://lh3.googleusercontent.com/aida/AEtjO1VH2vBcari-jUwXDUGYODknw1wxVXP8gs-ZUVI4VH1SVH5Q4R04YmFRiHreKR76EncM99cp5h9ols-WZrtQErWhPKVMev-kSKOELZLQfPLW047ZcdNbStCOTpZtRg53honZmdDBjg73ci_2ebMpTQUX-6VoFyG6yLAzT3wtNRkzJWl8vArWmy_jdW3cYnAO11zfYif2_z9VX1MRlEPHmym_a4VupYNhQYZwxf3_7rYmXrStn62fVyFzsH47"/>
+</div>
+<div class="hidden lg:flex flex-col text-left leading-tight">
+<span class="font-label-sm text-[11px] text-ink-deep group-hover:text-terracotta-rich transition-colors">Made by Matt</span>
+<span class="font-label-sm text-[10px] text-ink-muted underline underline-offset-2 decoration-border-strong">Founder's note</span>
+</div>
+</a>
+<a class="bg-terracotta-rich hover:bg-terracotta-deep text-paper-base px-3.5 py-1.5 rounded border border-terracotta-deep font-label-md text-xs active:translate-y-px duration-75 transition-all flex items-center gap-1.5 shadow-sm" href="#checkout">
+<span>Begin Week (£9)</span>
+<span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+</div>
+</div>
+</header>
+<!-- Main Container -->
+<main class="flex-grow">
+<div class="max-w-5xl mx-auto px-gutter md:px-margin pt-8 pb-16 space-y-10">
+<!-- Hero Header: Goal-first editorial introduction + Founder Card -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2" id="founder">
+<div class="space-y-3.5 max-w-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 bg-paper-elevated border border-border-strong/70 rounded-full">
+<span class="w-2 h-2 rounded-full bg-terracotta-rich animate-pulse"></span>
+<span class="font-label-sm text-[11px] text-ink-charcoal uppercase tracking-widest font-medium">A Gentle 7-Day Creative Experiment</span>
+</div>
+<h1 class="font-display-lg text-4xl sm:text-5xl lg:text-[54px] text-ink-deep font-normal tracking-tight leading-[1.12]">
+          Turn wasted phone time into <span class="italic font-normal underline decoration-terracotta-rich decoration-2 underline-offset-8">one finished thing</span>.
+        </h1>
+<p class="font-body-lg text-base sm:text-lg text-ink-muted leading-relaxed max-w-xl">
+          Trade 25 minutes of morning scrolling for a tangible, handmade keepsake. No subscription, no apps, no streaks. Guided day-by-day by letterpress artisan Matt.
+        </p>
+</div>
+<!-- Founder Polaroid / Notebook Badge -->
+<div class="flex md:flex-col items-center md:items-end gap-3.5 bg-paper-surface border border-border-strong/80 p-4 rounded-xl shadow-sm shrink-0 self-start md:self-auto max-w-xs debossed-frame">
+<div class="flex items-center gap-3">
+<img alt="Matt Reynolds" class="w-13 h-13 sm:w-14 sm:h-14 object-cover rounded-full border-2 border-terracotta-rich/40 shadow-sm" src="https://lh3.googleusercontent.com/aida/AEtjO1VH2vBcari-jUwXDUGYODknw1wxVXP8gs-ZUVI4VH1SVH5Q4R04YmFRiHreKR76EncM99cp5h9ols-WZrtQErWhPKVMev-kSKOELZLQfPLW047ZcdNbStCOTpZtRg53honZmdDBjg73ci_2ebMpTQUX-6VoFyG6yLAzT3wtNRkzJWl8vArWmy_jdW3cYnAO11zfYif2_z9VX1MRlEPHmym_a4VupYNhQYZwxf3_7rYmXrStn62fVyFzsH47"/>
+<div class="text-left">
+<p class="font-headline-sm text-base text-ink-deep font-medium leading-none">Matt Reynolds</p>
+<p class="font-label-sm text-[11px] text-ink-muted mt-1 tracking-wide">Letterpress Artisan • London</p>
+</div>
+</div>
+<p class="font-body-sm text-xs text-ink-charcoal italic max-w-[210px] text-left md:text-right border-t border-border-subtle/80 pt-2 md:pt-2">
+          “Reclaim 7 quiet mornings for an artifact you can hold in your hands.”
+        </p>
+</div>
+</div>
+<!-- Editorial Interactive Notebook Planner -->
+<div class="bg-paper-surface border-2 border-border-strong rounded-2xl p-6 sm:p-9 md:p-10 relative shadow-sm space-y-9" id="vessels"><!-- STEP 1: WHERE WILL THE MINUTES COME FROM? -->
+<div class="space-y-4 pt-1" id="minutes">
+<div class="flex items-center justify-between flex-wrap gap-2 pb-1 border-b border-border-subtle/70">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 rounded-full bg-terracotta-rich text-paper-base font-label-sm text-xs flex items-center justify-center font-bold">1</span>
+<h2 class="font-label-lg text-ink-deep text-sm uppercase tracking-wider font-semibold">
+        Step 1: Where will the minutes come from?
+      </h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-headline-md text-xl sm:text-2xl text-terracotta-rich font-medium" id="sliderValueDisplay">3h 45m / day</span>
+<span class="px-2.5 py-0.5 rounded-full bg-[#faecd9] text-terracotta-deep border border-terracotta-rich/20 font-label-sm text-xs font-medium" id="equivalencyPill">
+        = 26 hrs wasted this week
+      </span>
+</div>
+</div>
+<div class="bg-paper-base/70 border border-border-subtle rounded-xl p-4 sm:p-5 space-y-3">
+<div class="flex items-center justify-between text-xs font-label-sm text-ink-muted">
+<span>Drag to your daily screen time:</span>
+<span class="text-terracotta-rich font-medium" id="sliderSubtext">Taking just 25 min leaves you with plenty of day</span>
+</div>
+<input class="w-full h-2.5 bg-[#E2D9CB] rounded-full appearance-none cursor-pointer accent-terracotta-rich focus:outline-none" id="screenTimeSlider" max="7.0" min="1.5" step="0.25" type="range" value="3.75"/>
+<div class="flex justify-between font-label-sm text-[11px] text-ink-muted/90 pt-1">
+<span>1h 30m (Light)</span>
+<span class="hidden sm:inline">2h 45m</span>
+<span class="font-semibold text-ink-deep">3h 45m (UK/US Average)</span>
+<span class="hidden sm:inline">5h 15m</span>
+<span>7h 00m+ (Heavy)</span>
+</div>
+</div>
+</div>
+<!-- STEP 2: WHAT WILL YOU MAKE THIS WEEK? (Stationery Notebook Covers) -->
+<div class="space-y-4 pt-1">
+<div class="flex items-center justify-between flex-wrap gap-2 pb-1 border-b border-border-subtle/70">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 rounded-full bg-terracotta-rich/20 text-terracotta-rich font-label-sm text-xs flex items-center justify-center font-bold">2</span>
+<h2 class="font-label-lg text-ink-deep text-sm uppercase tracking-wider font-semibold">
+        Step 2: What will you make this week?
+      </h2>
+</div>
+<span class="font-label-sm text-xs text-ink-muted italic">Choose your 7-day creative vessel</span>
+</div>
+<!-- 3 Tactile Pastel Notebook Covers -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4" id="projectsContainer">
+<!-- Notebook 1: Soft Sage (Drawing) - Preselected -->
+<div class="project-card cursor-pointer border-2 border-terracotta-rich bg-[#EBF2E8] p-5 rounded-xl flex flex-col justify-between transition-all relative shadow-notebook notebook-spine group" data-project="drawing" onclick="selectProject('drawing', this)">
+<div class="space-y-3">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-white/90 text-pastel-sage-ink flex items-center justify-center border border-pastel-sage-border shadow-xs">
+<span class="material-symbols-outlined text-xl">draw</span>
+</div>
+<span class="px-2.5 py-0.5 rounded-full bg-terracotta-rich text-paper-base font-label-sm text-[10px] tracking-wider uppercase font-semibold project-badge shadow-xs">Selected</span>
+</div>
+<div>
+<span class="font-label-sm text-[11px] text-pastel-sage-ink uppercase tracking-wider font-semibold block mb-0.5">Discipline I • Drawing</span>
+<h3 class="font-headline-sm text-xl text-ink-deep font-medium leading-snug">The Daily Object</h3>
+</div>
+<p class="font-body-sm text-xs text-ink-charcoal/80 leading-relaxed border-t border-pastel-sage-border/60 pt-2.5">
+          Draw 1 household keepsake each dawn with pen &amp; ink. Concludes Sunday as a bound 7-page study folio.
+        </p>
+</div>
+<div class="pt-3 flex items-center justify-between text-[11px] font-label-sm text-pastel-sage-ink font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px]">auto_stories</span> 7 Guided folios</span>
+<span class="underline decoration-pastel-sage-ink/50 underline-offset-2">Inspect Vessel</span>
+</div>
+</div>
+<!-- Notebook 2: Warm Peach / Apricot (Journaling) -->
+<div class="project-card cursor-pointer border border-border-strong bg-[#FBF2E7] hover:bg-[#FAF0E2] p-5 rounded-xl flex flex-col justify-between transition-all relative shadow-notebook notebook-spine group" data-project="journal" onclick="selectProject('journal', this)">
+<div class="space-y-3">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-white/90 text-pastel-peach-ink flex items-center justify-center border border-pastel-peach-border shadow-xs">
+<span class="material-symbols-outlined text-xl">history_edu</span>
+</div>
+<span class="hidden px-2.5 py-0.5 rounded-full bg-terracotta-rich text-paper-base font-label-sm text-[10px] tracking-wider uppercase font-semibold project-badge shadow-xs">Selected</span>
+</div>
+<div>
+<span class="font-label-sm text-[11px] text-pastel-peach-ink uppercase tracking-wider font-semibold block mb-0.5">Discipline II • Journaling</span>
+<h3 class="font-headline-sm text-xl text-ink-deep font-medium leading-snug">The Seven Prompts</h3>
+</div>
+<p class="font-body-sm text-xs text-ink-charcoal/80 leading-relaxed border-t border-pastel-peach-border/60 pt-2.5">
+          Untangle your mind with contemplative letters and inquiries. Concludes Sunday as a personal stitched essay.
+        </p>
+</div>
+<div class="pt-3 flex items-center justify-between text-[11px] font-label-sm text-pastel-peach-ink font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px]">edit_note</span> 7 Inquiry letters</span>
+<span class="underline decoration-pastel-peach-ink/50 underline-offset-2">Inspect Vessel</span>
+</div>
+</div>
+<!-- Notebook 3: Soft Muted Lavender / Butter (Poetry) -->
+<div class="project-card cursor-pointer border border-border-strong bg-[#F4EFF7] hover:bg-[#EFE9F3] p-5 rounded-xl flex flex-col justify-between transition-all relative shadow-notebook notebook-spine group" data-project="poetry" onclick="selectProject('poetry', this)">
+<div class="space-y-3">
+<div class="flex items-start justify-between">
+<div class="w-10 h-10 rounded-lg bg-white/90 text-pastel-butter-ink flex items-center justify-center border border-pastel-butter-border shadow-xs">
+<span class="material-symbols-outlined text-xl">format_quote</span>
+</div>
+<span class="hidden px-2.5 py-0.5 rounded-full bg-terracotta-rich text-paper-base font-label-sm text-[10px] tracking-wider uppercase font-semibold project-badge shadow-xs">Selected</span>
+</div>
+<div>
+<span class="font-label-sm text-[11px] text-pastel-butter-ink uppercase tracking-wider font-semibold block mb-0.5">Discipline III • Poetry</span>
+<h3 class="font-headline-sm text-xl text-ink-deep font-medium leading-snug">The Guided Poem</h3>
+</div>
+<p class="font-body-sm text-xs text-ink-charcoal/80 leading-relaxed border-t border-pastel-butter-border/60 pt-2.5">
+          One quiet stanza crafted by dusk. Culminates Sunday evening into a custom-bound 14-line letterpress verse.
+        </p>
+</div>
+<div class="pt-3 flex items-center justify-between text-[11px] font-label-sm text-pastel-butter-ink font-medium">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[13px]">menu_book</span> 7 Stanzas to Sunday</span>
+<span class="underline decoration-pastel-butter-ink/50 underline-offset-2">Inspect Vessel</span>
+</div>
+</div>
+</div>
+</div>
+<!-- STEP 3: YOUR DAILY FLOOR & DIRECT 1-CLICK CHECKOUT -->
+<div class="space-y-4 pt-1" id="commit">
+<div class="flex items-center justify-between flex-wrap gap-2 pb-1 border-b border-border-subtle/70">
+<div class="flex items-center gap-2.5">
+<span class="w-6 h-6 rounded-full bg-terracotta-rich/20 text-terracotta-rich font-label-sm text-xs flex items-center justify-center font-bold">3</span>
+<h2 class="font-label-lg text-ink-deep text-sm uppercase tracking-wider font-semibold">
+        Step 3: Choose your daily floor threshold
+      </h2>
+</div>
+<span class="font-label-sm text-xs text-ink-muted">Small enough to never miss</span>
+</div>
+<!-- Floor Options -->
+<div class="grid grid-cols-3 gap-3 sm:gap-4" id="floorContainer">
+<div class="floor-card cursor-pointer border border-border-strong bg-[#faf7f0] hover:bg-[#fffefb] p-3.5 sm:p-4 rounded-xl text-center transition-all shadow-xs" onclick="selectFloor(15, this)">
+<span class="block font-headline-sm text-xl sm:text-2xl text-ink-deep font-medium">15 min</span>
+<span class="block font-label-sm text-[11px] text-ink-muted uppercase tracking-wider mt-0.5">Gentle Floor</span>
+</div>
+<div class="floor-card cursor-pointer border-2 border-terracotta-rich bg-[#FFFBF7] p-3.5 sm:p-4 rounded-xl text-center transition-all shadow-xs" onclick="selectFloor(25, this)">
+<span class="block font-headline-sm text-xl sm:text-2xl text-terracotta-rich font-semibold">25 min</span>
+<span class="block font-label-sm text-[11px] text-terracotta-rich uppercase tracking-wider font-semibold mt-0.5">Recommended</span>
+</div>
+<div class="floor-card cursor-pointer border border-border-strong bg-[#faf7f0] hover:bg-[#fffefb] p-3.5 sm:p-4 rounded-xl text-center transition-all shadow-xs" onclick="selectFloor(45, this)">
+<span class="block font-headline-sm text-xl sm:text-2xl text-ink-deep font-medium">45 min</span>
+<span class="block font-label-sm text-[11px] text-ink-muted uppercase tracking-wider mt-0.5">Deep Focus</span>
+</div>
+</div>
+<!-- Instant Direct Checkout Bar -->
+<div class="pt-3" id="checkout">
+<div class="p-4 sm:p-5 bg-paper-base border-2 border-terracotta-rich/40 rounded-xl space-y-3">
+<div class="flex items-center justify-between flex-wrap gap-2 text-xs font-label-sm">
+<div class="flex items-center gap-1.5 text-ink-deep">
+<span class="material-symbols-outlined text-base text-terracotta-rich">verified</span>
+<span>Selected plan: <strong class="text-terracotta-rich" id="summaryVessel">The Daily Object</strong> at a <strong class="text-terracotta-rich" id="summaryFloor">25-minute</strong> daily quiet floor</span>
+</div>
+<span class="text-ink-muted">Single dispatch • £9 one-time</span>
+</div>
+<form class="space-y-3" onsubmit="handleCommitment(event)">
+<div class="flex flex-col sm:flex-row items-stretch gap-2.5">
+<div class="relative flex-grow">
+<input class="w-full bg-[#fffefb] border border-border-strong text-ink-deep font-body-md text-sm sm:text-base px-4 py-3 sm:py-3.5 rounded-lg focus:ring-1 focus:ring-terracotta-rich focus:border-terracotta-rich transition-all" id="userEmail" placeholder="Enter your quiet email for morning folios..." required="" type="email"/>
+</div>
+<button class="bg-terracotta-rich hover:bg-terracotta-deep text-paper-base font-label-lg text-sm sm:text-base px-7 py-3 sm:py-3.5 rounded-lg border border-terracotta-deep transition-all duration-150 active:translate-y-px shadow-sm flex items-center justify-center gap-2 whitespace-nowrap" type="submit">
+<span>Begin 7-Day Plan — £9</span>
+<span class="material-symbols-outlined text-base">arrow_forward</span>
+</button>
+</div>
+<div class="flex flex-wrap items-center justify-between text-[11px] font-label-sm text-ink-muted gap-2 pt-0.5">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[15px] text-sage-soft">lock</span>
+<span>One-time £9 charge • No subscriptions • Instant archival PDF &amp; morning dispatches</span>
+</div>
+<div class="flex items-center gap-1.5 text-terracotta-rich font-medium">
+<span class="material-symbols-outlined text-[15px]">mail</span>
+<span>First dispatch arrives tomorrow at 7:00 AM</span>
+</div>
+</div>
+</form>
+</div>
+</div>
+</div></div>
+<!-- Manifesto Block -->
+<div class="border border-border-subtle bg-[#fcf9f2] rounded-xl p-6 sm:p-8 text-center space-y-3" id="manifesto">
+<span class="font-label-sm text-xs text-terracotta-rich uppercase tracking-widest block font-medium">From the Slow Publishing Manifesto</span>
+<blockquote class="font-headline-md text-xl md:text-2xl text-ink-deep italic font-normal leading-relaxed max-w-2xl mx-auto">
+        “In an age that monetizes your frantic distractedness, to finish one small, quiet thing with your hands is an act of quiet rebellion.”
+      </blockquote>
+<p class="font-label-md text-xs text-ink-muted">— Elsewhere Press, No. 4 Florin Court, London</p>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-paper-surface border-t border-border-subtle">
+<div class="w-full px-gutter md:px-margin py-space-xl max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-space-md">
+<!-- Brand & Colophon -->
+<div class="flex flex-col items-center md:items-start space-y-1">
+<span class="font-headline-sm text-headline-sm text-ink-deep">Elsewhere</span>
+<p class="font-body-sm text-body-sm text-ink-muted text-center md:text-left">
+        © Elsewhere Press. Handcrafted for mindful attention. Set in EB Garamond &amp; Literata.
+      </p>
+</div>
+<!-- Links -->
+<div class="flex flex-wrap justify-center md:justify-end gap-x-6 gap-y-2 font-label-sm text-label-sm">
+<a class="text-ink-deep underline underline-offset-4 hover:text-terracotta-rich transition-colors" href="#">Editorial Colophon</a>
+<a class="text-ink-muted underline underline-offset-4 hover:text-terracotta-rich transition-colors" href="#">Seven-Day Ledger</a>
+<a class="text-ink-muted underline underline-offset-4 hover:text-terracotta-rich transition-colors" href="#manifesto">Slow Publishing Manifesto</a>
+<a class="text-ink-muted underline underline-offset-4 hover:text-terracotta-rich transition-colors" href="#">Quiet Terms</a>
+<a class="text-ink-muted underline underline-offset-4 hover:text-terracotta-rich transition-colors" href="#">Dispatches</a>
+</div>
+</div>
+</footer>
+<!-- Interactive Scripts -->
+<script>
+  // State
+  let selectedProjectTitle = "The Daily Object (Drawing Course)";
+  let selectedProjectShort = "The Daily Object";
+  let selectedFloorMinutes = 25;
+
+  // Real-time Screen Time Calculations
+  const slider = document.getElementById('screenTimeSlider');
+  const display = document.getElementById('sliderValueDisplay');
+  const equivalency = document.getElementById('equivalencyPill');
+  const summaryFloor = document.getElementById('summaryFloor');
+  const summaryVessel = document.getElementById('summaryVessel');
+
+  function updateMetrics(hours) {
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+    display.textContent = `${h}h ${m < 10 ? '0' : ''}${m}m / day`;
+
+    const weekHours = Math.round(hours * 7);
+    equivalency.textContent = `= ${weekHours} hrs wasted this week`;
+  }
+
+  if (slider) {
+    slider.addEventListener('input', (e) => {
+      updateMetrics(parseFloat(e.target.value));
+    });
+  }
+
+  // Step 1: Creative Vessel Selection
+  function selectProject(discipline, element) {
+    const cards = document.querySelectorAll('.project-card');
+    cards.forEach(card => {
+      card.classList.remove('border-2', 'border-terracotta-rich');
+      card.classList.add('border', 'border-border-strong');
+      const badge = card.querySelector('.project-badge');
+      if (badge) badge.classList.add('hidden');
+    });
+
+    element.classList.remove('border-border-strong');
+    element.classList.add('border-2', 'border-terracotta-rich');
+    const activeBadge = element.querySelector('.project-badge');
+    if (activeBadge) activeBadge.classList.remove('hidden');
+
+    if (discipline === 'drawing') {
+      selectedProjectTitle = "The Daily Object (Drawing Course)";
+      selectedProjectShort = "The Daily Object";
+    } else if (discipline === 'journal') {
+      selectedProjectTitle = "The Seven Prompts (Contemplative Journaling)";
+      selectedProjectShort = "The Seven Prompts";
+    } else {
+      selectedProjectTitle = "The Guided Poem (Seven Stanzas to Sunday)";
+      selectedProjectShort = "The Guided Poem";
+    }
+
+    if (summaryVessel) {
+      summaryVessel.textContent = selectedProjectShort;
+    }
+  }
+
+  // Step 3: Floor Selection
+  function selectFloor(minutes, element) {
+    const cards = document.querySelectorAll('.floor-card');
+    cards.forEach(card => {
+      card.classList.remove('border-2', 'border-terracotta-rich', 'bg-[#FFFBF7]');
+      card.classList.add('border', 'border-border-strong', 'bg-[#faf7f0]');
+      const labelSpan = card.querySelector('span:last-child');
+      const numSpan = card.querySelector('span:first-child');
+      if (labelSpan) {
+        labelSpan.classList.remove('text-terracotta-rich', 'font-semibold');
+        labelSpan.classList.add('text-ink-muted');
+      }
+      if (numSpan) {
+        numSpan.classList.remove('text-terracotta-rich', 'font-semibold');
+        numSpan.classList.add('text-ink-deep');
+      }
+    });
+
+    element.classList.remove('border-border-strong', 'bg-[#faf7f0]');
+    element.classList.add('border-2', 'border-terracotta-rich', 'bg-[#FFFBF7]');
+    
+    const labelSpan = element.querySelector('span:last-child');
+    const numSpan = element.querySelector('span:first-child');
+    if (labelSpan) {
+      labelSpan.classList.add('text-terracotta-rich', 'font-semibold');
+      labelSpan.classList.remove('text-ink-muted');
+    }
+    if (numSpan) {
+      numSpan.classList.add('text-terracotta-rich', 'font-semibold');
+      numSpan.classList.remove('text-ink-deep');
+    }
+
+    selectedFloorMinutes = minutes;
+    if (summaryFloor) {
+      summaryFloor.textContent = `${minutes}-minute`;
+    }
+  }
+
+  // Submission handler
+  function handleCommitment(e) {
+    e.preventDefault();
+    const email = document.getElementById('userEmail').value;
+    alert(`Thank you! Your order for "${selectedProjectTitle}" at a ${selectedFloorMinutes}-minute daily floor (£9) has been prepared for ${email}. Matt will send your archival starter packet immediately.`);
+  }
+</script>
+</body></html>
