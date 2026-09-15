@@ -7,21 +7,27 @@ import styles from "./FounderTeaser.module.css";
 // in the elsewhere-mvp-scope-brainstorm memory for why it lives here and
 // not in either of those spots.
 //
+// Styled as a card sitting beside the hero text, not a header line --
+// the layout Calculator.js's caller (page.js) now gives it makes room for
+// that without needing FounderTeaser itself to know about the hero.
+//
 // No "use client" needed -- this is static content plus a link, so it can
 // stay a server component like page.js itself.
 export default function FounderTeaser() {
   return (
-    <div className={styles.teaser}>
+    <div className={styles.card}>
       {/* Placeholder for a real photo later -- circular on purpose, so it
           reads as "a person" at a glance, distinct from the square icon
-          placeholders on the goal cards. */}
+          tiles on the goal cards. */}
       <span className={styles.photoPlaceholder} aria-hidden="true" />
-      <p className={styles.text}>
-        Hi, I&rsquo;m Matt &mdash; I built this because I needed it myself.{" "}
+      <div className={styles.copy}>
+        <p className={styles.text}>
+          Hi, I&rsquo;m Matt &mdash; I built this because I needed it myself.
+        </p>
         <Link href="/about" className={styles.link}>
           My story &rarr;
         </Link>
-      </p>
+      </div>
     </div>
   );
 }
