@@ -11,22 +11,19 @@ import GoalPicker from "./GoalPicker.js";
 import PlanOffer from "./PlanOffer.js";
 import styles from "./Calculator.module.css";
 
-// The three stages of the flow, in order. Sections accumulate down the page
-// as a visitor reaches each one rather than replacing what came before --
-// the numbers they've already agreed to (their own screen time, the cost of
-// it) stay on screen while they answer the next question, which is what
-// makes each question feel earned rather than just the next field in a form.
+// Two stages, not three. Steps 2 and 3 (goal, daily-ask) reveal together as
+// soon as screen time is answered, rather than one-after-the-other -- the
+// only wait that's unavoidable is the first one, since daily-ask's minutes
+// are a percentage of a number that doesn't exist until step 1 is answered.
+// See the "all-at-once" layout test discussed 2026-09-16.
 const STAGE = {
   SCREEN_TIME: "screenTime",
-  GOAL: "goal",
-  DAILY_ASK: "dailyAsk",
+  ANSWERED: "answered",
 };
 
-// How long a new section gets to sit alone before the next one appears
-// underneath it. Used for every transition below -- the cost card's own
-// fade-in animation (see CostTotals.module.css) takes 500ms, so this
-// matches that: each new section shows up right as the previous one
-// finishes settling, rather than racing it.
+// How long the answered steps wait before appearing, once screen time is
+// submitted. Matches the cost card's own fade-in (CostTotals.module.css),
+// so step 1's numbers finish settling right as steps 2 and 3 show up.
 const REVEAL_DELAY_MS = 500;
 
 // True unless the visitor has asked for less motion. Guards every
@@ -55,11 +52,9 @@ export default function Calculator() {
 
   const costSectionRef = useRef(null);
   const goalSectionRef = useRef(null);
-  const dailyAskSectionRef = useRef(null);
 
-  // Holds whichever "reveal the next section" timer is currently pending.
-  // Only one is ever pending at a time in this linear flow, so one shared
-  // ref covers every transition rather than needing one per stage.
+  // Holds the single pending "reveal steps 2 and 3" timer, if one is
+  // waiting. Only ever one at a time now that there's only one reveal left.
   const revealTimeout = useRef(null);
 
   // Cancel a pending reveal if the visitor navigates away mid-delay.
@@ -69,26 +64,20 @@ export default function Calculator() {
     };
   }, []);
 
-  // Keep whatever the visitor just reached centred on screen, rather than
-  // just scrolled into view at the top edge -- "central" is what makes it
-  // read as the thing to look at right now, not just the next item in a
-  // long page. block: "center" does that scrolling for us; we only have to
-  // decide which section is the current one.
+  // Keep steps 2 and 3 centred on screen the moment they appear, rather
+  // than just scrolled into view at the top edge -- "central" is what makes
+  // it read as the thing to look at now, not just more of the page.
   //
   // The cost numbers get their own effect below, separate from this one,
   // because they appear the instant costRows is set -- before `stage` has
   // moved past SCREEN_TIME during the reveal delay. This effect only knows
   // about `stage`, so it can't see that moment.
   useEffect(() => {
-    const ref =
-      stage === STAGE.GOAL
-        ? goalSectionRef
-        : stage === STAGE.DAILY_ASK
-          ? dailyAskSectionRef
-          : null;
-
-    if (ref && ref.current && prefersMotion()) {
-      ref.current.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (stage === STAGE.ANSWERED && goalSectionRef.current && prefersMotion()) {
+      goalSectionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
     }
   }, [stage]);
 
@@ -153,7 +142,7 @@ export default function Calculator() {
     // they already are rather than snapping the page back to this question.
     if (stage === STAGE.SCREEN_TIME) {
       revealTimeout.current = setTimeout(() => {
-        setStage(STAGE.GOAL);
+        setStage(STAGE.ANSWERED);
       }, REVEAL_DELAY_MS);
     }
   }
@@ -164,16 +153,9 @@ export default function Calculator() {
     // Changing the goal invalidates whichever daily commitment was picked
     // for the old one -- same reasoning as resetPastScreenTime, one level
     // down: nothing shown can be out of step with what's chosen above it.
+    // No stage change needed here any more -- step 3 is already on screen
+    // alongside step 2, so there's nothing left to reveal.
     setSelectedDailyAsk(null);
-
-    // Only step forward. If the visitor picks a different goal after
-    // already reaching the daily-ask step, that step is already on screen
-    // -- no need to reveal it again, just clear the stale selection above.
-    if (stage === STAGE.GOAL) {
-      revealTimeout.current = setTimeout(() => {
-        setStage(STAGE.DAILY_ASK);
-      }, REVEAL_DELAY_MS);
-    }
   }
 
   function handleDailyAskSelect(option) {
@@ -245,56 +227,61 @@ export default function Calculator() {
           </section>
         )}
 
-        {stage !== STAGE.SCREEN_TIME && (
-          <section
-            ref={goalSectionRef}
-            className={`${styles.step} ${styles.reveal}`}
-          >
-            <div className={styles.stepHeaderRow}>
-              <div className={styles.stepHeaderLeft}>
-                <span className={styles.stepNumber}>2</span>
-                <h2 className={styles.stepLabel}>
-                  Step 2: What will you make this week?
-                </h2>
+        {/* Steps 2 and 3 reveal together -- see the STAGE comment above for
+            why there's no longer a separate wait between them. */}
+        {stage === STAGE.ANSWERED && (
+          <>
+            <section
+              ref={goalSectionRef}
+              className={`${styles.step} ${styles.reveal}`}
+            >
+              <div className={styles.stepHeaderRow}>
+                <div className={styles.stepHeaderLeft}>
+                  <span className={styles.stepNumber}>2</span>
+                  <h2 className={styles.stepLabel}>
+                    Step 2: What will you make this week?
+                  </h2>
+                </div>
               </div>
-            </div>
-            <GoalPicker
-              selectedId={selectedGoal}
-              onSelect={handleGoalSelect}
-              className={styles.cardRow}
-            />
-          </section>
-        )}
+              <GoalPicker
+                selectedId={selectedGoal}
+                onSelect={handleGoalSelect}
+                className={styles.cardRow}
+              />
+            </section>
 
-        {stage === STAGE.DAILY_ASK && screenTimeMinutes && (
-          <section
-            ref={dailyAskSectionRef}
-            className={`${styles.step} ${styles.reveal}`}
-          >
-            <div className={styles.stepHeaderRow}>
-              <div className={styles.stepHeaderLeft}>
-                <span className={styles.stepNumber}>3</span>
-                <h2 className={styles.stepLabel}>
-                  Step 3: How much can you give it each day?
-                </h2>
+            <section className={`${styles.step} ${styles.reveal}`}>
+              <div className={styles.stepHeaderRow}>
+                <div className={styles.stepHeaderLeft}>
+                  <span className={styles.stepNumber}>3</span>
+                  <h2 className={styles.stepLabel}>
+                    Step 3: How much can you give it each day?
+                  </h2>
+                </div>
               </div>
-            </div>
-            <DailyAsk
-              totalMinutes={screenTimeMinutes}
-              selectedPercent={
-                selectedDailyAsk ? selectedDailyAsk.percent : null
-              }
-              onSelect={handleDailyAskSelect}
-              className={styles.cardRow}
-            />
-          </section>
+              <DailyAsk
+                totalMinutes={screenTimeMinutes}
+                selectedPercent={
+                  selectedDailyAsk ? selectedDailyAsk.percent : null
+                }
+                onSelect={handleDailyAskSelect}
+                className={styles.cardRow}
+              />
+            </section>
+          </>
         )}
       </div>
 
-      {/* The real offer, once a daily commitment is picked -- see
-          PlanOffer.js. Sits outside the panel as its own card, same
-          pattern as the inner emphasis box in the Stitch design. */}
-      {selectedDailyAsk && (
+      {/* The real offer, once BOTH a goal and a daily commitment are
+          picked -- see PlanOffer.js. Sits outside the panel as its own
+          card, same pattern as the inner emphasis box in the Stitch
+          design.
+
+          Both are required now that steps 2 and 3 reveal together instead
+          of one gating the other: a visitor can reach step 3 and pick a
+          daily-ask amount before ever choosing a goal, so PlanOffer can't
+          assume selectedGoal is set just because selectedDailyAsk is. */}
+      {selectedGoal && selectedDailyAsk && (
         <section className={`${styles.offerSection} ${styles.reveal}`}>
           <PlanOffer goalId={selectedGoal} dailyAsk={selectedDailyAsk} />
         </section>
