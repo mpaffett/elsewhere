@@ -35,6 +35,38 @@ export default function Home() {
 
         <Calculator />
 
+        {/* The one-week commitment section -- makes explicit that this is
+            a single week, a promise to yourself rather than a competition,
+            and what sticking with it tends to produce. Matt's own words
+            (2026-09-16), tightened for the page. Sits between the
+            calculator and the ethos section below: this one concrete and
+            practical, that one more philosophical. */}
+        <div className={styles.commitment}>
+          <p className={styles.commitmentIntro}>
+            This isn&rsquo;t a competition &mdash; it&rsquo;s a commitment
+            you make to yourself, for one week. Stick with it, and by day
+            seven you&rsquo;ll have:
+          </p>
+          <ol className={styles.commitmentList}>
+            <li>Something that didn&rsquo;t exist when the week began.</li>
+            <li>
+              A clearer sense of where your time and attention actually go.
+            </li>
+            <li>Maybe a new hobby worth keeping.</li>
+            <li>A bit more clarity in how you think and speak.</li>
+            <li>Proof that you can send your time wherever you choose.</li>
+          </ol>
+          <p className={styles.commitmentClosing}>
+            We all get the same 24 hours. It&rsquo;s strange how little
+            resistance there is to losing six or seven of them to a phone
+            without thinking, yet ten minutes toward something meaningful
+            can feel like friction. A poem won&rsquo;t make you laugh for
+            thirty seconds the way a reel does &mdash; but it might stay
+            with you for months after the reel&rsquo;s forgotten. Most
+            people who finish the week want to start another one.
+          </p>
+        </div>
+
         {/* The ethos section -- why Elsewhere exists, in Matt's own words
             (2026-09-16), replacing the earlier placeholder quote. Kept
             deliberately separate from the offer card: what someone gets
