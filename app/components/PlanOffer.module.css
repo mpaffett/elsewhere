@@ -97,10 +97,17 @@
   transform: translateY(1px);
 }
 
-.reassurance {
-  font-size: 0.85rem;
+.smallPrint {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.smallPrint p {
+  font-size: 0.75rem;
   color: var(--color-text-muted);
   text-align: center;
+  line-height: 1.4;
 }
 
 .closingNote {

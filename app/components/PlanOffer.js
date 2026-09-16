@@ -3,7 +3,8 @@ import { ArrowIcon, CheckIcon } from "./Icons.js";
 import styles from "./PlanOffer.module.css";
 
 // The real £9, one-time Payment Link, created in Matt's Stripe dashboard.
-const STRIPE_PAYMENT_LINK_URL = "https://buy.stripe.com/4gMbJ31MA1wt9lR3Ai2oE00";
+const STRIPE_PAYMENT_LINK_URL =
+  "https://buy.stripe.com/4gMbJ31MA1wt9lR3Ai2oE00";
 
 // The real offer, replacing what used to be a placeholder email form. See
 // the "PAYMENT-FLOW" section of the elsewhere-mvp-scope-brainstorm memory:
@@ -38,8 +39,7 @@ export default function PlanOffer({ goalId, dailyAsk }) {
         <p className={styles.includedHeading}>For £9, you&rsquo;ll get:</p>
         <ul className={styles.includedList}>
           <li>
-            A 7-day roadmap &mdash; exactly what to do, each day, for the
-            week.
+            A 7-day roadmap &mdash; exactly what to do, each day, for the week.
           </li>
           <li>
             A printable tracker &mdash; stick it up, tick off each day, with
@@ -53,36 +53,29 @@ export default function PlanOffer({ goalId, dailyAsk }) {
         <ArrowIcon className={styles.ctaIcon} />
       </a>
 
-      {/* hello@elsewhere.it.com forwards to Matt's personal inbox (set up
-          2026-09-14) -- masks his personal address without needing a real
-          hosted mailbox yet. Matches the locked REFUND decision: soft and
-          personal, no formal policy.
-
-          The 24-hour line sets expectations for manual, made-to-order
-          fulfilment (see PAYMENT-FLOW in the elsewhere-mvp-scope-brainstorm
-          memory) -- nothing here is sent automatically. */}
-      <p className={styles.reassurance}>
-        Plans are made by hand &mdash; please allow up to 24 hours for
-        delivery. If it&rsquo;s not right for you, just{" "}
-        <a href="mailto:hello@elsewhere.it.com">get in touch</a>.
-      </p>
-      {/* PRIVACY, locked in the elsewhere-mvp-scope-brainstorm memory: a
-          short line covering what the email is used for and that it's never
-          sold/shared. Placed here rather than a separate policy page,
-          because this is the actual moment the email gets collected
-          (via Stripe checkout). */}
-      <p className={styles.reassurance}>
-        Your email is only ever used to send your plan &mdash; never sold or
-        shared.
-      </p>
+      {/* Small print: delivery expectations, privacy (locked in the
+          elsewhere-mvp-scope-brainstorm memory), and the soft REFUND line,
+          kept quiet and tight -- practical facts, not the pitch, so they
+          shouldn't compete for attention the way the sections above do. */}
+      <div className={styles.smallPrint}>
+        <p>Please allow up to 24 hours for delivery.</p>
+        <p>
+          Your email is only ever used to send your plan &mdash; never sold
+          or shared.
+        </p>
+        <p>
+          If it&rsquo;s not right for you, just{" "}
+          <a href="mailto:hello@elsewhere.it.com">get in touch</a>.
+        </p>
+      </div>
 
       {/* Matt's own closing note (2026-09-16) -- kept light on purpose,
           separate from the practical reassurance lines above. */}
       <p className={styles.closingNote}>
-        And beyond the plan itself &mdash; you&rsquo;d be helping a humble
-        bloke (me) get a little closer to actually making a living teaching
-        screen etiquette, to adults and kids alike. A dream, made a little
-        more real, for £9. :)
+        Psst.. and beyond the plan itself &mdash; you&rsquo;d be helping a
+        humble bloke (me) get a little closer to actually making a living
+        getting people away from their screens. A dream, made a little more
+        real, for £9. :)
       </p>
     </div>
   );
