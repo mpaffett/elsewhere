@@ -56,15 +56,6 @@ export default function Home() {
             <li>A bit more clarity in how you think and speak.</li>
             <li>Proof that you can send your time wherever you choose.</li>
           </ol>
-          <p className={styles.commitmentClosing}>
-            We all get the same 24 hours. It&rsquo;s strange how little
-            resistance there is to losing six or seven of them to a phone
-            without thinking, yet ten minutes toward something meaningful
-            can feel like friction. A poem won&rsquo;t make you laugh for
-            thirty seconds the way a reel does &mdash; but it might stay
-            with you for months after the reel&rsquo;s forgotten. Most
-            people who finish the week want to start another one.
-          </p>
         </div>
 
         {/* The ethos section -- why Elsewhere exists, in Matt's own words

@@ -154,13 +154,6 @@
   justify-content: center;
 }
 
-.commitmentClosing {
-  font-size: 0.95rem;
-  color: var(--color-text-muted);
-  max-width: 600px;
-  line-height: 1.6;
-}
-
 .quote {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
