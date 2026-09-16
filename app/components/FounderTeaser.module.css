@@ -11,14 +11,12 @@
   flex-shrink: 0;
 }
 
-/* Same tinted-circle treatment as the goal-card icon tiles, but round --
-   avatar shape reads as "a person" without needing a real photo yet. */
-.photoPlaceholder {
+.photo {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: var(--color-peach-bg);
-  border: 1px solid var(--color-peach-border);
+  object-fit: cover;
+  border: 1px solid var(--color-border-strong);
   flex-shrink: 0;
 }
 

@@ -50,14 +50,12 @@
   max-width: 480px;
 }
 
-/* Same round placeholder treatment as the header teaser, larger here since
-   it's the focal point of the page rather than a small aside. */
-.photoPlaceholder {
+.photo {
   width: 88px;
   height: 88px;
   border-radius: 50%;
-  background: var(--color-peach-bg);
-  border: 1px solid var(--color-peach-border);
+  object-fit: cover;
+  border: 1px solid var(--color-border-strong);
 }
 
 .back {

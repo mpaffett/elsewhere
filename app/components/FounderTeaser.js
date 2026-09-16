@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./FounderTeaser.module.css";
 
@@ -16,10 +17,13 @@ import styles from "./FounderTeaser.module.css";
 export default function FounderTeaser() {
   return (
     <div className={styles.card}>
-      {/* Placeholder for a real photo later -- circular on purpose, so it
-          reads as "a person" at a glance, distinct from the square icon
-          tiles on the goal cards. */}
-      <span className={styles.photoPlaceholder} aria-hidden="true" />
+      <Image
+        src="/matt.jpg"
+        alt="Matt, who built Elsewhere"
+        width={40}
+        height={40}
+        className={styles.photo}
+      />
       <div className={styles.copy}>
         <p className={styles.text}>
           Hi, I&rsquo;m Matt &mdash; I built this because I needed it myself.

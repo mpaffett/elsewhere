@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import styles from "./page.module.css";
 
@@ -6,8 +7,8 @@ import styles from "./page.module.css";
 // automatically, so it gets the same fonts and background as the main
 // page for free, with nothing extra to set up here.
 //
-// Placeholder photo, real copy -- see the "About page expansion" note in
-// the elsewhere-mvp-scope-brainstorm memory for where this text came from.
+// Photo and copy are both real -- see the "About page expansion" note in
+// the elsewhere-mvp-scope-brainstorm memory for where the text came from.
 export default function About() {
   return (
     <div className={styles.page}>
@@ -19,7 +20,13 @@ export default function About() {
 
       <main className={styles.main}>
         <div className={styles.card}>
-          <span className={styles.photoPlaceholder} aria-hidden="true" />
+          <Image
+            src="/matt.jpg"
+            alt="Matt, who built Elsewhere"
+            width={88}
+            height={88}
+            className={styles.photo}
+          />
 
           <p>
             Hi, I&rsquo;m Matt. I built Elsewhere because I needed it myself
