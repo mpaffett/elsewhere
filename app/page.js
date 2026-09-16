@@ -35,14 +35,23 @@ export default function Home() {
 
         <Calculator />
 
+        {/* The ethos section -- why Elsewhere exists, in Matt's own words
+            (2026-09-16), replacing the earlier placeholder quote. Kept
+            deliberately separate from the offer card: what someone gets
+            for £9 and why Matt charges for it each live at the point of
+            the ask instead, not mixed in here. */}
         <div className={styles.quote}>
-          <blockquote className={styles.quoteText}>
-            &ldquo;It&rsquo;s not about making the best thing in the world.
-            It&rsquo;s about making something that didn&rsquo;t exist
-            before.&rdquo;
-          </blockquote>
-          <p className={styles.quoteAttribution}>
-            &mdash; Matt, who built Elsewhere
+          <p className={styles.quoteText}>
+            Elsewhere exists to attempt to show what is possible if you
+            send a small slice of your time toward creation rather than
+            consumption.
+          </p>
+          <p className={styles.quoteText}>
+            To hold something in your hands that did not exist at the
+            beginning of the week, all because of a conscious decision and
+            commitment to build rather than consume was a lightbulb moment
+            for me personally, and an experience I wish as many of you to
+            have also.
           </p>
         </div>
       </main>
