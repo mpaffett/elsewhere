@@ -19,16 +19,33 @@ export default function PlanOffer({ goalId, dailyAsk }) {
 
   return (
     <div className={styles.card}>
-      <div className={styles.summaryRow}>
-        {/* goal.title as written ("The Daily Object"), not lowercased --
-            the old copy here read "a plan for write a poem" once the goal
-            titles stopped being plain nouns. */}
-        <p className={styles.summary}>
-          <CheckIcon className={styles.summaryIcon} />
-          Selected plan: <strong>{goal.title}</strong> at{" "}
-          <strong>{dailyAsk.minutesLabel}</strong> a day
-        </p>
-        <span className={styles.priceNote}>£9 &middot; one-time</span>
+      {/* Spells out the actual commitment in plain terms -- Matt's own
+          framing (2026-09-16): a visitor should know exactly what they're
+          agreeing to before they click, not just see a plan name. */}
+      <p className={styles.commitment}>
+        <CheckIcon className={styles.commitmentIcon} />
+        By clicking purchase, you&rsquo;re committing to{" "}
+        <strong>{dailyAsk.minutesLabel}</strong> toward{" "}
+        <strong>{goal.title}</strong> &mdash; every day, for 7 days.
+      </p>
+
+      {/* What £9 actually buys -- itemised, not just implied by "a plan".
+          The tracker described here is the printable one-pager designed in
+          the elsewhere-plan-pdf-design memory (poem's is finished; drawing
+          and journaling are written once a real order needs them, since
+          fulfilment is make-to-order). */}
+      <div className={styles.included}>
+        <p className={styles.includedHeading}>For £9, you&rsquo;ll get:</p>
+        <ul className={styles.includedList}>
+          <li>
+            A 7-day roadmap &mdash; exactly what to do, each day, for the
+            week.
+          </li>
+          <li>
+            A printable tracker &mdash; stick it up, tick off each day, with
+            space to reflect as you go.
+          </li>
+        </ul>
       </div>
 
       <a href={href} className={styles.cta}>
@@ -57,6 +74,15 @@ export default function PlanOffer({ goalId, dailyAsk }) {
       <p className={styles.reassurance}>
         Your email is only ever used to send your plan &mdash; never sold or
         shared.
+      </p>
+
+      {/* Matt's own closing note (2026-09-16) -- kept light on purpose,
+          separate from the practical reassurance lines above. */}
+      <p className={styles.closingNote}>
+        And beyond the plan itself &mdash; you&rsquo;d be helping a humble
+        bloke (me) get a little closer to actually making a living teaching
+        screen etiquette, to adults and kids alike. A dream, made a little
+        more real, for £9. :)
       </p>
     </div>
   );
