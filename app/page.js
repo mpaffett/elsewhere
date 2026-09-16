@@ -25,8 +25,7 @@ export default function Home() {
             </h1>
             <p className={styles.intro}>
               See what your screen time really adds up to, then send a small
-              slice of it somewhere better. No subscription, no app, no
-              streaks.
+              slice of it somewhere better. No subscription, no app, no streaks.
             </p>
           </div>
 
@@ -43,18 +42,21 @@ export default function Home() {
             practical, that one more philosophical. */}
         <div className={styles.commitment}>
           <p className={styles.commitmentIntro}>
-            This isn&rsquo;t a competition &mdash; it&rsquo;s a commitment
-            you make to yourself, for one week. Stick with it, and by day
-            seven you&rsquo;ll have:
+            This isn&rsquo;t a competition. It&rsquo;s a commitment you make to
+            yourself, for one week. Stick with it, and by day seven you&rsquo;ll
+            have:
           </p>
           <ol className={styles.commitmentList}>
             <li>Something that didn&rsquo;t exist when the week began.</li>
             <li>
               A clearer sense of where your time and attention actually go.
             </li>
-            <li>Maybe a new hobby worth keeping.</li>
+            <li>A new hobby you might enjoy.</li>
             <li>A bit more clarity in how you think and speak.</li>
-            <li>Proof that you can send your time wherever you choose.</li>
+            <li>
+              Proof (through experience) that you can send your time wherever
+              you choose.
+            </li>
           </ol>
         </div>
 
@@ -65,16 +67,14 @@ export default function Home() {
             the ask instead, not mixed in here. */}
         <div className={styles.quote}>
           <p className={styles.quoteText}>
-            Elsewhere exists to attempt to show what is possible if you
-            send a small slice of your time toward creation rather than
-            consumption.
+            Elsewhere exists to attempt to show what is possible if you send a
+            small slice of your time toward creation rather than consumption.
           </p>
           <p className={styles.quoteText}>
-            To hold something in your hands that did not exist at the
-            beginning of the week, all because of a conscious decision and
-            commitment to build rather than consume was a lightbulb moment
-            for me personally, and an experience I wish as many of you to
-            have also.
+            To hold something in your hands that did not exist at the beginning
+            of the week, all because of a conscious decision and commitment to
+            build rather than consume was a lightbulb moment for me personally,
+            and an experience I wish as many of you to have also.
           </p>
         </div>
       </main>
