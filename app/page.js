@@ -24,8 +24,8 @@ export default function Home() {
               <em className={styles.emphasis}>one finished thing</em>.
             </h1>
             <p className={styles.intro}>
-              See what your screen time really adds up to, then send a small
-              slice of it somewhere better. No subscription, no app, no streaks.
+              Send a small slice of your screen time{" "}
+              <em className={styles.introEmphasis}>elsewhere</em> for 7 days.
             </p>
           </div>
 
