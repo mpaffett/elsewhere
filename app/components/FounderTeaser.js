@@ -1,22 +1,28 @@
 import Image from "next/image";
 import Link from "next/link";
+import { WaveIcon } from "./Icons.js";
 import styles from "./FounderTeaser.module.css";
 
-// A small, always-visible sign that a real person made this -- lives in
-// the top bar (see page.js's wordmarkRow) so it never gates the first
-// action and never sits near the payment ask. See the "founder placement"
-// discussion in the elsewhere-mvp-scope-brainstorm memory for why it lives
-// separately from both of those.
+// A small, always-visible sign that a real person made this -- lives
+// centred in the top bar (see page.js's wordmarkRow) so it never gates the
+// first action and never sits near the payment ask. See the "founder
+// placement" discussion in the elsewhere-mvp-scope-brainstorm memory for
+// why it lives separately from both of those.
 //
 // Slim pill, not a card -- the top bar only has room for a glance, not the
 // fuller "Hi, I'm Matt..." line it used to carry when it sat beside the
 // hero text.
+//
+// Wording is a placeholder -- Matt wanted to see the wave icon in place
+// before choosing the final text (2026-09-17), since he wasn't keen on
+// "My story" reading as self-centred.
 //
 // No "use client" needed -- this is static content plus a link, so it can
 // stay a server component like page.js itself.
 export default function FounderTeaser() {
   return (
     <Link href="/about" className={styles.pill}>
+      <WaveIcon className={styles.wave} />
       <Image
         src="/matt.jpg"
         alt="Matt, who built Elsewhere"

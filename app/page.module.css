@@ -4,15 +4,28 @@
   min-height: 100%;
 }
 
+/* The founder pill is positioned absolutely, centred on the row's own
+   midpoint, rather than placed as a second flex child -- that way it's
+   genuinely centred in the header regardless of how wide the wordmark is,
+   not just centred in the leftover space next to it. */
 .wordmarkRow {
+  position: relative;
   max-width: var(--max-width);
   width: 100%;
   margin: 0 auto;
   padding: 28px 24px 0;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
+}
+
+.founderSlot {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  height: fit-content;
+  margin: auto 0;
+  transform: translateX(-50%);
 }
 
 .wordmark {

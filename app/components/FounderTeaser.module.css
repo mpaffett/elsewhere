@@ -6,6 +6,13 @@
   flex-shrink: 0;
 }
 
+.wave {
+  width: 20px;
+  height: 20px;
+  color: var(--color-accent);
+  flex-shrink: 0;
+}
+
 .photo {
   width: 28px;
   height: 28px;
