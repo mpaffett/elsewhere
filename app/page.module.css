@@ -21,8 +21,17 @@
 
 .founderCorner {
   position: absolute;
-  top: 26px;
+  top: 30px;
   right: 24px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.founderCorner:hover {
+  color: var(--color-accent);
+  text-decoration: underline;
 }
 
 .wordmark {

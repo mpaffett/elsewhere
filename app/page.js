@@ -1,5 +1,5 @@
 import Calculator from "./components/Calculator.js";
-import FounderTeaser from "./components/FounderTeaser.js";
+import Faq from "./components/Faq.js";
 import Highlight from "./components/Highlight.js";
 import styles from "./page.module.css";
 
@@ -11,9 +11,13 @@ export default function Home() {
     <div className={styles.page}>
       <div className={styles.wordmarkRow}>
         <span className={styles.wordmark}>Elsewhere</span>
-        <div className={styles.founderCorner}>
-          <FounderTeaser />
-        </div>
+        {/* A quiet hint that a real person made this, not a full pill --
+            see the "too busy" and "corner" discussions, 2026-09-17. Links
+            straight to the FAQ's first question rather than a separate
+            /about page, now that the founder story lives there instead. */}
+        <a href="#faq" className={styles.founderCorner}>
+          Made by Matt
+        </a>
       </div>
 
       <main className={styles.main}>
@@ -77,13 +81,15 @@ export default function Home() {
             and an experience I wish as many of you to have also.
           </p>
         </div>
+
+        <Faq />
       </main>
 
       <footer className={styles.footer}>
         <span className={styles.footerBrand}>Elsewhere</span>
         <p className={styles.footerNote}>Made by Matt.</p>
         <div className={styles.footerLinks}>
-          <a href="/about">My story</a>
+          <a href="#faq">FAQ</a>
           <a href="mailto:hello@elsewhere.it.com">Contact</a>
         </div>
       </footer>
