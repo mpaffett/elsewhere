@@ -7,9 +7,8 @@
 }
 
 .wave {
-  width: 20px;
-  height: 20px;
-  color: var(--color-accent);
+  font-size: 1.1rem;
+  line-height: 1;
   flex-shrink: 0;
 }
 
