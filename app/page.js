@@ -11,26 +11,23 @@ export default function Home() {
     <div className={styles.page}>
       <div className={styles.wordmarkRow}>
         <span className={styles.wordmark}>Elsewhere</span>
+        <FounderTeaser />
       </div>
 
       <main className={styles.main}>
         <div className={styles.hero}>
-          <div className={styles.heroText}>
-            <span className={styles.tag}>
-              <span className={styles.tagDot} aria-hidden="true" />A 7-day
-              creative experiment
-            </span>
-            <h1 className={styles.title}>
-              Send a small slice of your screen time{" "}
-              <em className={styles.emphasis}>elsewhere</em> for 7 days.
-            </h1>
-            <p className={styles.intro}>
-              One (small) project. One week. A tangible{" "}
-              <Highlight>thing</Highlight> at the end of it.
-            </p>
-          </div>
-
-          <FounderTeaser />
+          <span className={styles.tag}>
+            <span className={styles.tagDot} aria-hidden="true" />A 7-day
+            creative experiment
+          </span>
+          <h1 className={styles.title}>
+            Send a small slice of your screen time{" "}
+            <em className={styles.emphasis}>elsewhere</em> for 7 days.
+          </h1>
+          <p className={styles.intro}>
+            One (small) project. One week. One tangible{" "}
+            <Highlight>thing</Highlight> at the end of it.
+          </p>
         </div>
 
         <Calculator />
