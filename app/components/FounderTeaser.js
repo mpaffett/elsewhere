@@ -12,20 +12,15 @@ import styles from "./FounderTeaser.module.css";
 // fuller "Hi, I'm Matt..." line it used to carry when it sat beside the
 // hero text.
 //
-// Wording is a placeholder -- Matt wanted to see the wave in place before
-// choosing the final text (2026-09-17), since he wasn't keen on "My story"
-// reading as self-centred. The wave itself is the real emoji rather than a
-// custom icon -- a hand-drawn SVG version was tried first and didn't read
-// clearly as a hand at this size, so the emoji won out.
+// The wave is the real emoji rather than a custom icon -- a hand-drawn SVG
+// version was tried first and didn't read clearly as a hand at this size,
+// so the emoji won out.
 //
 // No "use client" needed -- this is static content plus a link, so it can
 // stay a server component like page.js itself.
 export default function FounderTeaser() {
   return (
     <Link href="/about" className={styles.pill}>
-      <span className={styles.wave} aria-hidden="true">
-        &#128075;&#127996;
-      </span>
       <Image
         src="/matt.jpg"
         alt="Matt, who built Elsewhere"
@@ -33,7 +28,12 @@ export default function FounderTeaser() {
         height={28}
         className={styles.photo}
       />
-      <span className={styles.text}>My story &rarr;</span>
+      <span className={styles.wave} aria-hidden="true">
+        &#128075;&#127996;
+      </span>
+      <span className={styles.text}>
+        Hi! I&rsquo;m Matt. Here&rsquo;s why I built this &rarr;
+      </span>
     </Link>
   );
 }

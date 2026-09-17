@@ -230,3 +230,20 @@
     font-size: 2.1rem;
   }
 }
+
+/* Below this width the founder pill's fuller wording ("Hi! I'm Matt...")
+   is too wide to centre without colliding with the wordmark, so it drops
+   out of the absolute-centred overlay and flows underneath instead. */
+@media (max-width: 560px) {
+  .wordmarkRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .founderSlot {
+    position: static;
+    transform: none;
+    margin: 0;
+  }
+}
