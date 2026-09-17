@@ -11,9 +11,7 @@ export default function Home() {
     <div className={styles.page}>
       <div className={styles.wordmarkRow}>
         <span className={styles.wordmark}>Elsewhere</span>
-        <div className={styles.founderSlot}>
-          <FounderTeaser />
-        </div>
+        <FounderTeaser />
       </div>
 
       <main className={styles.main}>

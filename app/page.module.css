@@ -4,28 +4,18 @@
   min-height: 100%;
 }
 
-/* The founder pill is positioned absolutely, centred on the row's own
-   midpoint, rather than placed as a second flex child -- that way it's
-   genuinely centred in the header regardless of how wide the wordmark is,
-   not just centred in the leftover space next to it. */
+/* Wordmark and founder pill both centred and stacked -- now that the hero
+   below is fully centred too, a left-aligned wordmark was the one thing
+   still reading as leftover from the old layout. */
 .wordmarkRow {
-  position: relative;
   max-width: var(--max-width);
   width: 100%;
   margin: 0 auto;
   padding: 28px 24px 0;
   display: flex;
+  flex-direction: column;
   align-items: center;
-}
-
-.founderSlot {
-  position: absolute;
-  left: 50%;
-  top: 0;
-  bottom: 0;
-  height: fit-content;
-  margin: auto 0;
-  transform: translateX(-50%);
+  gap: 10px;
 }
 
 .wordmark {
@@ -234,22 +224,5 @@
 @media (max-width: 720px) {
   .title {
     font-size: 2.1rem;
-  }
-}
-
-/* Below this width the founder pill's fuller wording ("Hi! I'm Matt...")
-   is too wide to centre without colliding with the wordmark, so it drops
-   out of the absolute-centred overlay and flows underneath instead. */
-@media (max-width: 560px) {
-  .wordmarkRow {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .founderSlot {
-    position: static;
-    transform: none;
-    margin: 0;
   }
 }
