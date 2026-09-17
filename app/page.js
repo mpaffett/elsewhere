@@ -24,9 +24,9 @@ export default function Home() {
               <em className={styles.emphasis}>elsewhere</em> for 7 days.
             </h1>
             <p className={styles.intro}>
-              Choose a small project. Chip away at it for a week. End the
-              week with a fresh mindset, some useful data, and maybe a new
-              hobby.
+              One (small) project. One week. A tangible{" "}
+              <em className={styles.introEmphasis}>thing</em> at the end of
+              it.
             </p>
           </div>
 
