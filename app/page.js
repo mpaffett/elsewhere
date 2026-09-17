@@ -1,5 +1,6 @@
 import Calculator from "./components/Calculator.js";
 import FounderTeaser from "./components/FounderTeaser.js";
+import Highlight from "./components/Highlight.js";
 import styles from "./page.module.css";
 
 // This stays a server component -- only Calculator.js needs "use client".
@@ -25,8 +26,7 @@ export default function Home() {
             </h1>
             <p className={styles.intro}>
               One (small) project. One week. A tangible{" "}
-              <em className={styles.introEmphasis}>thing</em> at the end of
-              it.
+              <Highlight>thing</Highlight> at the end of it.
             </p>
           </div>
 
