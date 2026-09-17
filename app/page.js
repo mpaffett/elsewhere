@@ -20,12 +20,13 @@ export default function Home() {
               creative experiment
             </span>
             <h1 className={styles.title}>
-              Turn wasted phone time into{" "}
-              <em className={styles.emphasis}>one finished thing</em>.
+              Send a small slice of your screen time{" "}
+              <em className={styles.emphasis}>elsewhere</em> for 7 days.
             </h1>
             <p className={styles.intro}>
-              Send a small slice of your screen time{" "}
-              <em className={styles.introEmphasis}>elsewhere</em> for 7 days.
+              Choose a small project. Chip away at it for a week. End the
+              week with a fresh mindset, some useful data, and maybe a new
+              hobby.
             </p>
           </div>
 
