@@ -2,6 +2,9 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  /* page.js's .main now centres its children (for the hero) rather than
+     stretching them, so this needs its own width to still span the row. */
+  width: 100%;
 }
 
 /* The notebook panel that holds every step of the flow -- one bordered
