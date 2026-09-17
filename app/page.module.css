@@ -4,18 +4,25 @@
   min-height: 100%;
 }
 
-/* Wordmark and founder pill both centred and stacked -- now that the hero
-   below is fully centred too, a left-aligned wordmark was the one thing
-   still reading as leftover from the old layout. */
+/* The wordmark is genuinely centred (text-align, not a flex sibling), and
+   the founder pill sits absolutely in the top-right corner independent of
+   it -- deliberately the one thing on the page that isn't centred, so it
+   catches the eye for a second without competing with the wordmark or
+   piling up as a second centred line underneath it (see the "too busy"
+   conversation, 2026-09-17). */
 .wordmarkRow {
+  position: relative;
   max-width: var(--max-width);
   width: 100%;
   margin: 0 auto;
   padding: 28px 24px 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  text-align: center;
+}
+
+.founderCorner {
+  position: absolute;
+  top: 26px;
+  right: 24px;
 }
 
 .wordmark {
@@ -224,5 +231,21 @@
 @media (max-width: 720px) {
   .title {
     font-size: 2.1rem;
+  }
+}
+
+/* Below this width there's no longer room beside the wordmark for the
+   founder corner without the two colliding, so it drops out of the
+   absolute-positioned corner and flows centred underneath instead. */
+@media (max-width: 480px) {
+  .wordmarkRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .founderCorner {
+    position: static;
   }
 }
