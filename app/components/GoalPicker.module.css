@@ -64,6 +64,22 @@
   pointer-events: none;
 }
 
+@media (max-width: 640px) {
+  .stamp {
+    right: 14px;
+  }
+}
+
+/* Tablet -- cards are still 3-across here (only max-width: 640px drops to
+   1 column, see .cardRow in Calculator.module.css), just narrower than
+   on desktop, so the stamp can need its own tweak in this range too. */
+@media (min-width: 641px) and (max-width: 900px) {
+  .stamp {
+    right: 5px;
+    top: 275px;
+  }
+}
+
 .card:hover {
   transform: translateY(-1px);
   box-shadow: var(--shadow-lifted);
