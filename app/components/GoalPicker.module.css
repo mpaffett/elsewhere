@@ -45,16 +45,18 @@
 
 /* Matt's own generated stamp, sat fully inside the card (not overlapping
    its border) at a slight angle so it reads as physically stamped on
-   rather than a flat sticker. Sits below the icon/"Selected" badge row
-   and above the title, right-aligned. Replaces the earlier
-   arrow + "My personal favourite!" text callout, and an even earlier
-   version that overlapped the card's outer edge. */
+   rather than a flat sticker. Sized/positioned to match Matt's own
+   reference screenshot exactly (measured pixel offsets scaled down to
+   this card's actual rendered width) -- overlapping the hairline divider
+   between the title and description is intentional, not a bug. Replaces
+   the earlier arrow + "My personal favourite!" text callout, and an even
+   earlier version that overlapped the card's outer edge. */
 .stamp {
   position: absolute;
   z-index: 1;
-  top: 48px;
-  right: 29px;
-  width: 66px;
+  top: 40px;
+  right: 19px;
+  width: 76px;
   height: auto;
   transform: rotate(-12deg);
   pointer-events: none;
