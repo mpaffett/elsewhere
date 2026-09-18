@@ -2,13 +2,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-
-  /* Same rise-in every newly revealed step gets -- see Calculator.module.css
-     -- so the cost numbers feel like part of the same sequence, not a
-     separately-styled card bolted onto the panel. */
-  opacity: 0;
-  transform: translateY(12px);
-  animation: rise 0.5s ease-out forwards;
 }
 
 @keyframes rise {
@@ -19,7 +12,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .card {
+  .row {
     animation: none;
     opacity: 1;
     transform: none;
@@ -49,10 +42,29 @@
   text-align: center;
   padding: 0 12px;
   border-left: 1px solid var(--color-border);
+
+  /* Staggered rather than all three landing at once -- "this week", "this
+     month", "this year" appear one after another so each has a moment to
+     register before the next lands. */
+  opacity: 0;
+  transform: translateY(12px);
+  animation: rise 0.4s ease-out forwards;
 }
 
 .row:first-child {
   border-left: none;
+}
+
+.row:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.row:nth-child(2) {
+  animation-delay: 0.18s;
+}
+
+.row:nth-child(3) {
+  animation-delay: 0.36s;
 }
 
 .horizon {

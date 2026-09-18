@@ -52,8 +52,8 @@
 .stamp {
   position: absolute;
   z-index: 1;
-  top: 50px;
-  right: 34px;
+  top: 48px;
+  right: 29px;
   width: 66px;
   height: auto;
   transform: rotate(-12deg);

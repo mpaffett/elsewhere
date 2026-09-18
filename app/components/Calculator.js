@@ -22,9 +22,11 @@ const STAGE = {
 };
 
 // How long the answered steps wait before appearing, once screen time is
-// submitted. Matches the cost card's own fade-in (CostTotals.module.css),
-// so step 1's numbers finish settling right as steps 2 and 3 show up.
-const REVEAL_DELAY_MS = 500;
+// submitted. Deliberately longer than the cost card's own 0.5s fade-in
+// (CostTotals.module.css) -- Matt wants a beat to actually read "here's
+// what that adds up to" before steps 2 and 3 show up underneath it,
+// rather than everything landing on screen at once.
+const REVEAL_DELAY_MS = 1500;
 
 // True unless the visitor has asked for less motion. Guards every
 // scrollIntoView call below -- without it, a new section can land below the
@@ -160,6 +162,18 @@ export default function Calculator() {
 
   function handleDailyAskSelect(option) {
     setSelectedDailyAsk(option);
+
+    // Picking a daily commitment before a goal is a real, reachable state
+    // now that steps 2 and 3 reveal together -- without this, nothing
+    // visibly happens (the offer card just never appears) and there's no
+    // clue why. Scroll back up to step 2 so it's obvious what's still
+    // missing, on top of the persistent text hint rendered below.
+    if (!selectedGoal && goalSectionRef.current && prefersMotion()) {
+      goalSectionRef.current.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
   }
 
   return (
@@ -283,6 +297,16 @@ export default function Calculator() {
         <section className={`${styles.offerSection} ${styles.reveal}`}>
           <PlanOffer goalId={selectedGoal} dailyAsk={selectedDailyAsk} />
         </section>
+      )}
+
+      {/* The other half of the "both required" state above -- a daily
+          commitment picked with no goal yet otherwise looks like nothing
+          happened. Paired with the auto-scroll in handleDailyAskSelect. */}
+      {selectedDailyAsk && !selectedGoal && (
+        <p className={`${styles.missingGoalHint} ${styles.reveal}`}>
+          <ArrowIcon className={styles.missingGoalHintIcon} />
+          Almost there &mdash; pick a goal in step 2 above to see your plan.
+        </p>
       )}
     </div>
   );

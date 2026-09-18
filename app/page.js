@@ -41,12 +41,11 @@ export default function Home() {
             enough to keep scrolling. Plain text, not a bordered card, so
             it stays light between two heavier sections. */}
         <p className={styles.explainer}>
-          If you&rsquo;re anything like me, you spend more of your life
-          staring at a screen than you&rsquo;d like to admit. Elsewhere is a
-          first step toward reframing that: tell it your screen time, pick a
-          project, and follow a simple plan for a week. By the end,
-          you&rsquo;ll have made something real &mdash; and a small win you
-          can point to.
+          If you&rsquo;re anything like me, you spend more of your life staring
+          at a screen than you&rsquo;d like to admit. Elsewhere is a first step
+          toward reframing that: tell it your screen time, pick a project, and
+          follow a simple plan for a week. By the end, you&rsquo;ll have made
+          something real &mdash; and a small win you can point to.
         </p>
 
         {/* The one-week commitment section -- makes explicit that this is
@@ -57,9 +56,9 @@ export default function Home() {
             practical, that one more philosophical. */}
         <div className={styles.commitment}>
           <p className={styles.commitmentIntro}>
-            This isn&rsquo;t a competition. It&rsquo;s a commitment you make to
-            yourself, for one week. Stick with it, and by day seven you&rsquo;ll
-            have:
+            The idea is not to become the next great artist or writer. The idea
+            is just to create something. Stick with it, and by day seven
+            you&rsquo;ll have:
           </p>
           <ol className={styles.commitmentList}>
             <li>Something that didn&rsquo;t exist when the week began.</li>

@@ -207,6 +207,27 @@
   /* Sits below the panel via .wrapper's own gap. */
 }
 
+/* Shown instead of .offerSection when a daily commitment is picked before
+   a goal -- otherwise nothing visibly happens once step 3 is answered,
+   which read as broken rather than "one more thing to do". Styled as a
+   quiet nudge (muted colour, no card/border) rather than an error. */
+.missingGoalHint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-align: center;
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+}
+
+.missingGoalHintIcon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  transform: rotate(-90deg);
+}
+
 /* Same rise-in every newly revealed section gets (see
    CostTotals.module.css) -- applied here too so goal, daily-ask and the
    offer card all settle onto the page the same way the cost ledger does,
