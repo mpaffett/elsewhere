@@ -6,6 +6,16 @@
   text-align: center;
 }
 
+/* Same treatment as the hero's "elsewhere" -- see .emphasis in
+   page.module.css. */
+.emphasis {
+  font-style: italic;
+  text-decoration: underline;
+  text-decoration-color: var(--color-accent);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
+
 .picker {
   margin-top: 20px;
   /* Grid layout (columns, gap, mobile collapse) comes from the className

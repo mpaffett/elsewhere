@@ -24,7 +24,8 @@ export default function GoalPicker({ selectedId, onSelect, className }) {
   return (
     <div>
       <p className={styles.heading}>
-        If you could send some of that time elsewhere, where would you send
+        If you could send some of that time{" "}
+        <em className={styles.emphasis}>elsewhere</em>, where would you send
         it?
       </p>
 
