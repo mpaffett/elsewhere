@@ -35,50 +35,29 @@ export default function GoalPicker({ selectedId, onSelect, className }) {
           const isSelected = goal.id === selectedId;
 
           return (
-            <div key={goal.id} className={styles.cardSlot}>
-              {/* Matt's own callout, pointing at the goal he'd pick himself
-                  -- the arrow is drawn in the same line-art style as
-                  Icons.js rather than literally hand-scrawled, so it stays
-                  consistent with the rest of the page's icons. */}
-              {goal.id === "poem" && (
-                <div className={styles.favourite} aria-hidden="true">
-                  <span className={styles.favouriteText}>
-                    My personal favourite!
-                  </span>
-                  {/* Matt's own hand-drawn arrow (public/favourite-arrow.png),
-                      not a redrawn SVG -- used as a CSS mask so it can be
-                      recoloured to the accent colour, and rotated to point
-                      down into the card instead of its original sideways
-                      orientation. */}
-                  <span className={styles.favouriteArrow} />
-                </div>
-              )}
-
-              <button
-                type="button"
-                className={`${styles.card} ${tint} ${
-                  isSelected ? styles.selected : ""
-                }`}
-                onClick={() => onSelect(goal.id)}
-              >
-                <div className={styles.cardTop}>
-                  <span className={styles.iconTile}>
-                    <Icon className={styles.icon} />
-                  </span>
-                  {isSelected && (
-                    <span className={styles.badge}>
-                      <CheckIcon className={styles.badgeIcon} />
-                      Selected
-                    </span>
-                  )}
-                </div>
-                <span className={styles.label}>{goal.label}</span>
-                <span className={styles.title}>{goal.title}</span>
-                <span className={styles.description}>
-                  {goal.description}
+            <button
+              key={goal.id}
+              type="button"
+              className={`${styles.card} ${tint} ${
+                isSelected ? styles.selected : ""
+              }`}
+              onClick={() => onSelect(goal.id)}
+            >
+              <div className={styles.cardTop}>
+                <span className={styles.iconTile}>
+                  <Icon className={styles.icon} />
                 </span>
-              </button>
-            </div>
+                {isSelected && (
+                  <span className={styles.badge}>
+                    <CheckIcon className={styles.badgeIcon} />
+                    Selected
+                  </span>
+                )}
+              </div>
+              <span className={styles.label}>{goal.label}</span>
+              <span className={styles.title}>{goal.title}</span>
+              <span className={styles.description}>{goal.description}</span>
+            </button>
           );
         })}
       </div>
