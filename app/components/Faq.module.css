@@ -20,46 +20,94 @@
 }
 
 .item {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 18px 0;
   border-bottom: 1px solid var(--color-border);
 }
 
-.item:first-child {
-  padding-top: 0;
-}
-
 .item:last-child {
-  padding-bottom: 0;
   border-bottom: none;
 }
 
 .question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 18px 0;
+  background: none;
+  border: none;
   font-family: var(--font-heading);
   font-size: 1.05rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
 }
 
+.item:first-child .question {
+  padding-top: 0;
+}
+
+.chevron {
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(45deg);
+  transition: transform 0.2s ease;
+}
+
+.question[aria-expanded="true"] .chevron {
+  transform: rotate(-135deg);
+}
+
+/* Grid-rows trick for a smooth height animation without measuring the
+   answer's height in JS. */
+.answerWrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.25s ease;
+}
+
+.answerWrap[data-open] {
+  grid-template-rows: 1fr;
+}
+
+.answerInner {
+  overflow: hidden;
+}
+
+.item:first-child .answerInner {
+  padding-top: 0;
+}
+
+/* overflow: hidden gives this its own block formatting context, so the
+   floated photo below is contained and padding-bottom lands below it
+   rather than being ignored the way floats normally are. */
 .answerRow {
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
+  overflow: hidden;
+  padding-bottom: 18px;
 }
 
+.item:last-child .answerRow {
+  padding-bottom: 0;
+}
+
+/* Floated (not flexed) so the answer text wraps around it, then flows
+   full-width again once it clears the photo's bottom edge. */
 .photo {
-  width: 40px;
-  height: 40px;
+  float: left;
+  width: 44px;
+  height: 44px;
+  margin: 2px 14px 8px 0;
   border-radius: 50%;
   object-fit: cover;
   border: 1px solid var(--color-border-strong);
-  flex-shrink: 0;
 }
 
 .answer {
   font-size: 0.95rem;
-  color: var(--color-text-soft);
+  color: var(--color-text-muted);
   line-height: 1.55;
 }

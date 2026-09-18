@@ -60,8 +60,8 @@ export default function PlanOffer({ goalId, dailyAsk }) {
       <div className={styles.smallPrint}>
         <p>Please allow up to 24 hours for delivery.</p>
         <p>
-          Your email is only ever used to send your plan &mdash; never sold
-          or shared.
+          Your email is only ever used to send your plan &mdash; never sold or
+          shared.
         </p>
         <p>
           If it&rsquo;s not right for you, just{" "}
@@ -72,10 +72,10 @@ export default function PlanOffer({ goalId, dailyAsk }) {
       {/* Matt's own closing note (2026-09-16) -- kept light on purpose,
           separate from the practical reassurance lines above. */}
       <p className={styles.closingNote}>
-        Psst.. and beyond the plan itself &mdash; you&rsquo;d be helping a
-        humble bloke (me) get a little closer to actually making a living
-        getting people away from their screens. A dream, made a little more
-        real, for £9. :)
+        ...and beyond the plan itself &mdash; you&rsquo;d be helping one humble
+        bloke (me) get a little closer to actually making a living getting
+        people away from their screens. A dream, made a little more real, for
+        £9. :)
       </p>
     </div>
   );

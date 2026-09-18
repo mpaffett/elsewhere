@@ -1,42 +1,37 @@
+"use client";
+
+import { useState } from "react";
 import Image from "next/image";
 import styles from "./Faq.module.css";
 
-// Answers pulled from what already exists elsewhere on the site (the old
-// /about page, the offer card's small print, the locked REFUND decision in
-// the elsewhere-mvp-scope-brainstorm memory) plus the practical questions
-// raised in the "should we add nav" discussion on 2026-09-17 -- not
-// invented filler, real anticipated questions.
+// The five questions Matt drafted himself (2026-09-18) -- kept in his own
+// words, just tightened for length and one unfinished sentence fixed.
 const FAQS = [
+  {
+    question: "What is Elsewhere?",
+    answer:
+      "In short, Elsewhere is a 7-day mini challenge: you create something slowly, over the course of a week. Input your screen time, choose the project that appeals to you most (more to come soon!), decide how much time you can realistically commit each day, pay me ;), then follow the daily tasks. By the end of the week you'll have your own keepsake — and, hopefully, the itch to create more.",
+  },
   {
     question: "Who made this, and why?",
     photo: true,
     answer:
-      "I'm Matt. I built Elsewhere because I needed it myself — I spend far more time on my phone than I'd like to admit, and I got tired of watching that time disappear into nothing. I don't love asking people for money, but keeping this going (and building the next thing after it) takes real time and cost, and I'd rather charge a small amount upfront than fill this with ads or sell your data. This isn't really about one plan or one week — I want to spend my time building things that pull people off their phones and into the real world. Elsewhere is the first step in that.",
+      "Hi, I'm Matt. Tiny experiments have helped me reframe my relationship with screens and tech. The friction I felt at the thought of spending 15 minutes a day creating something, next to the ease with which I'd lose 3 hours to Instagram reels, was telling. So one day I made a deal with myself: draw a sunflower once a day for a week. What happened wasn't just that I got better at drawing — I'd dipped my toes into a long-time interest, and by the end of the week I had a drawing that admittedly was far from Picasso, but it was something that didn't exist before, and it existed because of me. That felt good. I signed it, framed it, put it on my desk — and that paved the way for dozens more tiny experiments.",
+  },
+  {
+    question: "Why would I pay £9 for something I could just do for free?",
+    answer:
+      "You absolutely can (and should!) start a tiny experiment of your own, for free. You're under no obligation to spend £9 on this. If you've got the idea, feel free to steal it, make your own version, and go.",
+  },
+  {
+    question: "Why do you charge £9 for this?",
+    answer:
+      "Eventually, I'd love to make a living from getting people away from their screens — whatever form that takes. This is my first step toward that much bigger goal, and the £9 is a bit of encouragement along the way.",
   },
   {
     question: "What do I actually get for £9?",
     answer:
-      "A personalised 7-day plan for whichever project you pick — drawing, journaling, or writing a poem. A day-by-day roadmap of exactly what to do, plus a printable tracker to tick off each day and reflect as you go. Made by hand and sent to your email within 24 hours.",
-  },
-  {
-    question: "What happens if I miss a day?",
-    answer:
-      "Nothing dramatic — just pick back up the next day. This is meant to be a floor, not a streak to protect. Missing one day doesn't undo the rest of the week.",
-  },
-  {
-    question: "Can I change my daily minutes after I've paid?",
-    answer:
-      "Yes — just get in touch and I'll adjust it. You're not locked into whatever you picked before paying.",
-  },
-  {
-    question: "What if it's not right for me?",
-    answer:
-      "Just get in touch. There's no formal refund policy, but I handle it case by case rather than leaving you stuck.",
-  },
-  {
-    question: "How is this different from a habit-tracking app?",
-    answer:
-      "Most apps ask you to track less phone use. Elsewhere doesn't touch your phone use at all — it gives you one small, specific thing to make instead, with a plan for exactly what to do each day. The proof isn't a lower screen-time number, it's a finished thing you can point to.",
+      "A curated 7-day roadmap for the project of your choice, plus a printable tracker with space to reflect as you go. Delivered to your inbox within 24 hours.",
   },
 ];
 
@@ -44,28 +39,53 @@ const FAQS = [
 // instead (2026-09-17) so the whole site stays one page, per Matt's call.
 // The top-right corner hint ("Made by Matt") links straight to this
 // section's first question rather than to a separate route.
+//
+// Each question is a button that toggles its own answer open/closed --
+// added 2026-09-18 so the section reads as a compact list of questions
+// rather than a wall of text. The smooth reveal uses the CSS grid-rows
+// trick (0fr -> 1fr) rather than JS height measurement or max-height.
 export default function Faq() {
+  const [openQuestion, setOpenQuestion] = useState(null);
+
   return (
     <div className={styles.card} id="faq">
-      <h2 className={styles.heading}>A few questions</h2>
+      <h2 className={styles.heading}>FAQ</h2>
       <div className={styles.list}>
-        {FAQS.map((item) => (
-          <div key={item.question} className={styles.item}>
-            <p className={styles.question}>{item.question}</p>
-            <div className={item.photo ? styles.answerRow : undefined}>
-              {item.photo && (
-                <Image
-                  src="/matt.jpg"
-                  alt="Matt, who built Elsewhere"
-                  width={40}
-                  height={40}
-                  className={styles.photo}
-                />
-              )}
-              <p className={styles.answer}>{item.answer}</p>
+        {FAQS.map((item) => {
+          const isOpen = openQuestion === item.question;
+          return (
+            <div key={item.question} className={styles.item}>
+              <button
+                type="button"
+                className={styles.question}
+                aria-expanded={isOpen}
+                onClick={() => setOpenQuestion(isOpen ? null : item.question)}
+              >
+                <span>{item.question}</span>
+                <span className={styles.chevron} aria-hidden="true" />
+              </button>
+              <div
+                className={styles.answerWrap}
+                data-open={isOpen || undefined}
+              >
+                <div className={styles.answerInner}>
+                  <div className={styles.answerRow}>
+                    {item.photo && (
+                      <Image
+                        src="/matt.jpg"
+                        alt="Matt, who built Elsewhere"
+                        width={40}
+                        height={40}
+                        className={styles.photo}
+                      />
+                    )}
+                    <p className={styles.answer}>{item.answer}</p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
