@@ -39,7 +39,9 @@
   text-align: left;
   cursor: pointer;
   font-family: inherit;
-  transition: border-color 0.15s ease, transform 0.15s ease,
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease,
     box-shadow 0.15s ease;
 }
 
@@ -53,12 +55,12 @@
    earlier version that overlapped the card's outer edge. */
 .stamp {
   position: absolute;
+  top: 68px;
   z-index: 1;
-  top: 40px;
-  right: 19px;
+  right: 27px;
   width: 76px;
   height: auto;
-  transform: rotate(-12deg);
+  transform: rotate(12deg);
   pointer-events: none;
 }
 
