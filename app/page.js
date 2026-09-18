@@ -10,14 +10,9 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <div className={styles.wordmarkRow}>
-        <span className={styles.wordmark}>Elsewhere</span>
-        {/* A quiet hint that a real person made this, not a full pill --
-            see the "too busy" and "corner" discussions, 2026-09-17. Links
-            straight to the FAQ's first question rather than a separate
-            /about page, now that the founder story lives there instead. */}
-        <a href="#faq" className={styles.founderCorner}>
-          Made by Matt
-        </a>
+        <span className={styles.wordmark}>
+          <Highlight>Elsewhere</Highlight>
+        </span>
       </div>
 
       <main className={styles.main}>
@@ -37,6 +32,22 @@ export default function Home() {
         </div>
 
         <Calculator />
+
+        {/* Plainly spells out the mechanism (input screen time, pick a
+            project, follow the plan), in Matt's own words (2026-09-18).
+            Deliberately below the calculator rather than above it -- a
+            first-time visitor shouldn't be hit with a wall of text before
+            they've even reached step 1, but it's here for anyone curious
+            enough to keep scrolling. Plain text, not a bordered card, so
+            it stays light between two heavier sections. */}
+        <p className={styles.explainer}>
+          If you&rsquo;re anything like me, you spend more of your life
+          staring at a screen than you&rsquo;d like to admit. Elsewhere is a
+          first step toward reframing that: tell it your screen time, pick a
+          project, and follow a simple plan for a week. By the end,
+          you&rsquo;ll have made something real &mdash; and a small win you
+          can point to.
+        </p>
 
         {/* The one-week commitment section -- makes explicit that this is
             a single week, a promise to yourself rather than a competition,
@@ -62,24 +73,6 @@ export default function Home() {
               you choose.
             </li>
           </ol>
-        </div>
-
-        {/* The ethos section -- why Elsewhere exists, in Matt's own words
-            (2026-09-16), replacing the earlier placeholder quote. Kept
-            deliberately separate from the offer card: what someone gets
-            for £9 and why Matt charges for it each live at the point of
-            the ask instead, not mixed in here. */}
-        <div className={styles.quote}>
-          <p className={styles.quoteText}>
-            Elsewhere exists to attempt to show what is possible if you send a
-            small slice of your time toward creation rather than consumption.
-          </p>
-          <p className={styles.quoteText}>
-            To hold something in your hands that did not exist at the beginning
-            of the week, all because of a conscious decision and commitment to
-            build rather than consume was a lightbulb moment for me personally,
-            and an experience I wish as many of you to have also.
-          </p>
         </div>
 
         <Faq />

@@ -14,9 +14,15 @@
   margin-bottom: 28px;
 }
 
+/* Narrowed and centred, matching the measure every other section on the
+   page uses (.commitmentList, .explainer, the old .quoteText) -- the card
+   itself stays full width, but the readable content doesn't stretch
+   edge-to-edge the way it did before. */
 .list {
   display: flex;
   flex-direction: column;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .item {

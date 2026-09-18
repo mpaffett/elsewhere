@@ -181,38 +181,41 @@ export default function Calculator() {
           </div>
 
           <form className={styles.form} onSubmit={handleScreenTimeSubmit}>
-            <div className={styles.timeInputs}>
-              <label className={styles.timeInput}>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  min="0"
-                  placeholder="0"
-                  value={hours}
-                  onChange={handleHoursChange}
-                />
-                <span>hours</span>
-              </label>
-              <label className={styles.timeInput}>
-                <input
-                  type="number"
-                  inputMode="numeric"
-                  min="0"
-                  placeholder="0"
-                  value={minutes}
-                  onChange={handleMinutesChange}
-                />
-                <span>minutes</span>
-              </label>
+            <div className={styles.formRow}>
+              <div className={styles.timeInputs}>
+                <label className={styles.timeInput}>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min="0"
+                    placeholder="0"
+                    value={hours}
+                    onChange={handleHoursChange}
+                  />
+                  <span>hours</span>
+                </label>
+                <label className={styles.timeInput}>
+                  <input
+                    type="number"
+                    inputMode="numeric"
+                    min="0"
+                    placeholder="0"
+                    value={minutes}
+                    onChange={handleMinutesChange}
+                  />
+                  <span>minutes</span>
+                </label>
+              </div>
+
+              <button type="submit" className={styles.submit}>
+                Go
+                <ArrowIcon className={styles.submitIcon} />
+              </button>
             </div>
+
             <p className={styles.hint}>
               You&rsquo;ll find this in Settings &rarr; Screen Time.
             </p>
-
-            <button type="submit" className={styles.submit}>
-              Show me
-              <ArrowIcon className={styles.submitIcon} />
-            </button>
           </form>
 
           {timeError && <p className={styles.error}>{timeError}</p>}

@@ -4,8 +4,10 @@ import { useState } from "react";
 import Image from "next/image";
 import styles from "./Faq.module.css";
 
-// The five questions Matt drafted himself (2026-09-18) -- kept in his own
-// words, just tightened for length and one unfinished sentence fixed.
+// Matt's own five questions (2026-09-18), plus a sixth condensing the old
+// standalone "Elsewhere exists to..." ethos section that used to sit
+// between the calculator and this FAQ -- folded in here instead so the
+// page doesn't repeat the same idea in two places.
 const FAQS = [
   {
     question: "What is Elsewhere?",
@@ -17,6 +19,11 @@ const FAQS = [
     photo: true,
     answer:
       "Hi, I'm Matt. Tiny experiments have helped me reframe my relationship with screens and tech. The friction I felt at the thought of spending 15 minutes a day creating something, next to the ease with which I'd lose 3 hours to Instagram reels, was telling. So one day I made a deal with myself: draw a sunflower once a day for a week. What happened wasn't just that I got better at drawing — I'd dipped my toes into a long-time interest, and by the end of the week I had a drawing that admittedly was far from Picasso, but it was something that didn't exist before, and it existed because of me. That felt good. I signed it, framed it, put it on my desk — and that paved the way for dozens more tiny experiments.",
+  },
+  {
+    question: "What's the bigger idea behind this?",
+    answer:
+      "Elsewhere exists to show what's possible when you send a small slice of your time toward creation instead of consumption. Holding something in my hands that didn't exist at the start of the week — just because I chose to make it instead of scroll — was a genuine lightbulb moment for me, and it's one I want more people to have too.",
   },
   {
     question: "Why would I pay £9 for something I could just do for free?",

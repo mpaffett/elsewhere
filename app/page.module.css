@@ -4,40 +4,22 @@
   min-height: 100%;
 }
 
-/* The wordmark is genuinely centred (text-align, not a flex sibling), and
-   the founder pill sits absolutely in the top-right corner independent of
-   it -- deliberately the one thing on the page that isn't centred, so it
-   catches the eye for a second without competing with the wordmark or
-   piling up as a second centred line underneath it (see the "too busy"
-   conversation, 2026-09-17). */
 .wordmarkRow {
-  position: relative;
   max-width: var(--max-width);
   width: 100%;
   margin: 0 auto;
-  padding: 28px 24px 0;
+  padding: 36px 24px 8px;
   text-align: center;
 }
 
-.founderCorner {
-  position: absolute;
-  top: 30px;
-  right: 24px;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-text-muted);
-  text-decoration: none;
-}
-
-.founderCorner:hover {
-  color: var(--color-accent);
-  text-decoration: underline;
-}
-
+/* Its own typeface (Yeseva One), not the page's --font-heading -- the
+   wordmark should read as a mark, not just a bigger version of everything
+   else on the page. */
 .wordmark {
-  font-family: var(--font-heading);
-  font-size: 1.3rem;
-  font-weight: 500;
+  font-family: var(--font-wordmark), var(--font-heading);
+  font-size: 1.7rem;
+  font-weight: 400;
+  letter-spacing: 0.01em;
   color: var(--color-text);
 }
 
@@ -120,6 +102,19 @@
   line-height: 1.55;
 }
 
+/* Plain-text "here's what this actually is" line, sat between the
+   calculator and the commitment card. Not a bordered section like its
+   neighbours -- deliberately lighter, so the page doesn't stack three
+   heavy cards in a row. */
+.explainer {
+  font-size: 0.95rem;
+  color: var(--color-text-muted);
+  max-width: 540px;
+  line-height: 1.6;
+  text-align: center;
+  margin: 0 auto;
+}
+
 .commitment {
   width: 100%;
   background: var(--color-surface);
@@ -177,27 +172,6 @@
   justify-content: center;
 }
 
-.quote {
-  width: 100%;
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius);
-  padding: 36px 32px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.quoteText {
-  font-family: var(--font-heading);
-  font-size: 1.2rem;
-  line-height: 1.5;
-  color: var(--color-text);
-  max-width: 620px;
-  margin: 0 auto;
-}
-
 .footer {
   border-top: 1px solid var(--color-border);
   background: var(--color-surface);
@@ -240,21 +214,5 @@
 @media (max-width: 720px) {
   .title {
     font-size: 2.1rem;
-  }
-}
-
-/* Below this width there's no longer room beside the wordmark for the
-   founder corner without the two colliding, so it drops out of the
-   absolute-positioned corner and flows centred underneath instead. */
-@media (max-width: 480px) {
-  .wordmarkRow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .founderCorner {
-    position: static;
   }
 }

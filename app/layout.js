@@ -1,4 +1,4 @@
-import { EB_Garamond, Literata } from "next/font/google";
+import { EB_Garamond, Literata, Yeseva_One } from "next/font/google";
 import "./globals.css";
 
 // Headings. A classical book serif -- the design leans on fine-press
@@ -17,6 +17,14 @@ const literata = Literata({
   subsets: ["latin"],
 });
 
+// Wordmark only -- deliberately its own face, not reused for any other
+// heading, so it reads as a mark rather than just a bigger heading.
+const yesevaOne = Yeseva_One({
+  variable: "--font-wordmark",
+  subsets: ["latin"],
+  weight: "400",
+});
+
 export const metadata = {
   title: "Elsewhere",
   description:
@@ -25,7 +33,10 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${garamond.variable} ${literata.variable}`}>
+    <html
+      lang="en"
+      className={`${garamond.variable} ${literata.variable} ${yesevaOne.variable}`}
+    >
       <body>{children}</body>
     </html>
   );
