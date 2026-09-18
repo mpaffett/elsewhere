@@ -61,6 +61,12 @@
   margin-right: 6px;
 }
 
+/* Hidden by default -- only shown below 640px, see the media query
+   further down. */
+.favouriteArrowMobile {
+  display: none;
+}
+
 .card {
   background: var(--color-surface);
   border: 1px solid var(--color-border-strong);
@@ -188,8 +194,8 @@
 /* Below 640px the cards stack into one column (see .cardRow in
    Calculator.module.css), so the absolutely-positioned callout would
    overlap the card above the poem card instead of sitting above it.
-   Drops back into normal flow instead -- no arrow, since a curving arrow
-   only makes sense pointing sideways/down at a card beside it. */
+   Drops back into normal flow instead, with the curved arrow swapped for
+   a straight one pointing down at the card directly below. */
 @media (max-width: 640px) {
   .picker {
     margin-top: 20px;
@@ -197,12 +203,20 @@
 
   .favourite {
     position: static;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
+    gap: 6px;
     transform: none;
     margin-bottom: 6px;
   }
 
   .favouriteArrow {
     display: none;
+  }
+
+  .favouriteArrowMobile {
+    display: block;
+    width: 16px;
+    height: 16px;
   }
 }

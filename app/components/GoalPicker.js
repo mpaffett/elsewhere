@@ -64,6 +64,24 @@ export default function GoalPicker({ selectedId, onSelect, className }) {
                       strokeLinejoin="round"
                     />
                   </svg>
+                  {/* Straight down instead of curved -- shown only below
+                      640px (see the media query in GoalPicker.module.css),
+                      once the cards stack into one column and the card
+                      being pointed at is directly underneath rather than
+                      to the side. */}
+                  <svg
+                    className={styles.favouriteArrowMobile}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M12 4v14M6 13l6 6 6-6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
                 </div>
               )}
 
