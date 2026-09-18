@@ -7,13 +7,15 @@
 }
 
 /* Same treatment as the hero's "elsewhere" -- see .emphasis in
-   page.module.css. */
+   page.module.css -- but thinner/closer, scaled down to match this
+   heading's much smaller font-size rather than copying the hero's
+   pixel values directly. */
 .emphasis {
   font-style: italic;
   text-decoration: underline;
   text-decoration-color: var(--color-accent);
-  text-decoration-thickness: 2px;
-  text-underline-offset: 6px;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
 }
 
 .picker {
