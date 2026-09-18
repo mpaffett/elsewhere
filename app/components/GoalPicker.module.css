@@ -32,17 +32,21 @@
 }
 
 /* Matt's own pick, called out above the poem card -- rotated slightly for
-   a handwritten-note feel, with an arrow in the same line-art style as
-   Icons.js curving down into the card rather than a literal scrawl. */
+   a handwritten-note feel. Text sits on top, left-aligned, with the arrow
+   directly below it, starting under the "M" of "My" and curving down into
+   the card -- matching Matt's own reference photo of a post-it note, just
+   drawn in the same line-art style as Icons.js rather than a literal
+   scrawl. Centred over the card (left: 50% + translateX), not pinned to
+   either edge, so the arrow lands roughly in the middle of it. */
 .favourite {
   position: absolute;
-  top: -46px;
-  right: 6px;
+  top: -56px;
+  left: 50%;
+  transform: translateX(-50%) rotate(-3deg);
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 0;
-  transform: rotate(-3deg);
+  align-items: flex-start;
+  gap: 2px;
   color: var(--color-accent-deep);
   pointer-events: none;
 }
@@ -55,16 +59,29 @@
   white-space: nowrap;
 }
 
+/* The source image (public/favourite-arrow.png) is a wide, roughly
+   horizontal doodle pointing right, sized to its own aspect ratio here
+   (308:84) with a transparent background baked in -- see
+   scratchpad/make_transparent.py. It's painted via mask-image rather than
+   <img> so background-color can recolour it to match the accent colour,
+   and rotated ~100deg so the original rightward arrowhead points down
+   into the card instead. */
 .favouriteArrow {
-  width: 34px;
-  height: 34px;
-  margin-right: 6px;
-}
-
-/* Hidden by default -- only shown below 640px, see the media query
-   further down. */
-.favouriteArrowMobile {
-  display: none;
+  display: block;
+  width: 46px;
+  height: 13px;
+  margin: 6px 0 0 6px;
+  background-color: var(--color-accent-deep);
+  -webkit-mask-image: url("/favourite-arrow.png");
+  mask-image: url("/favourite-arrow.png");
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-position: center;
+  mask-position: center;
+  transform: rotate(100deg);
+  transform-origin: 20% 50%;
 }
 
 .card {
@@ -194,8 +211,8 @@
 /* Below 640px the cards stack into one column (see .cardRow in
    Calculator.module.css), so the absolutely-positioned callout would
    overlap the card above the poem card instead of sitting above it.
-   Drops back into normal flow instead, with the curved arrow swapped for
-   a straight one pointing down at the card directly below. */
+   Drops back into normal flow instead, arrow and text sitting inline
+   since the card being pointed at is directly underneath. */
 @media (max-width: 640px) {
   .picker {
     margin-top: 20px;
@@ -211,12 +228,8 @@
   }
 
   .favouriteArrow {
-    display: none;
-  }
-
-  .favouriteArrowMobile {
-    display: block;
-    width: 16px;
-    height: 16px;
+    width: 26px;
+    height: 8px;
+    margin: 0;
   }
 }

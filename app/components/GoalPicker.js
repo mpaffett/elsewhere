@@ -45,43 +45,12 @@ export default function GoalPicker({ selectedId, onSelect, className }) {
                   <span className={styles.favouriteText}>
                     My personal favourite!
                   </span>
-                  <svg
-                    className={styles.favouriteArrow}
-                    viewBox="0 0 60 60"
-                    fill="none"
-                  >
-                    <path
-                      d="M48 10C28 10 14 24 16 46"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                    />
-                    <path
-                      d="M8 38L16 46L23 36"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
-                  {/* Straight down instead of curved -- shown only below
-                      640px (see the media query in GoalPicker.module.css),
-                      once the cards stack into one column and the card
-                      being pointed at is directly underneath rather than
-                      to the side. */}
-                  <svg
-                    className={styles.favouriteArrowMobile}
-                    viewBox="0 0 24 24"
-                    fill="none"
-                  >
-                    <path
-                      d="M12 4v14M6 13l6 6 6-6"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                  </svg>
+                  {/* Matt's own hand-drawn arrow (public/favourite-arrow.png),
+                      not a redrawn SVG -- used as a CSS mask so it can be
+                      recoloured to the accent colour, and rotated to point
+                      down into the card instead of its original sideways
+                      orientation. */}
+                  <span className={styles.favouriteArrow} />
                 </div>
               )}
 
