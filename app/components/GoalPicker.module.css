@@ -43,19 +43,18 @@
     box-shadow 0.15s ease;
 }
 
-/* Matt's own generated stamp, overlapping the poem card's top-right
-   corner at a slight angle so it reads as physically stamped on rather
-   than a flat sticker sitting inside the card. Replaces the earlier
-   arrow + "My personal favourite!" text callout. Pushed further into the
-   corner (rather than centred on it) so it doesn't cover the "Selected"
-   badge once this card is chosen -- z-index kept low just in case, with
-   .badge given its own stacking context to sit above it regardless. */
+/* Matt's own generated stamp, sat fully inside the card (not overlapping
+   its border) at a slight angle so it reads as physically stamped on
+   rather than a flat sticker. Sits below the icon/"Selected" badge row
+   and above the title, right-aligned. Replaces the earlier
+   arrow + "My personal favourite!" text callout, and an even earlier
+   version that overlapped the card's outer edge. */
 .stamp {
   position: absolute;
   z-index: 1;
-  top: -26px;
-  right: -22px;
-  width: 58px;
+  top: 50px;
+  right: 34px;
+  width: 66px;
   height: auto;
   transform: rotate(-12deg);
   pointer-events: none;
