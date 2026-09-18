@@ -65,12 +65,6 @@
   color: var(--color-text);
 }
 
-.stepNote {
-  font-family: var(--font-heading);
-  font-size: 1.2rem;
-  color: var(--color-accent);
-}
-
 /* Inputs, the submit button and the hint text, tried as one inline row
    2026-09-18. Now: inputs + button sit in .formRow (same height, aligned
    centre), with the hint centred underneath the whole row rather than

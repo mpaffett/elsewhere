@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { costOverLifetime, formatDuration } from "../../lib/calculate.js";
+import { costOverLifetime } from "../../lib/calculate.js";
 import { validateScreenTime } from "../../lib/validate.js";
 import CostTotals from "./CostTotals.js";
 import DailyAsk from "./DailyAsk.js";
@@ -173,11 +173,6 @@ export default function Calculator() {
                 Step 1: Your daily screen time
               </h2>
             </div>
-            {screenTimeMinutes && (
-              <span className={styles.stepNote}>
-                {formatDuration(screenTimeMinutes)} a day
-              </span>
-            )}
           </div>
 
           <form className={styles.form} onSubmit={handleScreenTimeSubmit}>
