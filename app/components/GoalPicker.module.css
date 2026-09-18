@@ -19,10 +19,46 @@
 }
 
 .picker {
-  margin-top: 20px;
+  /* Extra top margin (vs. the original 20px) makes room for the
+     "My personal favourite!" callout, which sits above the poem card. */
+  margin-top: 52px;
   /* Grid layout (columns, gap, mobile collapse) comes from the className
      passed in from Calculator.js -- this file only styles the cards
      themselves. */
+}
+
+.cardSlot {
+  position: relative;
+}
+
+/* Matt's own pick, called out above the poem card -- rotated slightly for
+   a handwritten-note feel, with an arrow in the same line-art style as
+   Icons.js curving down into the card rather than a literal scrawl. */
+.favourite {
+  position: absolute;
+  top: -46px;
+  right: 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+  transform: rotate(-3deg);
+  color: var(--color-accent-deep);
+  pointer-events: none;
+}
+
+.favouriteText {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.favouriteArrow {
+  width: 34px;
+  height: 34px;
+  margin-right: 6px;
 }
 
 .card {
@@ -147,4 +183,26 @@
   font-size: 0.88rem;
   color: var(--color-text-soft);
   line-height: 1.45;
+}
+
+/* Below 640px the cards stack into one column (see .cardRow in
+   Calculator.module.css), so the absolutely-positioned callout would
+   overlap the card above the poem card instead of sitting above it.
+   Drops back into normal flow instead -- no arrow, since a curving arrow
+   only makes sense pointing sideways/down at a card beside it. */
+@media (max-width: 640px) {
+  .picker {
+    margin-top: 20px;
+  }
+
+  .favourite {
+    position: static;
+    align-items: flex-start;
+    transform: none;
+    margin-bottom: 6px;
+  }
+
+  .favouriteArrow {
+    display: none;
+  }
 }

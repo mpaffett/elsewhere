@@ -35,29 +35,63 @@ export default function GoalPicker({ selectedId, onSelect, className }) {
           const isSelected = goal.id === selectedId;
 
           return (
-            <button
-              key={goal.id}
-              type="button"
-              className={`${styles.card} ${tint} ${
-                isSelected ? styles.selected : ""
-              }`}
-              onClick={() => onSelect(goal.id)}
-            >
-              <div className={styles.cardTop}>
-                <span className={styles.iconTile}>
-                  <Icon className={styles.icon} />
-                </span>
-                {isSelected && (
-                  <span className={styles.badge}>
-                    <CheckIcon className={styles.badgeIcon} />
-                    Selected
+            <div key={goal.id} className={styles.cardSlot}>
+              {/* Matt's own callout, pointing at the goal he'd pick himself
+                  -- the arrow is drawn in the same line-art style as
+                  Icons.js rather than literally hand-scrawled, so it stays
+                  consistent with the rest of the page's icons. */}
+              {goal.id === "poem" && (
+                <div className={styles.favourite} aria-hidden="true">
+                  <span className={styles.favouriteText}>
+                    My personal favourite!
                   </span>
-                )}
-              </div>
-              <span className={styles.label}>{goal.label}</span>
-              <span className={styles.title}>{goal.title}</span>
-              <span className={styles.description}>{goal.description}</span>
-            </button>
+                  <svg
+                    className={styles.favouriteArrow}
+                    viewBox="0 0 60 60"
+                    fill="none"
+                  >
+                    <path
+                      d="M48 10C28 10 14 24 16 46"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                    />
+                    <path
+                      d="M8 38L16 46L23 36"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </div>
+              )}
+
+              <button
+                type="button"
+                className={`${styles.card} ${tint} ${
+                  isSelected ? styles.selected : ""
+                }`}
+                onClick={() => onSelect(goal.id)}
+              >
+                <div className={styles.cardTop}>
+                  <span className={styles.iconTile}>
+                    <Icon className={styles.icon} />
+                  </span>
+                  {isSelected && (
+                    <span className={styles.badge}>
+                      <CheckIcon className={styles.badgeIcon} />
+                      Selected
+                    </span>
+                  )}
+                </div>
+                <span className={styles.label}>{goal.label}</span>
+                <span className={styles.title}>{goal.title}</span>
+                <span className={styles.description}>
+                  {goal.description}
+                </span>
+              </button>
+            </div>
           );
         })}
       </div>
