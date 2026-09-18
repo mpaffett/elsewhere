@@ -8,10 +8,14 @@
   gap: 18px;
 }
 
+/* Not flex -- this is a wrapping paragraph, and flex would turn each text
+   run and <strong> into its own separate flex item (each wrapping in its
+   own little column instead of the whole sentence wrapping normally).
+   That's exactly what broke on narrow screens: "10 minutes" and "The
+   Guided Poem" each got stranded in their own vertical strip instead of
+   flowing with the rest of the sentence. The icon sits inline via
+   vertical-align instead of flex alignment. */
 .commitment {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
   font-size: 0.92rem;
   line-height: 1.5;
   color: var(--color-text);
@@ -25,9 +29,9 @@
 .commitmentIcon {
   width: 16px;
   height: 16px;
-  margin-top: 3px;
+  margin-right: 6px;
+  vertical-align: -2px;
   color: var(--color-accent);
-  flex-shrink: 0;
 }
 
 .included {
