@@ -1,16 +1,23 @@
+import Image from "next/image";
 import { GOALS } from "../../lib/goals.js";
 import { CheckIcon, NotebookIcon, PencilIcon, QuoteIcon } from "./Icons.js";
 import styles from "./GoalPicker.module.css";
 
-// One pastel "notebook cover" tint and icon per goal, keyed by id -- kept
-// here rather than in lib/goals.js so that plain-data file stays free of
-// React components. See the "GOAL-LIST" section of the
-// elsewhere-mvp-scope-brainstorm memory for why there are exactly three.
-const CARD_STYLE = {
-  drawing: { tint: styles.sage, Icon: PencilIcon },
-  journal: { tint: styles.peach, Icon: NotebookIcon },
-  poem: { tint: styles.lavender, Icon: QuoteIcon },
+// Icon per goal, keyed by id -- kept here rather than in lib/goals.js so
+// that plain-data file stays free of React components. See the
+// "GOAL-LIST" section of the elsewhere-mvp-scope-brainstorm memory for
+// why there are exactly three.
+const ICON_BY_GOAL = {
+  drawing: PencilIcon,
+  journal: NotebookIcon,
+  poem: QuoteIcon,
 };
+
+// Tint is keyed by column position, not by goal -- "keep yellow in the
+// middle, purple on the right" even as poem (previously on the right,
+// lavender) moved into the centre slot. Whichever goal ends up in a given
+// column takes that column's colour.
+const TINT_BY_POSITION = [styles.sage, styles.peach, styles.lavender];
 
 // Three curated goals, click to choose. Replaces what used to be a free-text
 // box -- see the "GOAL-LIST" section of the elsewhere-mvp-scope-brainstorm
@@ -30,8 +37,9 @@ export default function GoalPicker({ selectedId, onSelect, className }) {
       </p>
 
       <div className={`${styles.picker} ${className || ""}`}>
-        {GOALS.map((goal) => {
-          const { tint, Icon } = CARD_STYLE[goal.id];
+        {GOALS.map((goal, index) => {
+          const tint = TINT_BY_POSITION[index];
+          const Icon = ICON_BY_GOAL[goal.id];
           const isSelected = goal.id === selectedId;
 
           return (
@@ -43,6 +51,23 @@ export default function GoalPicker({ selectedId, onSelect, className }) {
               }`}
               onClick={() => onSelect(goal.id)}
             >
+              {/* Matt's own generated stamp asset (public/favourite-stamp.png,
+                  background keyed to transparent, ink recoloured to the
+                  brand terracotta -- see
+                  scratchpad/make_stamp_transparent.py), stamped over the
+                  top-right corner at a slight angle rather than an arrow
+                  and label. Replaces the earlier arrow/callout attempt. */}
+              {goal.id === "poem" && (
+                <Image
+                  src="/favourite-stamp.png"
+                  alt=""
+                  aria-hidden="true"
+                  width={300}
+                  height={296}
+                  className={styles.stamp}
+                />
+              )}
+
               <div className={styles.cardTop}>
                 <span className={styles.iconTile}>
                   <Icon className={styles.icon} />
