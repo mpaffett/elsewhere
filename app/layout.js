@@ -1,4 +1,5 @@
 import { EB_Garamond, Literata, Yeseva_One } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
 // Headings. A classical book serif -- the design leans on fine-press
@@ -37,7 +38,10 @@ export default function RootLayout({ children }) {
       lang="en"
       className={`${garamond.variable} ${literata.variable} ${yesevaOne.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <Analytics />
+      </body>
     </html>
   );
 }
